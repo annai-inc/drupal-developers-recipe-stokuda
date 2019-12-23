@@ -3,7 +3,7 @@
 ## How to Use
 
 ```
-$ git clone ..
+$ git clone git@bitbucket.org:annai-labs/example_drupal_developers_recipe.git
 $ npm install
 $ npx marp --server docs
 $ open http://localhost:8080
