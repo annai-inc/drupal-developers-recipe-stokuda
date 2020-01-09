@@ -1,9 +1,9 @@
-# Drupal Developers Recipe (Example)
+# Drupal Developers Recipe
 
 ## How to Use
 
 ```
-$ git clone git@bitbucket.org:annai-labs/example_drupal_developers_recipe.git
+$ git clone git@bitbucket.org:annai-labs/drupal_developers_recipe.git
 $ npm install
 $ npx marp --server docs
 $ open http://localhost:8080
