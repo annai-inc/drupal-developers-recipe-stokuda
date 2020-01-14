@@ -56,7 +56,7 @@ Listening on "http://127.0.0.1:8088".
 
 それでは、ブラウザから http://127.0.0.1:8088 にアクセスしてみましょう。以下のようにトップページが表示されれば成功です。
 
-![welcome Drupal8](../assets/03_install_drupal/welcome_to_drupal.png)
+![welcome Drupal8](../assets/01_about_drupal/welcome_to_drupal.png)
 
 ---
 
