@@ -60,6 +60,18 @@ Listening on "http://127.0.0.1:8088".
 
 ---
 
+## 最初の状態でgitのレポジトリを作成する
+
+無事Drupalが動作したので、最初の状態でgitのレポジトリを作成しておきましょう。
+
+```sh
+$ git init
+$ git add .
+$ git commit -m "Initial commit"
+```
+
+---
+
 ## WebサーバーやDBサーバーがなくても起動できる
 
 Ruby on RailsやLaravelなどのフレームワークを使ったことがある方であれば、「アプリケーションの初期化」→「組み込みWebサーバーとsqliteを使って起動」というおなじみのステップだったと思います。
