@@ -188,6 +188,34 @@ description: Hello World module
 
 ---
 
+## hello_worldモジュールの有効化
+
+それでは、モジュールを有効化してみましょう。
+モジュールの有効化は `drush` コマンドを使って以下のように実行します。
+
+```sh
+$ vendor/bin/drush en hello_world
+```
+
+---
+
+`/admin/modules` にアクセスしてください。以下のようにチェックボックスがチェックされていればモジュールが有効になっています。
+
+![install Hello World module](../assets/02_module_basics/hello_world_module_installed.png)
+
+まだ何の機能も実装していないため、今のところhello_worldモジュールの存在が確認できるのは、このモジュール一覧が表示されるパスだけです。
+
+---
+
+モジュールの状態は `drush pml` でも確認することができます。
+
+```
+$ vendor/bin/drush pml |grep hello_world
+  Other                 Hello World (hello_world)                                   Enabled
+```
+
+---
+
 ## まとめ
 
 モジュール開発の最初の一歩として、機能を何も持たないhello_worldモジュールを開発し、Drupalがどのようにモジュールを認識するかの概要が理解できたと思います。
