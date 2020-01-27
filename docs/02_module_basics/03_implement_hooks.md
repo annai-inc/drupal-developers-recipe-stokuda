@@ -5,7 +5,7 @@ _class: invert
 ---
 
 <!-- _class: lead -->
-# 2.3 フックの実装
+# 2.3 フックの実装 (1) - hook_help
 
 ---
 
