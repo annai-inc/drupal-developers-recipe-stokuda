@@ -24,7 +24,7 @@ https://www.drupal.org/docs/8/api/routing-system/routing-system-overview
 
 ---
 
-リクエストが来ると、ルーティングシステムがそのルート(パス)に対して処理を担当するコントローラーを判断し、コントローラーがレスポンスを生成して返します。
+リクエストが来ると、ルーティングシステムがそのルート(パス)に対して処理を担当するコントローラーを判断し、コントローラーがレスポンスを生成して返します。これは、 (TBD)章の「リクエストからレスポンスまでの流れ」で説明したとおりです。
 
 ご存知の通り、ルーティングやコントローラーといった考え方はDrupalやSymfony独自のものではなく、どのWebアプリケーションフレームワークでも持っている概念です。
 
@@ -38,7 +38,10 @@ https://www.drupal.org/docs/8/api/routing-system/routing-system-overview
 
 ---
 
+<!-- _class: lead -->
 ## 簡単なルーティングとコントローラーの実装
+
+---
 
 Drupalでは、 `{module_name}.routing.yml` でルーティングの定義をすることができます。
 
@@ -90,13 +93,18 @@ class HelloWorldController extends ControllerBase {
 
 ---
 
-それでは、 `/admin/config/development/performance` にアクセスしてキャッシュをクリアしてから `/hello` にアクセスしてみてください。以下のように「Hello World!」が表示されれば成功です。
+それでは、 `/admin/config/development/performance` にアクセスしてキャッシュをクリアしてから `/hello` にアクセスしてみてください。
+
+以下のように「Hello World!」が表示されれば成功です！
 
 ![Hello World](../assets/02_module_basics/routing_and_controllre_hello_world.png)
 
 ---
 
+<!-- _class: lead -->
 ## ルーティングの定義
+
+---
 
 無事に動いたところでまずは `hello_world.routing.yml` のコードから詳細を見ていきましょう。
 
@@ -130,7 +138,7 @@ Drupalの仕様として、Drupal自体のnamespaceは `\Drupal`、モジュー�
 
 #### **_title**
 
-このルートのタイトルです。これは出力されるhtmlの `<title>` に設定されます。
+このルートのタイトルです。これは出力されるhtmlの `<title>` に設定されます。 
 
 ### **requirements**
 
@@ -144,7 +152,10 @@ Drupalの仕様として、Drupal自体のnamespaceは `\Drupal`、モジュー�
 
 ---
 
+<!-- _class: lead -->
 ## コントローラーの実装
+
+---
 
 続いて `src/Controller/HelloWorldController.php` を見ていきましょう。ファイル名とnamespaceに関しては、先ほど説明したとおり [PSR-4](https://www.php-fig.org/psr/psr-4/) に従います。これに関しては詳しくは解説しませんので、必ずPSR-4のドキュメントに目を通してください。
 
@@ -154,7 +165,7 @@ Ruby on Railsの [ApplicationController](https://guides.rubyonrails.org/action_c
 
 ---
 
-ルートの定義にコールバックとして `helloWorld` メソッドを設定したので、この前で実装をする必要があります。また、このメソッドはDrupalコアのルーティングシステムから実行できる必要があるので、アクセス修飾子は `public` にする必要があります。
+ルートの定義にコールバックとして `helloWorld` メソッドを設定したので、この前提で実装をする必要があります。また、このメソッドはDrupalコアのルーティングシステムから実行できる必要があるので、アクセス修飾子は `public` にする必要があります。
 
 メソッドの中を見てみると、 `#markup` というキーを持った配列を返しているだけです。これは、Drupalの　[Render arrays](https://www.drupal.org/docs/8/api/render-api/render-arrays) という仕様に従っています。
 
@@ -164,4 +175,4 @@ Render arraysについては本コンテンツで別途解説します。今の�
 
 ---
 
-WIP
+https://www.drupal.org/docs/8/api/routing-system/parameters-in-routes
