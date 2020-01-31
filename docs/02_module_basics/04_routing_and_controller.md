@@ -171,8 +171,178 @@ Ruby on Railsの [ApplicationController](https://guides.rubyonrails.org/action_c
 
 ---
 
-Render arraysについては本コンテンツで別途解説します。今のところは **「あるルートに割り当てられたコントローラーのメソッドで #markup というキーを持つ配列を返すと、それをコンテンツとしてページを生成してくれる」** というくらいの理解で進めてください。
+Render arraysについては本コンテンツで別途解説します。
+
+今のところは **「あるルートに割り当てられたコントローラーのメソッドで #markup というキーを持つ配列を返すと、それをコンテンツとしてページを生成してくれる」** というくらいの理解で進めてください。
 
 ---
 
-https://www.drupal.org/docs/8/api/routing-system/parameters-in-routes
+<!-- _class: lead -->
+## パラメータを受け取るルート
+
+---
+
+さて、あるパスに対して固定のレスポンスを返す機能が完成したので、次はパスの一部を可変にし、パラメートとして扱うサンプルを実装します。
+
+[Symfonyのルーティングコンポーネントのドキュメント](https://symfony.com/doc/current/routing.html#route-parameters) を見てみましょう。
+
+---
+
+```plain
+Route Parameters
+
+The previous examples defined routes where the URL never changes (e.g. /blog).
+
+However, it's common to define routes where some parts are variable.
+
+For example, the URL to display some blog post will probably
+include the title or slug
+(e.g. /blog/my-first-post or /blog/all-about-symfony).
+
+In Symfony routes, variable parts are wrapped in { ... } and
+they must have a unique name.
+
+For example, the route to display the blog post contents is defined as /blog/{slug}:
+```
+
+---
+
+ルートの可変部分は `/blog/{slug}` のようにユニークな変数名を付与して `{...}` で括れば良いことが分かります。
+
+それでは、 `/say_something/{message}` にアクセスしたら、 `{message}` の部分で指定されたパラメータを表示する機能を開発しましょう。
+
+---
+
+`hello_world.routing.yml` に以下のルートの定義を追加してください。
+
+```yml
+hello_world.say_something:
+  path: '/say_something/{message}'
+  defaults:
+    _controller: '\Drupal\hello_world\Controller\HelloWorldController::saySomething'
+    _title: 'Say Something!'
+  requirements:
+    _access: 'TRUE'
+```
+
+先ほどのルートとの違いとして、 `path` の一部に `{message}` という 可変部分があることと、 `_controller` のメソッド名が変わっている点に注意してください。
+
+なお、このようなパスに含まれるパラメータは `slug` と呼ばれることがあります。検索する際に便利なので覚えておきましょう。
+
+---
+
+次に、 `HelloWorldController` に以下のメソッドを追加してください。
+
+```php
+  /**
+   * Just say something by use param.
+   */
+  public function saySomething(string $message) {
+    return [
+      "#markup" => $message,
+    ];
+  }
+```
+
+---
+
+`/say_something/hahaha!` にアクセスして以下のように表示されれば成功です。hahaha!の部分を他の文字列に変更し、表示内容が変わることも確認してください。
+
+![say something](../assets/02_module_basics/routing_and_controllre_say_something.png)
+
+---
+
+<!-- _class: lead -->
+## オブジェクトを受け取るルート
+
+---
+
+パスの文字列をコントローラーに渡す機能が作成できました。しかし、ほとんどのシステムでは `/some_model/{id}` のようなルートにアクセスがあった場合、実際に関心があるデータは文字列としてのidではなく、このidを持つ何らかのオブジェクト(モデル)であるケースの方が多いと思います。
+
+コントローラーのメソッド内で「idの文字列からデータベースを検索し目的のオブジェクトをロードする」コードを書くことはもちろん可能ですが、ルートが多くなると非常に冗長になります。
+
+---
+
+他の多くのフレームワークがそうであるように、Drupalもパスのパラメータからオブジェクトを自動的にロードし、コントローラーのメソッドに渡すことができます。
+
+それは、もう少し実践的なサンプルとして `/inspect_user/{user}` にアクセスするとユーザーアカウントの情報を表示する機能を開発してみましょう。
+
+---
+
+`hello_world.routing.yml` に以下のルートの定義を追加してください。
+
+```yml
+hello_world.inspect_user:
+  path: '/inspect_user/{user}'
+  defaults:
+    _controller: '\Drupal\hello_world\Controller\HelloWorldController::inspectUser'
+    _title: 'Inspect User information'
+  requirements:
+    _access: 'TRUE'
+  options:
+    parameters:
+      user:
+        type: entity:user
+```
+
+---
+
+`options` の部分にルートのパラメータをオブジェクトに変換する定義を記載しています。
+
+```yml
+options:
+  parameters:
+    user:
+      type: entity:user
+```
+
+この定義により、 `/inspect_user/{user}` の `{user}` が `type: entity:user` のオブジェクトとして `_controller` で指定したコールバックに渡されます。
+
+詳しくは、 [Using parameters in routes](https://www.drupal.org/docs/8/api/routing-system/parameters-in-routes/using-parameters-in-routes#s-example) のExampleのセクションを参照してください。
+
+---
+
+次に、 `HelloWorldController` に以下のメソッドを追加してください。
+
+```php
+use Drupal\Core\Session\AccountInterface;
+
+...
+
+  /**
+   * Inspect user information.
+   */
+  public function inspectUser(AccountInterface $user = NULL) {
+    $content = "User id: " . $user->id() . ", username: " . $user->getAccountName();
+
+    return [
+      "#markup" => $content,
+    ];
+  }
+```
+
+---
+
+コールバックメソッドの引数の変数名は、routing.ymlのルートで定義した変数名と一致させる必要があります。なお、パスに複数の変数があるような場合は、変数名さえ一致していれば引数の順序に制約はありません。
+
+このメソッドでは、Drupalのユーザーアカウント(`AccountInterface`) のidとユーザー名を表示しています。
+
+なぜ `{user}` パラメータが変換されるオブジェクトのクラスが `AccountInterface` になるかは不思議だと思いますが、これについては後ほど説明します。
+
+---
+
+それでは、 `/inspect_user/1` にアクセスしてみましょう。以下のようにアカウント情報が表示されれば成功です。
+
+![inspect admin user](../assets/02_module_basics/routing_and_controllre_inspect_user_1.png)
+
+---
+
+今後は違うアカウントを指定してみましょう。先のセクションで、 `user1` というアカウントを作成していると思います。そのユーザーのIDを調べて、 `/inspect_user/{ユーザーのID}` にアクセスしてください。先ほどとは異なるアカウント情報が表示されるはずです。
+
+![inspect user 1](../assets/02_module_basics/routing_and_controllre_inspect_user_2.png)
+
+---
+
+最後に、ルーティングの定義で `type: entity:user` と指定した時に、 `AccountInterface` という型がどのように決定されるのかを説明します。
+
+これは、Drupalの `PathProcesser` で実現されています (TBD)
