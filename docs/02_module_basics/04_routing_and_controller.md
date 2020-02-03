@@ -24,7 +24,7 @@ https://www.drupal.org/docs/8/api/routing-system/routing-system-overview
 
 ---
 
-リクエストが来ると、ルーティングシステムがそのルート(パス)に対して処理を担当するコントローラーを判断し、コントローラーがレスポンスを生成して返します。これは、 (TBD)章の「リクエストからレスポンスまでの流れ」で説明したとおりです。
+リクエストが来ると、ルーティングシステムがそのルート(パス)に対して処理を担当するコントローラーを判断し、コントローラーがレスポンスを生成して返します。これは、 1章の「リクエストからレスポンスまでの流れ」で説明したとおりです。
 
 ご存知の通り、ルーティングやコントローラーといった考え方はDrupalやSymfony独自のものではなく、どのWebアプリケーションフレームワークでも持っている概念です。
 
@@ -337,7 +337,11 @@ use Drupal\Core\Session\AccountInterface;
 
 ---
 
-今後は違うアカウントを指定してみましょう。先のセクションで、 `user1` というアカウントを作成していると思います。そのユーザーのIDを調べて、 `/inspect_user/{ユーザーのID}` にアクセスしてください。先ほどとは異なるアカウント情報が表示されるはずです。
+今後は違うアカウントを指定してみましょう。先のセクションで、 `user1` というアカウントを作成していると思います。
+
+そのユーザーのIDを調べて、 `/inspect_user/{ユーザーのID}` にアクセスしてください。先ほどとは異なるアカウント情報が表示されるはずです。
+
+---
 
 ![inspect user 1](../assets/02_module_basics/routing_and_controllre_inspect_user_2.png)
 
@@ -345,4 +349,29 @@ use Drupal\Core\Session\AccountInterface;
 
 最後に、ルーティングの定義で `type: entity:user` と指定した時に、 `AccountInterface` という型がどのように決定されるのかを説明します。
 
-これは、Drupalの `PathProcesser` で実現されています (TBD)
+Drupalでルートのパラメータを変換する処理は、[ParamConverterInterface](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21ParamConverter%21ParamConverterInterface.php/interface/ParamConverterInterface/) というインターフェースで実現されています。
+
+今回は `type` に `entity:user` を指定しましたが、これを `AccountInterface` のオブジェクトに変換 (upcast)する処理は [\Drupal\Core\ParamConverter\EntityConverter](https://github.com/drupal/drupal/blob/8.8.x/core/lib/Drupal/Core/ParamConverter/EntityConverter.php) で実装されています。
+
+---
+
+詳細は以下のリンクを参照してください。
+- [How upcasting parameters works](https://www.drupal.org/docs/8/api/routing-system/parameters-in-routes/how-upcasting-parameters-works)
+
+`ParamConverterInterface` を実装することで、独自の変換処理を実装することもできます。
+
+これについてのコードの解説は割愛しますが、興味がある方はコアの実装をチェックしてみてください。
+
+---
+
+## まとめ
+
+このセクションでは、ルーティングとコントローラーを実装して「あるURLにアクセスした時に独自の処理を実行する」サンプルを開発しました。
+
+フックと違い、OOPや場合によってはSynfomyコンポーネントが理解できている前提のインタフェースになりますので、Drupalだけではなくこれらの基本知識もしっかりと押さえておきましょう。
+
+---
+
+## ストレッチゴール
+
+1. `/inspect_node/{node}` にアクセスした時に、ノードのIDとタイトルを表示するルーティングとコントローラーを実装してください。`{node}` をupcastする際のコンバーターの識別子は `entity:node` で、コールバックメソッドに渡されるオブジェクトのインターフェースは  `NodeInterface` です。
