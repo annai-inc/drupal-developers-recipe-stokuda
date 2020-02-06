@@ -23,18 +23,18 @@ Drupalはコアの機能として [ロースベースのアクセス制御(RBAC)
 
 ---
 
-フレームワーク自体に機能がない場合、ビジネスやプロジェクトの都合に合わせて使うライブラリを選択できるという柔軟性がある半面、以下のような問題もあります。
+フレームワーク自体に機能がない場合、ビジネスやプロジェクトの都合に合わせて使うライブラリを選択できる柔軟性がある半面、以下のような問題もあります。
 
 - 採用したライブラリが活発にメンテナンスされなくなる、フレームワークのメジャーアップデートにすぐに(もしくは永久に)対応しない場合がある
 - マイナーなライブラリを選択すると技術情報が少ない
 - 複数のライブラリを組み合わせる場合、組み合わせて動くかどうかの検証が必要になる
-- 複数のライブラリを組み合わせる場合、UI/UXが統一されず場合によっては独自に作り込む必要がある
+- UI/UXが統一されず、場合によっては独自に作り込む必要がある
 
 ---
 
-ちなみにRuby on Railsのユーザー、パーミッション、ロールは個別のライブラリに分割されているものが多く、1.x〜3.xくらいの世代ではライブラリ自体の隆盛も変化が早かったため、苦労した覚えがあります。
+ちなみにRuby on Railsのユーザー、パーミッション、ロールは個別のライブラリに分割されているものが多く、1.x〜3.xくらいの世代ではライブラリ自体の隆盛も変化が早かったため、Railsのメジャーアップデートの度に苦労した覚えがあります。
 
-フレームワーク自体にRBACの基本的な機能が提供されていると、このような（ビジネス的にはあまり本質的ではない)問題が発生しないのは大きなメリットです。
+フレームワーク自体でRBACの機能が提供されていると、このような（ビジネスとしてはあまり本質的ではない)問題が発生しないのは大きなメリットです。
 
 ---
 
@@ -58,9 +58,9 @@ show hello message:
   title: 'Show hello message'
 ```
 
----
+ymlのトップレベル要素、つまり `show hello message` が権限の内部名称になります。権限には `title` キーが必ず必要です。
 
-ymlのトップレベルが権限の内部名称になります。権限には `title` キーが必ず必要です。
+---
 
 それでは、 `/admin/people/permissions` にアクセスして定義した権限が認識されているか確認しましょう。以下のように `Show hello message` という権限が追加されていると思います。
 
@@ -86,7 +86,7 @@ show hello message:
 
 ---
 
-また、ymlで `rectrict access` キーを `true` に設定すると、管理UI上に」その権限は信頼できるロールにのみ付与してください」という趣旨のメッセージが追加されます。
+また、`rectrict access` キーを `true` に設定すると、管理UI上に「この権限は信頼できるロールにのみ付与してください」という趣旨の警告メッセージが追加されます。
 
 付与することによってアクセスをバイパスするような強い権限を定義する場合は、このキーを設定してください。
 
@@ -97,7 +97,7 @@ show hello message:
 
 ---
 
-さて、権限が定義できたところで `/hello` のルートにアクセスると、 `show hello message` 権限を持っているかどうかチェックするように変更しましょう。
+さて、権限が定義できたところで `/hello` のルートにアクセスした時に、 `show hello message` 権限を持っているかどうかチェックするようにしましょう。
 
 ルートに対しての静的な権限チェックは、 `{module_name}.routing.yml` のみで実現できます。
 
@@ -119,15 +119,85 @@ hello_world.hello:
 
 ---
 
-それでは、以下の2点を確認してください。
-- 管理者ユーザーで `/hello` にアクセスするとメッセージが表示されること
+それでは、`AUTHENTICATED USER` ロールに `show hello message` 権限を付与してください。その後、以下の2点の動作を確認しましょう。
+- (2.4章で作成した) user1でログインし `/hello` にアクセスするとメッセージが表示されること
 - ログアウトした状態で `/hello` にアクセスするとアクセスが拒否されること
+
+---
+
+複数の権限を持っているかチェックしたい場合は、 `_permissions` に複数の権限を設定し、 `,` か `+` で区切ります。
+
+複数の権限をANDでチェックする例
+```yml
+  requirements:
+    # 'show hello message' と `use advanced search' の両方の権限があればアクセスを許可
+    _permission: 'show hello message,use advanced search'
+```
+
+複数の権限をORでチェックする例
+```yml
+  requirements:
+    # 'show hello message' と `use advanced search' のどちらかの権限があればアクセスを許可
+    _permission: 'show hello message+use advanced search'
+```
+
+---
+
+`AUTHENTICATED USER` ロールに付与する権限を以下4つのパターンに従って変更し、「複数の権限をANDでチェックする例」、「複数の権限をORでチェックする例」が期待通り動くかどうか確認してみてください。
+
+|show hello message|use advanced search|
+|--|--|
+|OFF|OFF|
+|OFF|ON|
+|ON|OFF|
+|ON|ON|
+
+---
+
+なお、 `,` と `+` の前後にスペースを含めると権限の名称が正しく認識されないので注意が必要です。
+
+詳細は [Structure of routes](https://www.drupal.org/docs/8/api/routing-system/structure-of-routes) を参照してください。
+
+---
+
+<!-- _class: lead -->
+## ルートに対してロールのチェックを行う
+
+---
+
+今度は権限ではなくロールでチェックしてみましょう。ロールでのチェックも権限のチェックとほぼ同じです。
+
+ `{module_name}.routing.yml` の `requirements` キーの子要素に `_role` を定義し、値にロールの内部名称を設定することで、ルートにアクセスした際に権限があるかどうかがチェックされます。
+
+---
+
+`hello_world.routing.yml` の `hello_world.say_something` ルートの定義を以下の様に変更してください。この変更により、 `/say_something/{message}` にアクセスするためには `administrator` ロールが必要になります。
+
+```yml
+hello_world.say_something:
+  path: '/say_something/{message}'
+  defaults:
+    _controller: '\Drupal\hello_world\Controller\HelloWorldController::saySomething'
+    _title: 'Say Something!'
+  requirements:
+    _role: 'administrator'
+```
+
+---
+
+それでは、次の動作を確認しましょう。
+
+- 管理者ユーザーでログインし、 `/say_something/{message}'` にアクセスするとメッセージが表示されること
+- user1でログインし `/say_something/{message}'` にアクセスするとアクセスが拒否されること
+
+複数のロールでチェックしたい場合は、 `_role` に複数のロールを設定し、 `,` か `+` で区切ります。これも権限でチェックする場合と同様です。
 
 ---
 
 TBD
 
 ---
+
 
 ## まとめ
 
