@@ -45,7 +45,7 @@ Drupalのロールと権限についての基本的な理解がある前提と�
 ---
 
 <!-- _class: lead -->
-## 静的な権限の定義
+## 権限の定義
 
 ---
 
@@ -156,7 +156,15 @@ hello_world.hello:
 
 なお、 `,` と `+` の前後にスペースを含めると権限の名称が正しく認識されないので注意が必要です。
 
-詳細は [Structure of routes](https://www.drupal.org/docs/8/api/routing-system/structure-of-routes) を参照してください。
+詳細は [Structure of routes](https://www.drupal.org/docs/8/api/routing-system/structure-of-routes) の `_permission` の部分を参照してください。
+
+---
+
+また、詳細は解説は省きますが、 `permission_callbacks` というキーを定義することで、PHPのコードで権限を動的に定義することもできます。
+
+例えば、Drupalのノードはコンテツタイプと呼ばれる独自のデータ型を持ったサブクラス（のようなもの）を管理UIから追加することができます。コンテンツタイプが新しく定義された場合、そのタイプに対するCRUDの権限の定義も自動的に追加されると便利です。
+
+このようなケースでは権限を静的に定義せず、PHPのコードで動的に定義したほうが柔軟に拡張ができます。興味がある方は [node.permissions.yml](https://github.com/drupal/drupal/blob/8.8.x/core/modules/node/node.permissions.yml#L27) を参考にしてください。
 
 ---
 
@@ -194,17 +202,135 @@ hello_world.say_something:
 
 ---
 
-TBD
+
+<!-- _class: lead -->
+## アクセス権限のチェックをPHPのコードで実装する
 
 ---
 
+ここまではルートに対する権限とロールのチェックをymlで静的に定義してきました。
+
+条件が簡単であればこの方法で対応できますが、もっと複雑な条件に対応しなければならないケースもよくあります。
+
+`_permission` や `_role` の代わりに `_custom_access` を設定すると、任意のPHPのコールバックにアクセス権限のチェックを委譲することができます。
+
+`_permission` のチェックと同様の機能を `_custom_access` で実装し直してみましょう。
+
+---
+
+まず、`hello_world.hello` ルートの `requirements` を以下の様に変更してください。
+
+```yml
+  requirements:
+    _custom_access: '\Drupal\hello_world\Controller\HelloWorldController::helloWorldAccess'
+```
+
+次に、`HelloWorldController.php` に上記で指定した `helloWorldAccess` を追加します。
+
+---
+
+```php
+
+use Drupal\Core\Access\AccessResult;
+...
+
+  /**
+   * Access check for helloWorld().
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   Access result. @see \Drupal\Core\Access\AccessResultInterface
+   */
+  public function helloWorldAccess(AccountInterface $account) {
+    if ($account->hasPermission('show hello message')) {
+      return AccessResult::allowed();
+    }
+
+    return AccessResult::forbidden();
+  }
+```
+
+---
+
+それでは、コードを見ていきましょう。
+
+`_custom_access` で指定するコールバックは、以下の仕様に従って実装する必要があります。
+- 引数として `\Drupal\Core\Session\AccountInterface` を受け取ること
+- 戻り値として ` \Drupal\Core\Access\AccessResultInterface` を返すこと
+- 引数として `\Symfony\Component\Routing\Route` を受け取っても良い
+- 引数として `\Drupal\Core\Routing\RouteMatch` を受け取っても良い
+
+最後の2つは必須ではないので今回の実装では省略しました。
+
+---
+
+`$account` にはカレントユーザーの情報が格納されており、`hasPermission()` でカレントユーザーが `show hello message` 権限を持っているかをチェックしています。
+
+`AccontInterface` が提供するAPIについては [AccountInterface](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Session%21AccountInterface.php/interface/AccountInterface) を参照してください。
+
+---
+
+先述したとおり、`_custom_access` で指定するコールバックは戻り値として ` \Drupal\Core\Access\AccessResultInterface` を返す必要があります。
+
+Drupalのコアでは、このインターフェースを実装した以下のクラスが定義されています。
+
+- [AccessResultAllowed](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Access%21AccessResultAllowed.php/class/AccessResultAllowed)
+- [AccessResultNeutral](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Access%21AccessResultNeutral.php/class/AccessResultNeutral)
+- [AccessResultForbidden](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Access%21AccessResultForbidden.php/class/AccessResultForbidden)
+
+※このインターフェースを実装した独自のクラスのを定義し、そのインスタンスを返しても構わないのですが、その必要性があるケースは少ないと思います。
+
+---
+
+`AccessResult::allowed()` は `AccessResultAllowed` のインスタンスを生成するstaticメソッドです。つまり、`return AccessResult::allowed()` は `return new AccessResultAllowed()` と等価になります。
+
+同様に、`AccessResultNeutral`、 `AccessResultForbidden` のインスタンスを返すメソッドとして、 `AccessResult::neutral`、`AccessResult::forbidden`  が用意されています。
+
+コールバック関数がアクセスコントロールに関して判断すべきではない(他のモジュールに判断を委ねたい)場合は、 `AccessResultNeutral` を返してください。
+
+---
+
+また、権限のチェックは非常によく扱うユースケースですので、専用のAPIが用意されています。先ほどのコードは次のように実装することもできます。
+
+```php
+  /**
+   * Access check for helloWorld().
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   Access result. @see \Drupal\Core\Access\AccessResultInterface
+   */
+  public function helloWorldAccess(AccountInterface $account) {
+    return AccessResult::allowedIfHasPermission($account, 'show hello message');
+  }
+```
+
+---
+
+こちらの実装の方が見通しがいいですね。
+
+AccessResultクラスには、他にも便利なヘルパーメソッドが多数用意されています。詳細は [AccessResult](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Access%21AccessResult.php/class/AccessResult/) を参照してください。
+
+---
 
 ## まとめ
 
-TBD
+このセクションでは、権限の定義とアクセスコントロールの基本について解説しました。
+
+実際のビジネスロジックでは、単にユーザーの権限やロールだけではなく、システム上に存在するデータの状態に応じてアクセス可否が動的に変わるケースもよくあります。
+
+このようなもう少し複雑なケースでも実装すべきインターフェースは同じなので、このセクションの内容をしっかりと把握しておきましょう。
 
 ---
 
 ## ストレッチゴール
 
-TBD
+1. `hello.hello` にアクセスした時に、`show hello message` か `use advanced search` のどちらかの権限を持っていればアクセスを許可するように修正してください。
+ 
+2. `hello.say_something` の `_role` で設定したロールのチェックを `_custom_access` で実装し直してください。
+
+3. `hello.say_something` にアクセスした時に、 `{message}` に `a` が含まれている場合はアクセスを拒否するように修正してください。
