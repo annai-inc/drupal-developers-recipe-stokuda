@@ -19,7 +19,7 @@ _class: invert
 
 Drupalがリクエストを受けてからレスポンスを返すまでの流れは次の図のようになっています。
 
-![width:800px height:350px](../assets/02_module_basics/routing_and_controllre_overview.png)
+![width:800px height:350px](../assets/02_module_basics/05_routing_and_controller/routing_and_controller_overview.png)
 https://www.drupal.org/docs/8/api/routing-system/routing-system-overview
 
 ---
@@ -97,7 +97,7 @@ class HelloWorldController extends ControllerBase {
 
 以下のように「Hello World!」が表示されれば成功です！
 
-![Hello World](../assets/02_module_basics/routing_and_controllre_hello_world.png)
+![Hello World](../assets/02_module_basics/05_routing_and_controller/routing_and_controller_hello_world.png)
 
 ---
 
@@ -248,7 +248,7 @@ hello_world.say_something:
 
 `/say_something/hahaha!` にアクセスして以下のように表示されれば成功です。hahaha!の部分を他の文字列に変更し、表示内容が変わることも確認してください。
 
-![say something](../assets/02_module_basics/routing_and_controllre_say_something.png)
+![say something](../assets/02_module_basics/05_routing_and_controller/routing_and_controller_say_something.png)
 
 ---
 
@@ -333,7 +333,7 @@ use Drupal\Core\Session\AccountInterface;
 
 それでは、 `/inspect_user/1` にアクセスしてみましょう。以下のようにアカウント情報が表示されれば成功です。
 
-![inspect admin user](../assets/02_module_basics/routing_and_controllre_inspect_user_1.png)
+![inspect admin user](../assets/02_module_basics/05_routing_and_controller/routing_and_controller_inspect_user_1.png)
 
 ---
 
@@ -343,7 +343,7 @@ use Drupal\Core\Session\AccountInterface;
 
 ---
 
-![inspect user 1](../assets/02_module_basics/routing_and_controllre_inspect_user_2.png)
+![inspect user 1](../assets/02_module_basics/05_routing_and_controller/routing_and_controller_inspect_user_2.png)
 
 ---
 

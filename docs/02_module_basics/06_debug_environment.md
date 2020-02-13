@@ -123,7 +123,7 @@ develには以下のような機能が含まれています。
 
 それでは、さっそくdevelモジュールを有効にしてみましょう。`/admin/modules` の `DEVELOPMENT` パッケージにある4つのモジュール全てにチェックを付けて有効化してください。
 
-![devel module](../assets/02_module_basics/devel_submodules.png)
+![devel module](../assets/02_module_basics/06_debug_environmentdevel_submodules.png)
 
 ---
 
@@ -137,7 +137,7 @@ develには以下のような機能が含まれています。
 
 ---
 
-![50%](../assets/02_module_basics/devel_generate_contents.png)
+![50%](../assets/02_module_basics/06_debug_environment/devel_generate_contents.png)
 
 ---
 
@@ -153,7 +153,7 @@ develには以下のような機能が含まれています。
 
 モジュールを有効にすると、サイトの下部に様々な情報がタブでグループ化して表示されます。
 
-![web profiler](../assets/02_module_basics/devel_web_profiler.png)
+![web profiler](../assets/02_module_basics/06_debug_environment/devel_web_profiler.png)
 
 それぞれのタブで表示される情報を左から順に簡単に紹介します。
 
@@ -163,7 +163,7 @@ develには以下のような機能が含まれています。
 
 一番左のDrupalアイコンのタブでは、Drupalのバージョンやインストールプロファイル、drupal.orgのドキュメントへのリンクなどが表示されます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_drupal.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_drupal.png)
 
 ---
 
@@ -171,7 +171,7 @@ develには以下のような機能が含まれています。
 
 次のタブでは、キャッシュのクリア、ルート、エンティティ、フィールド、セッション、サービスコンテナの一覧、phpinfo()などを標示することができます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_tools.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_tools.png)
 
 ---
 
@@ -179,7 +179,7 @@ develには以下のような機能が含まれています。
 
 次のタブでは、PHPに関する情報が表示されます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_php.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_php.png)
 
 ---
 
@@ -187,7 +187,7 @@ develには以下のような機能が含まれています。
 
 次のタブでは、PHPの処理時間やメモリ使用量が表示されます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_time_memory.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_time_memory.png)
 
 ---
 
@@ -195,7 +195,7 @@ develには以下のような機能が含まれています。
 
 次のタブでは、TTFBなどネットワークに関する情報が表示されます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_network.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_network.png)
 
 ---
 
@@ -205,7 +205,7 @@ develには以下のような機能が含まれています。
 
 タブをクリックして詳細レポートを見ると、クエリの詳細内容やクエリの発行元などの詳細を確認することができます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_database.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_database.png)
 
 ---
 
@@ -213,7 +213,7 @@ develには以下のような機能が含まれています。
 
 次のタブでは、現在ログインしているカレントユーザーの情報が表示されます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_current_user.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_current_user.png)
 
 ---
 
@@ -223,7 +223,7 @@ develには以下のような機能が含まれています。
 
 タブをクリックして詳細レポートを見ると、利用されているviewsのidや処理時間などの詳細を確認することができます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_views.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_views.png)
 
 ---
 
@@ -233,7 +233,7 @@ develには以下のような機能が含まれています。
 
 タブをクリックして詳細レポートを見ると、利用されているブロックのidや配置先のリージョンなどの詳細を確認することができます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_blocks.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_blocks.png)
 
 ---
 
@@ -245,7 +245,7 @@ develには以下のような機能が含まれています。
 
 タブをクリックして詳細レポートを見ると、利用されているフォームのidや生成元のメソッドなどの詳細を確認することができます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_blocks.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_blocks.png)
 
 ---
 
@@ -255,7 +255,7 @@ develには以下のような機能が含まれています。
 
 `/admin/modules` や `/admin/appearance` と違い、タブをクリックして詳細レポートを見ると、モジュールやテーマの `.info.yml` のパスを確認することができます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_modules.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_modules.png)
 
 ---
 
@@ -265,7 +265,7 @@ develには以下のような機能が含まれています。
 
 タブをクリックして詳細レポートを見ると、キャシュのIDやヒット数などの詳細を確認することができます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_cache.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_cache.png)
 
 ---
 
@@ -273,7 +273,7 @@ develには以下のような機能が含まれています。
 
 次のタブでは、アセット(js,css)の情報が表示されます。
 
-![web profiler drupal](../assets/02_module_basics/devel_web_profiler_asset.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_asset.png)
 
 ---
 
@@ -310,7 +310,7 @@ Develモジュールには、デバッグ支援のためのヘルパー関数が
 
 `/inspect_user/1` にアクセスると、`$user` オブジェクトの詳細がダンプされます。
 
-![dpm](../assets/02_module_basics/devel_dpm.png)
+![dpm](../assets/02_module_basics/06_debug_environment/devel_dpm.png)
 
 ---
 

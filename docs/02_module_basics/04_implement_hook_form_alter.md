@@ -36,7 +36,7 @@ Drupalは主にCMSとして利用されているフレームワークです。
 まずは、ユーザー登録フォームの標準の動きを確認してみましょう。
 `/admin/people/create` にアクセスしてユーザー登録フォームを表示してください。
 
-![user register form 1](../assets/02_module_basics/user_register_form_1.png)
+![user register form 1](../assets/02_module_basics/04_implement_hook_form_alter/user_register_form_1.png)
 
 ---
 
@@ -53,7 +53,7 @@ Drupalは主にCMSとして利用されているフレームワークです。
 
 登録に成功すると以下のようなメッセージが表示されます。
 
-![user register form 2](../assets/02_module_basics/user_register_form_2.png)
+![user register form 2](../assets/02_module_basics/04_implement_hook_form_alter/user_register_form_2.png)
 
 ---
 
@@ -193,7 +193,7 @@ hook_form_alter には以下の引数が渡されます。
 
 ---
 
-![user register form 3](../assets/02_module_basics/user_register_form_3.png)
+![user register form 3](../assets/02_module_basics/04_implement_hook_form_alter/user_register_form_3.png)
 
 ---
 
@@ -288,7 +288,7 @@ Form APIの仕様がわからないとこのコードの妥当性は判断でき
 
 以下のようにエラーメッセージが表示されれば成功です。
 
-![user register form 4](../assets/02_module_basics/user_register_form_4.png)
+![user register form 4](../assets/02_module_basics/04_implement_hook_form_alter/user_register_form_4.png)
 
 ---
 

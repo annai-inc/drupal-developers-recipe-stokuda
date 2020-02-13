@@ -195,13 +195,13 @@ $ vendor/bin/drush cr
 
 それでは、上部のメニューから「Manage」→「Help」に進んで `/admin/help` にアクセスしてください。正しくフックが実装されていれば、以下のように「Hello World」のリンクが表示されています。
 
-![list of hook_help](../assets/02_module_basics/hook_help_1.png)
+![list of hook_help](../assets/02_module_basics/03_implement_hooks/hook_help_1.png)
 
 ---
 
 「Hello World」のリンクをクリックすると、 `hello_world_help` でreturnしている `$output` 変数の内容が表示されていることが分かります。
 
-![content of hook_help](../assets/02_module_basics/hook_help_2.png)
+![content of hook_help](../assets/02_module_basics/03_implement_hooks/hook_help_2.png)
 
 ---
 

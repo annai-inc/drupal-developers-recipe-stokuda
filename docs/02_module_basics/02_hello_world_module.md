@@ -129,7 +129,7 @@ core: 8.x
 
 上部メニューの `Extend` をクリックして `/admin/modules` にアクセスしてください。以下のように表示されれば成功です。
 
-![Hello World module](../assets/02_module_basics/hello_world_module.png)
+![Hello World module](../assets/02_module_basics/02_hello_world_module/hello_world_module.png)
 
 ---
 
@@ -161,7 +161,7 @@ description: Hello World module
 
 ブラウザをリロードして、以下の様に説明が表示されることを確認してください。
 
-![description of Hello World module](../assets/02_module_basics/hello_world_module_add_description.png)
+![description of Hello World module](../assets/02_module_basics/02_hello_world_module/hello_world_module_add_description.png)
 
 ---
 
@@ -175,7 +175,7 @@ description: Hello World module
 
 管理画面のHello Worldモジュールの説明欄をクリックしてみてください。以下のようにモジュールのメタデータが展開して表示されます。
 
-![machine name of Hello World module](../assets/02_module_basics/hello_world_module_machine_name.png)
+![machine name of Hello World module](../assets/02_module_basics/02_hello_world_module/hello_world_module_machine_name.png)
 
 ---
 
@@ -201,7 +201,7 @@ $ vendor/bin/drush en hello_world
 
 `/admin/modules` にアクセスしてください。以下のようにチェックボックスがチェックされていればモジュールが有効になっています。
 
-![install Hello World module](../assets/02_module_basics/hello_world_module_installed.png)
+![install Hello World module](../assets/02_module_basics/02_hello_world_module/hello_world_module_installed.png)
 
 まだ何の機能も実装していないため、今のところhello_worldモジュールの存在が確認できるのは、このモジュール一覧が表示されるパスだけです。
 
