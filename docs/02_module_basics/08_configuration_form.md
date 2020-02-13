@@ -294,6 +294,10 @@ select * from config where name = 'hello_world.settings';
 
 ---
 
+このセクションで解説したの内容のドキュメントは [ConfigFormBase with Simple Configuration API](https://www.drupal.org/docs/8/api/form-api/configformbase-with-simple-configuration-api) にありますので合わせて参照してください。
+
+---
+
 ## ストレッチゴール
 
 1. `administer hello world` 権限を定義し、`hello_world.setting_form` にアクセスする際にチェックするように変更してください。
