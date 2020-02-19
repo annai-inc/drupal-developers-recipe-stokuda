@@ -5,7 +5,7 @@ _class: invert
 ---
 
 <!-- _class: lead -->
-# 2.10 サービスの実装
+# 2.10 サービスの実装とDependecy Injection
 
 ---
 
@@ -13,14 +13,22 @@ _class: invert
 
 ある程度経験がある開発者の方であればお気づきだったかもしれませんが、このセクションの解説を行うために、敢えてこれらの機能を使わずに実装を行ってきました。
 
-このセクションで変更する全てはリファクタリングであり、モジュールの振る舞いには何の変化もありません。しかし、セクションの最後にはコードの見通しが良くなり、メンテナンスや拡張性が格段に向上しているはずです。
+このセクションで変更する全ての内容はリファクタリングであり、モジュールの振る舞いには何の変化もありません。しかし、セクションの最後にはコードの見通しが良くなり、メンテナンスや拡張性が格段に向上しているはずです。
 
-それでは、早速リファクタリングしていきましょう。
+---
+
+このセクションでは、
+
+1. コントローラーが持っているロジックを別クラスに切り出す
+2. 切り出したクラスをサービス化してstaticに利用する
+3. Dependecy Injectionを利用する
+
+という3段階のリファクタリングを行っていきます。
 
 ---
 
 <!-- _class: lead -->
-## サービス
+## サービスを使う2つの方法
 
 ---
 
@@ -46,7 +54,7 @@ Drupalのコアだけでも非常に多数のサービスが実装されてい�
 
 もう一つの方法は、外部からサービスへの依存を注入する方法、いわゆるDIを使う方法です。
 
-基本的に `.module` 以外でサービスを利用する場合はこちらの方法を利用してください。
+基本的に `.module`  (もしくは「サービスコンテナが初期化される前」にコードが実行される稀なケース)以外でサービスを利用する場合はこちらの方法を利用してください。
 
 この手法ではコードの実装量は多少増えますが、それに見合った見返りが確実にあります。
 
@@ -54,42 +62,14 @@ Drupalのコアだけでも非常に多数のサービスが実装されてい�
 
 ---
 
-このセクションでは、まずはstaticにサービスを利用する実装を行い、その後DIをつかう実装にリファクタリングしていきます。
-
----
-
 <!-- _class: lead -->
-## hello_world.messenger サービスの実装
+## Step 1. コントローラーが持っているロジックを別クラスに切り出す
 
 ---
 
-それでは、早速サービスを実装していきましょう。
+それでは、早速実装していきましょう。最初にコントローラーが持っているロジックを別クラスに切り出します。
 
-まずは、`hello_world.messenger` という名前でサービスを作成し、`HelloWorldController:hello` と `HelloWorldController:saySomething` のロジックをサービスに切り出します。
-
----
-
-サービスの定義は `{module_name}.services.yml` というファイルで行います。`hello_world.services.yml` を以下の様に作成してください。
-
-```yml
-services:
-  hello_world.messenger:
-    class: '\Drupal\hello_world\Service\HelloWorldMessenger'
-```
-
----
-
-ルートレベルの要素は `services` にする必要があります。
-
-その子要素はサービス名です。ここでは `hello_world.messenger` としています。サービス名にモジュールの名称を必ずしも含める必要はありませんが、サービス名はシステム前提でユニークにする必要があります。
-
-`class` にサービスの実装クラスを指定します。先のコードでは名前空間を `Service` で区切っていますが、サービスの名前空間に制約は特にありません。
-
-Drupalの場合、「このクラスはサービスである」という宣言をするためのPHPのインターフェースは存在しないため、`Service` で名前空間を区切る実装例もあります。
-
----
-
-次に、このサービスのクラスのインターフェースを宣言しましょう。
+まずは、ロジックが持つ機能のインターフェースを宣言しましょう。
 
 `web/modules/custom/hello_world/EchoMessageServiceInterface.php` を以下のように実装してください。
 
@@ -99,6 +79,9 @@ Drupalの場合、「このクラスはサービスである」という宣言�
 <?php
 
 namespace Drupal\hello_world;
+
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * A service interface the echo messages.
@@ -121,13 +104,30 @@ interface EchoMessageServiceInterface {
    */
   public function saySomething(string $message);
 
+  /**
+   * Inspect user information.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   An object that, when cast to a string, returns the translated string.
+   */
+  public function inspectUser(AccountInterface $user);
+
+  /**
+   * Inspect node information.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   An object that, when cast to a string, returns the translated string.
+   */
+  public function inspectNode(NodeInterface $node);
+
 }
 
 ```
 
 ---
 
-ここでは、`helloWorld` と `saySomething` というstringを返す2つのメソッドをインターフェースとしました。
+ここでは、4つのメソッドをインターフェースとしました。
+(`inspectNode` については 2.5章のストレッチゴールを参照)。
 
 次にサービスの実装クラスである `HelloWorldMessenger.php` を追加します。
 
@@ -138,12 +138,17 @@ interface EchoMessageServiceInterface {
 
 namespace Drupal\hello_world\Service;
 
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\hello_world\EchoMessageServiceInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * A service that echo messages.
  */
 class HelloWorldMessenger implements EchoMessageServiceInterface {
+
+  use StringTranslationTrait;
 
   /**
    * Just say configured hello message.
@@ -163,20 +168,172 @@ class HelloWorldMessenger implements EchoMessageServiceInterface {
     return $message;
   }
 
+  // (次のページへ続く)
+```
+
+---
+
+```php
+  // (前のページからの続き)
+
+  /**
+   * Inspect user information.
+   *
+   * @inheritDoc
+   */
+  public function inspectUser(AccountInterface $user) {
+    if (\Drupal::moduleHandler()->moduleExists("devel")) {
+      dpm($user);
+    }
+
+    return $this->t(
+      "User id: %user_id, username: %user_name",
+      ["%user_id" => $user->id(), '%user_name' => $user->getAccountName()]
+    );
+  }
+
+  /**
+   * Inspect node information.
+   *
+   * @inheritDoc
+   */
+  public function inspectNode(NodeInterface $node) {
+    return $this->t(
+      "Node id: %node_id, title: %title",
+      ["%node_id" => $node->id(), '%title' => $node->getTitle()]
+    );
+  }
+
 }
 
 ```
 
 ---
 
-コントローラーの同名のメソッドとの違いは、文字列をarrayでラップして返すかどうかだけです。
+この時点ではこのクラスはサービスではありませんが、最終的にサービスにするためnamespaceやコメントに `Service` を含めています。
+
+コントローラーの同名メソッドとの実装の違いは、文字列をarrayでラップして返すかどうかだけです。
 
 最後に、`HelloWorldController` がこのサービスを使うように変更しましょう。
 
 ---
 
 ```php
-// ...
+<?php
+
+namespace Drupal\hello_world\Controller;
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\hello_world\Service\HelloWorldMessenger;
+use Drupal\node\NodeInterface;
+use Symfony\Component\Routing\Route;
+
+/**
+ * A example of custom controller.
+ */
+class HelloWorldController extends ControllerBase {
+
+  /**
+   * Just say a configured hello message.
+   */
+  public function helloWorld() {
+    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
+    $service = new HelloWorldMessenger();
+
+    return [
+      "#markup" => $service->helloWorld(),
+    ];
+  }
+
+  /**
+   * Just say something by use param.
+   */
+  public function saySomething(string $message) {
+    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
+    $service = new HelloWorldMessenger();
+
+    return [
+      "#markup" => $service->saySomething($message),
+    ];
+  }
+```
+
+---
+
+
+```php
+  /**
+   * Inspect user information.
+   */
+  public function inspectUser(AccountInterface $user = NULL) {
+    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
+    $service = new HelloWorldMessenger();
+
+    return [
+      "#markup" => $service->inspectUser($user),
+    ];
+  }
+
+  /**
+   * Inspect node information.
+   */
+  public function inspectNode(NodeInterface $node) {
+    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
+    $service = new HelloWorldMessenger();
+
+    return [
+      "#markup" => $service->inspectNode($node),
+    ];
+  }
+```
+
+---
+
+それでは、キャッシュをクリアして `/hello`, `say_something/{message}`, `/inspect_user/{user}`, `/inspect_node/{node}` にアクセスしてください。
+
+今までと同じ振る舞いが維持されていればリファクタリングは成功です。
+
+---
+
+<!-- _class: lead -->
+## Step 2. 切り出したクラスをサービス化してstaticに利用する
+
+---
+
+先ほどのコードは `HelloWorldMessenger` という具象クラスに依存しており、 `EchoMessageServiceInterface` を実装した他のクラスを使うように変更するには、コードを書き換える必要があります。
+
+この問題を解決するために `hello_world.messenger` という名前で `HelloWorldMessenger` をサービスとして登録し、利用できるようにしていきます。
+
+---
+
+サービスの定義は `{module_name}.services.yml` というファイルで行います。`hello_world.services.yml` を以下の様に作成してください。
+
+```yml
+services:
+  hello_world.messenger:
+    class: '\Drupal\hello_world\Service\HelloWorldMessenger'
+```
+
+---
+
+ルートレベルの要素は必ず `services` にする必要があります。
+
+その子要素はサービス名です。ここでは `hello_world.messenger` としています。サービス名にモジュールの名称を必ずしも含める必要はありませんが、サービス名はシステム前提でユニークにする必要があります。
+
+`class` にサービスの実装クラスを指定します。先のコードでは名前空間を `Service` で区切っていますが、サービスの名前空間に制約は特にありません。
+
+Drupalの場合、「このクラスはサービスである」という宣言をするためのPHPのインターフェースは存在しないため、`Service` で名前空間を区切る実装例もあります。
+
+---
+
+最後に、`HelloWorldController` がこのサービスを使うように変更しましょう。
+
+---
+
+```php
   /**
    * Just say a configured hello message.
    */
@@ -200,33 +357,63 @@ class HelloWorldMessenger implements EchoMessageServiceInterface {
     ];
   }
 
-  // ...
 ```
 
 ---
 
-この時点ではサービスをstaticに呼び出していますが、これは後ほどDIの解説と一緒に値ファクタリングします。
+```php
+  /**
+   * Inspect user information.
+   */
+  public function inspectUser(AccountInterface $user = NULL) {
+    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
+    $service = \Drupal::service('hello_world.messenger');
 
-それでは、キャッシュをクリアして `/hello` と `say_something/{message}` にアクセスしてください。今までと同じ振る舞いが維持されていれば成功です。
+    return [
+      "#markup" => $service->inspectUser($user),
+    ];
+  }
+
+  /**
+   * Inspect node information.
+   */
+  public function inspectNode(NodeInterface $node) {
+    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
+    $service = \Drupal::service('hello_world.messenger');
+
+    return [
+      "#markup" => $service->inspectNode($node),
+    ];
+  }
+
+```
+
+---
+
+`$services` 変数の代入の実装が変わっただけですね。
+
+それでは、再度キャッシュをクリアして `/hello`, `say_something/{message}`, `/inspect_user/{user}`, `/inspect_node/{node}` にアクセスしてください。今までと同じ振る舞いが維持されていれば成功です。
 
 最低限のサービスの実装はこれだけになります。意外と簡単でしたね。
 
 ---
 
 <!-- _class: lead -->
-## サービスの確認方法
+## Step 3. サービスの確認方法
 
 ---
 
 実際に開発をしていると、実装のミスでサービスが認識されなかったり、コアやモジュールでどんなサービスが提供されているか知りたい場合があります。
 
-このような場合は、以降に紹介するいくつかの方法でどのようなサービスが動いているか確認することができます。
+このような場合は、以降に紹介するいくつかの方法で、どのようなサービスが動いているか確認することができます。
 
 ---
 
 ### {module_name.services.yml} のコードを読む
 
-サービスは `{module_name.services.yml}` で定義されているので、このコードを読むことでどんなサービスがあるか確認することができます。また、先に解説したとおり `\Drupal` クラスには頻繁に利用するサービスを取得するためのstaticメソッドがあるので、このクラスのAPIを見てみることも有益です。
+サービスは `{module_name.services.yml}` で定義されているので、このコードを読むことでどんなサービスがあるか確認することができます。
+
+また、先に解説したとおり `\Drupal` クラスには頻繁に利用するサービスを取得するためのヘルパーメソッドがあるので、このクラスのAPIを見てみることも有益です。
 
 ---
 

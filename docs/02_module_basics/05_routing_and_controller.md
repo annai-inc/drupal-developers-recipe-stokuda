@@ -374,4 +374,4 @@ Drupalでルートのパラメータを変換する処理は、[ParamConverterIn
 
 ## ストレッチゴール
 
-1. `/inspect_node/{node}` にアクセスした時に、ノードのIDとタイトルを表示するルーティングとコントローラーを実装してください。`{node}` をupcastする際のコンバーターの識別子は `entity:node` で、コールバックメソッドに渡されるオブジェクトのインターフェースは  `NodeInterface` です。
+1. `/inspect_node/{node}` にアクセスした時に、ノードのIDとタイトルを表示するルーティングとメソッドを実装してください。`{node}` をupcastする際のコンバーターの識別子は `entity:node` で、コールバックメソッドに渡されるオブジェクトのインターフェースは  `NodeInterface` です。メソッド名は `inspectNode` としてください。
