@@ -329,7 +329,7 @@ Drupalの場合、「このクラスはサービスである」という宣言�
 
 ---
 
-最後に、`HelloWorldController` がこのサービスを使うように変更しましょう。
+それでは、`HelloWorldController` がこのサービスを使うように変更しましょう。
 
 ---
 
@@ -340,6 +340,7 @@ Drupalの場合、「このクラスはサービスである」という宣言�
   public function helloWorld() {
     /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
     $service = \Drupal::service('hello_world.messenger');
+
     return [
       "#markup" => $service->helloWorld(),
     ];
@@ -399,7 +400,7 @@ Drupalの場合、「このクラスはサービスである」という宣言�
 ---
 
 <!-- _class: lead -->
-## Step 3. サービスの確認方法
+## Tips. サービスの確認方法
 
 ---
 
@@ -468,9 +469,155 @@ $ vendor/bin/drupal debug:container
 ---
 
 <!-- _class: lead -->
-## Dependency Injection
+## Step 3. Dependency Injectionによるサービスの注入
 
 ---
+
+それでは、最後にDependency Injectionによるサービスの注入を行います。
+
+`HelloWorldController` のコードを以下の様に変更しましょう。
+
+---
+
+```php
+<?php
+
+namespace Drupal\hello_world\Controller;
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\hello_world\EchoMessageServiceInterface;
+use Drupal\node\NodeInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Route;
+
+// ...
+```
+
+---
+
+```php
+/**
+ * A example of custom controller.
+ */
+class HelloWorldController extends ControllerBase {
+
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\hello_world\EchoMessageServiceInterface
+   */
+  protected $messenger;
+
+  /**
+   * A construtor of HelloWorldController.
+   *
+   * @param \Drupal\hello_world\EchoMessageServiceInterface $messenger
+   *   The messenger service.
+   */
+  public function __construct(EchoMessageServiceInterface $messenger) {
+    $this->messenger = $messenger;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('hello_world.messenger')
+    );
+  }
+
+  // ...
+```
+
+---
+
+```php
+  /**
+   * Just say a configured hello message.
+   */
+  public function helloWorld() {
+    return [
+      "#markup" => $this->messenger->helloWorld(),
+    ];
+  }
+
+  /**
+   * Just say something by use param.
+   */
+  public function saySomething(string $message) {
+    return [
+      "#markup" => $this->messenger->saySomething($message),
+    ];
+  }
+
+  /**
+   * Inspect user information.
+   */
+  public function inspectUser(AccountInterface $user = NULL) {
+    return [
+      "#markup" => $this->messenger->inspectUser($user),
+    ];
+  }
+
+  /**
+   * Inspect node information.
+   */
+  public function inspectNode(NodeInterface $node) {
+    return [
+      "#markup" => $this->messenger->inspectNode($node),
+    ];
+  }
+
+  // ...
+```
+
+---
+
+変更点は以下の通りです。
+- 1. `$messenger` をクラスのプロパティとして追加されている
+- 2. コンストラクタを追加し `$messenger` を初期化している
+- 3. `create` というstaticメソッドが追加されている
+
+1.と2.は一般的なOOPプログラミングの実装なので特に不明点はありませんね。
+
+では、3.はどうでしょうか？この意味を知るためには、新たにインポートされた `ContainerInterface` を見る必要がありそうです。namespaceを見るとDrupalに特有のものではなく、Symfonyのコンポーネントであることが分かります。コードを見てみましょう。
+
+---
+
+```php
+<?php
+
+namespace Drupal\Core\DependencyInjection;
+
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * Defines a common interface for dependency container injection.
+ *
+ * This interface gives classes who need services a factory method for
+ * instantiation rather than defining a new service.
+ */
+interface ContainerInjectionInterface {
+
+  /**
+   * Instantiates a new instance of this class.
+   *
+   * This is a factory method that returns a new instance of this class. The
+   * factory should pass any needed dependencies into the constructor of this
+   * class, but not the container itself. Every call to this method must return
+   * a new instance of this class; that is, it may not implement a singleton.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The service container this instance should use.
+   */
+  public static function create(ContainerInterface $container);
+
+}
+```
 
 ## まとめ
 
