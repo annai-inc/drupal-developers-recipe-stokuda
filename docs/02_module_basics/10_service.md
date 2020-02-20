@@ -584,7 +584,54 @@ class HelloWorldController extends ControllerBase {
 
 1.と2.は一般的なOOPプログラミングの実装なので特に不明点はありませんね。
 
-では、3.はどうでしょうか？この意味を知るためには、新たにインポートされた `ContainerInterface` を見る必要がありそうです。namespaceを見るとDrupalに特有のものではなく、Symfonyのコンポーネントであることが分かります。コードを見てみましょう。
+では、3.はどうでしょうか？この意味を知るためには、新たにインポートされた `ContainerInterface` クラスと `create` メソッドを見る必要がありそうです。
+
+---
+
+まずは `ContainerInterface` クラスから見てきましょう。
+
+namespaceを見るとDrupalに特有のものではなく、Symfonyのコンポーネントであることが分かります。コードをざっと見てみましょう。
+
+クラスのコメントから `ContainerInterface`  がサービスコンテナを実装するためのインターフェースであること、`get` メソッドのコメントから引数 `id` を持つサービスを取得できることが分かります。
+
+---
+
+```php
+/**
+ * ContainerInterface is the interface implemented by service container classes.
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
+interface ContainerInterface extends PsrContainerInterface
+{
+    // ...
+
+    /**
+     * Gets a service.
+     *
+     * @param string $id              The service identifier
+     * @param int    $invalidBehavior The behavior when the service does not exist
+     *
+     * @return object|null The associated service
+     *
+     * @throws ServiceCircularReferenceException When a circular reference is detected
+     * @throws ServiceNotFoundException          When the service is not defined
+     *
+     * @see Reference
+     */
+    public function get($id, $invalidBehavior = self::EXCEPTION_ON_INVALID_REFERENCE);
+
+    // ...
+```
+
+---
+
+次に `create` メソッドを見てみましょう。
+
+少しコードを追っていくと、このメソッドは`\Drupal\Core\DependencyInjection\ContainerInjectionInterface` で定義されていることが分かります。
+
+こちらはnamespaceを見てわかるとおり、Drupal特有の実装ですね。コメントを見てみましょう。
 
 ---
 
@@ -617,14 +664,60 @@ interface ContainerInjectionInterface {
   public static function create(ContainerInterface $container);
 
 }
+
 ```
+
+---
+
+コメントから、このメソッドが依存関係を元にクラスの新しいインスタンスを生成するファクトリーメソッドであることが分かります。
+
+「ファクトリーメソッドって何だっけ？」という方は 
+[Factory method pattern](https://en.wikipedia.org/wiki/Factory_method_pattern) を参照してください。
+
+(Drupal以外のメタな知識はとても重要ですよ！)
+
+---
+
+もし、ここまでの調査に時間がかかったようであれば、ここで一旦進むのを止め、利用しているIDE・エディタ環境を見直してください。
+
+具体的には、クラス名やインターフェース名などを選択して、コードの`Impelementation`, `Type Definition`, `Declaration` などにジャンプできる環境を、構築にコストをかけてでも今すぐ用意してください。
+
+この環境があるだけで、このレベルの調査であればほんの数分で終わるはずです。
+
+本コンテンツのトレーニングをする期間だけ考えても、かけたコストに関する見返りは十分にあります。トレーニング終了後にプロダクトの開発を行う期間を含めて考えると、これほど効果のある投資はありません。
+
+---
+
+では、ここまで調査したことを踏まえ、`HelloWorldController::create` の実装を見ていきましょう。
+
+このメソッドは、`new static` の戻り値を返しています。これは、PHP 5.3から追加された [オブジェクトを作成するためのシンタックス](https://www.php.net/manual/en/language.oop5.basic.php) です。
+
+`new static` の引数には、 `ContainerInterface::get` した値を設定しています。つまり、サービスですね。
+
+`new static` はオブジェクトを生成するため、内部でコンストラクタを呼び出します。つまり、最終的には、`HelloWorldController::__construct` が呼ばれる事になります。
+
+---
+
+このように Drupalでは `ContainerInjectionInterface` を使って依存するサービスを注入します。
+
+解説が長くなりましたが、再度キャッシュをクリアして `/hello`, `say_something/{message}`, `/inspect_user/{user}`, `/inspect_node/{node}` にアクセスしてください。今までと同じ振る舞いが維持されていれば成功です。
+
+---
 
 ## まとめ
 
-TBD
+このセクションでは、コントローラーが抱えていたロジックをサービスに切り出し、Dependecy Injectionの機能を使ってコントローラーがサービスを利用するように変更しました。
+
+これにより、コントローラーの実装がシンプルになり、サービスの実装に対する依存が少なくなりました。
+
+セクションの前後でコードを見比べてみると、非常に見通しが良くなったことわかると思います。
 
 ---
 
 ## ストレッチゴール
 
-TBD
+1. 2.5章で設定したphpcsで `HelloWorldController` のコードをチェックしてください。 `\Drupal calls should be avoided in classes, use dependency injection instead`  という警告がいくつか出ると思います。この警告を解消するために、staticにサービスを参照しているコードをDependecy Injectionを使う実装に修正してください。
+
+---
+
+2. `NullMessenger` というクラスを新たに実装して、`HelloWorldController` がこのサービスを利用するに変更してください。各メソッドの実装では何もせずに例外を返してください。ただし、hello_worldモジュールがデフォルトで利用するサービスは `HelloWorldMessenger` のまま維持し、`settings.php` 経由で変更するようにしてください (2.6章にヒントがあります)。
