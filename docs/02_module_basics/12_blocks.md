@@ -20,7 +20,7 @@ _class: invert
 ---
 
 <!-- _class: lead -->
-## HelloWorldBlock の実装
+## ブロック の実装
 
 ---
 
@@ -152,6 +152,12 @@ class HelloWorldBlock extends BlockBase implements ContainerFactoryPluginInterfa
 
 ---
 
+ブロックレイアウトの設定画面も見てみましょう。GUIからブロックを作成したときと同様に色々な設定ができる事が分かります。
+
+![](../assets/02_module_basics/12_blocks/block_layout_4.png)
+
+---
+
 ブロックの設定が完了したらトップページにアクセスしましょう。
 次のようにブロックが表示されれば成功です。
 
@@ -159,6 +165,7 @@ class HelloWorldBlock extends BlockBase implements ContainerFactoryPluginInterfa
 ![width:1100px](../assets/02_module_basics/12_blocks/block_layout_3.png)
 
 ---
+
 
 それでは、コードを解説していきます。
 
@@ -233,18 +240,227 @@ interface ContainerFactoryPluginInterface {
 
 ---
 
-TBD.
+2.8章で解説したように、Drupalでは `ConfigFormBase` を継承して設定用の管理UIを作成することができます。
+
+ブロックの設定をこの方法で管理することもできますが、 `BlockPluginInterface` を実装したほうがより効率的にブロックの設定を管理できます。
+
+いくつかのメソッドを実装してHello World Blockに設定を追加してみましょう。
 
 ---
 
-ブロックレイアウトの設定画面を見てみましょう。管理UIからブロックコンテンツを作成したときと同様の設定ができることが分かります。
+ブロックに設定を追加するには `BlockPluginInterface` で定義されている以下の3つのメソッドを実装する必要があります。
 
-![](../assets/02_module_basics/11_blocks/block_layout_4.png)
+- defaultConfiguration
+- blockForm
+- blockSubmit
+
+それでは「ブロックのメッセージを強調表示する」という振る舞いを設定で変更できるようにしてみましょう。
 
 ---
 
+それでは、 `defaultConfiguration` から実装していきます。
+まずは `BlockPluginInterface::defaultConfiguration` の定義から見てみましょう。
 
-次にカスタムブロックライブラリ(ブロックコンテンツの一覧)を見てみましょう。
+```php
+  /**
+   * Gets default configuration for this plugin.
+   *
+   * @return array
+   *   An associative array with the default configuration.
+   */
+  public function defaultConfiguration();
+```
+
+---
+
+設定のデフォルト値を配列で返せば良さそうですね。では、 `HelloWorldBlock::defaultConfiguration` を次のように実装しましょう。
+
+```php
+  /**
+   * {@inheritDoc}
+   */
+  public function defaultConfiguration() {
+    return [
+      'emphasize' => 0,
+    ];
+  }
+```
+
+ここでは `emphasize` というキーで設定を定義しました。
+
+---
+
+次に、 `blockForm` を実装します。
+
+こちらも `BlockPluginInterface::blockForm` の定義から見てみましょう。
+
+---
+
+```php
+  /**
+   * Returns the configuration form elements specific to this block plugin.
+   *
+   * Blocks that need to add form elements to the normal block configuration
+   * form should implement this method.
+   *
+   * @param array $form
+   *   The form definition array for the block configuration form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return array
+   *   The renderable form array representing the entire configuration form.
+   */
+  public function blockForm($form, FormStateInterface $form_state);
+```
+
+---
+
+設定フォーム用のフォームエレメントを返すインターフェースであることが分かります。
+
+※DrupalのフォームはForm APIという巨大な中間レイヤーの上で動いています。この解説だけで2章全てよりボリュームが大きくなるので、解説は最低限で済ませています。Form APIの詳細な解説は別途行います。
+
+それでは、`blockForm` を次の様に実装しましょう。
+
+---
+
+```php
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+...
+
+class HelloWorldBlock extends BlockBase implements ContainerFactoryPluginInterface {
+  use StringTranslationTrait;
+  ...
+
+  /**
+   * {@inheritDoc}
+   */
+  public function blockForm($form, FormStateInterface $form_state) {
+    /** @var array $config */
+    $config = $this->getConfiguration();
+
+    $form['emphasize'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Emphasize message'),
+      '#description' => $this->t('Check this box if you want to emphasize message'),
+      '#default_value' => $config['emphasize'],
+    ];
+
+    return $form;
+  }
+```
+
+---
+
+`emphasize` の設定をチェックボックス要素としてフォームを定義しました。
+
+フォームについては2.4章や2.8章で少し実装してきましたが、自信がない方は一度戻って見直しましょう。
+
+最後に `blockSubmit` を実装します。こちらも `BlockPluginInterface::blockSubmit` の定義から見てみましょう。
+
+---
+
+```php
+  /**
+   * Adds block type-specific submission handling for the block form.
+   *
+   * Note that this method takes the form structure and form state for the full
+   * block configuration form as arguments, not just the elements defined in
+   * BlockPluginInterface::blockForm().
+   *
+   * @param array $form
+   *   The form definition array for the full block configuration form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @see \Drupal\Core\Block\BlockPluginInterface::blockForm()
+   * @see \Drupal\Core\Block\BlockPluginInterface::blockValidate()
+   */
+  public function blockSubmit($form, FormStateInterface $form_state);
+```
+
+---
+
+submit時に呼ばれるハンドラーであることは分かりますが、具体的にどのようなコードを書けばいいのかちょっと読み取れないですね。
+
+このような場合は実際に動いているコードを見るのが近道です。具体的には、 `blockSubmit` を実装している別クラスのコードを見れば良さそうですね。
+
+2.10章の時点で、インターフェースの定義から実装クラスに簡単にジャンプできる仕組みは作ってありますね？もし、この準備ができていないなら2.10章の該当部分に戻って環境構築をしてください。
+
+それでは、例として `SystemMenuBlock::blockSubmit` のコードを見てみましょう。
+
+---
+
+```php
+  /**
+   * {@inheritdoc}
+   */
+  public function blockSubmit($form, FormStateInterface $form_state) {
+    $this->configuration['level'] = $form_state->getValue('level');
+    $this->configuration['depth'] = $form_state->getValue('depth');
+    $this->configuration['expand_all_items'] = $form_state->getValue('expand_all_items');
+  }
+```
+
+---
+
+`$form_state` から取得した入力値を `$this->configuration` に保存しているようです。
+
+それでは、 `blockSubmit` を実装しましょう。
+
+```php
+  /**
+   * {@inheritDoc}
+   */
+  public function blockSubmit($form, FormStateInterface $form_state) {
+    $this->configuration['emphasize'] = $form_state->getValue('emphasize');
+  }
+
+```
+
+---
+
+最後に、`emphasize` の設定値で出力するメッセージが変わるようにしましょう。`build` メソッドを以下のように変更してください。
+
+```php
+  /**
+   * {@inheritdoc}
+   */
+  public function build() {
+    $content = $this->messenger->helloWorld();
+    if ($this->configuration['emphasize']) {
+      $content = '<em>' . $content . '</em>';
+    }
+
+    return [
+      '#markup' => $content,
+    ];
+  }
+```
+
+---
+
+これで全ての実装は完了です。
+
+それでは、ブロックレイアウト設定画面を再度見てみましょう。`Emphasize message` という設定項目が追加されています。
+
+![](../assets/02_module_basics/12_blocks/block_layout_5.png)
+
+---
+
+それでは、`Emphasize message` を有効にして設定を保存し、トップページにアクセスしてください。ブロックのメッセージが `<em>` タグで囲われていれば成功です。
+
+![](../assets/02_module_basics/12_blocks/emphasized_message.png)
+
+---
+
+<!-- _class: lead -->
+## コードでブロックを定義するメリット
+
+---
+
+最後にカスタムブロックライブラリ(ブロックコンテンツの一覧)を見てみましょう。
 
 ![width:1100px](../assets/02_module_basics/12_blocks/custom_block_library.png)
 
@@ -254,7 +470,7 @@ TBD.
 
 これは、「たとえ管理者であってもそのブロックの内容を変更したり、削除したりすることができない」という事を意味します。
 
-別の言葉で言い換えると、「あるブロックコンテンツが固定のIDとコンテンツを常に持っていることが保証される」ということになります。
+別の言葉で言い換えると、「ブロックコンテンツが固定のIDを持ち常に存在することが保証される」ということになります。
 
 ---
 
@@ -274,11 +490,14 @@ TBD.
 
 ---
 
-実際のプロダクト開発と比べると簡単な例ではありますが、このセクションのストレッチゴールで「ブロックをコードで書くとどんなメリットがあるか」を理解するようにしましょう。
+実際のプロダクト開発・運用と比べるととても簡単な例ではありますが、このセクションのストレッチゴールで「ブロックをコードで書くとどんなメリットがあるか」を理解するようにしましょう。
 
 ---
 
 ## ストレッチゴール
 
 1. 管理UIから「Hello!」を表示するブロックコンテツを定義して「second sidebar」リージョンに配置してください(結果として、second sidebar」リージョンには2つのブロックが表示されている状態になります)。
+
+---
+
 2. 1.を実施後にサイト全体のコンフィグをエクスポートしてください。同じソースコードで別のDrupalサイトを起動し、エクスポートしたコンフィグをインポートしてください。この結果、どのようなエラーが発生するか、なぜそのエラーが発生するかを調査してください。
