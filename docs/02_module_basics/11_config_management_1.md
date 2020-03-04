@@ -20,7 +20,7 @@ Config Managementの本質は「設定のコード化」です。
 ---
 
 <!-- _class: lead -->
-## Config Managemantの概要
+## 2.11.1 Config Managemantの概要
 
 ---
 
@@ -28,12 +28,12 @@ Drupalのコンフィグは、パフォーマンス的な理由からデフォ�
 
 しかし、全てのコンフィグはymlファイルとしてエクスポート・インポートする事ができます。
 
-Drupalでは、コンフィグのエクスポート・インポートを次に紹介する2つの方法で行うことができます。
+Drupalでは、コンフィグのエクスポート・インポートを管理UI・CLIの2つの方法で行うことができます。
 
 ---
 
 <!-- _class: lead -->
-## 管理UIからコンフィグをエクスポートする
+## 2.11.2 管理UIからコンフィグをエクスポートする
 
 ---
 
@@ -163,7 +163,7 @@ _core:
 ---
 
 <!-- _class: lead -->
-## 管理UIからコンフィグをインポートする
+## 2.11.3 管理UIからコンフィグをインポートする
 
 ---
 
@@ -226,7 +226,7 @@ _core:
 ---
 
 <!-- _class: lead -->
-## コンフィグの保存先
+## 2.11.4 コンフィグの保存先
 
 ---
 
@@ -251,7 +251,7 @@ Drupalが `.htaccess` を自動生成するためWebサーバーにApacheを利�
 ---
 
 <!-- _class: lead -->
-## CLIからコンフィグをエクスポートする
+## 2.11.5 CLIからコンフィグをエクスポートする
 
 ---
 
@@ -270,7 +270,7 @@ total 0
 コンフィグのエクスポートには `drush` の `config:export (cex)` サブコマンドを利用します。ターミナルから以下のようにコマンドを実行してください。
 
 ```txt
-$ vendor/bin/drush config:export
+$ vendor/bin/drush cex
 [success] Configuration successfully exported to ../config/sync.
 ../config/sync
 ```
@@ -298,7 +298,7 @@ drwxrwxr-x 4 aoyama aoyama  4096 Mar  3 13:34 language
 ---
 
 <!-- _class: lead -->
-## CLIからコンフィグをインポートする
+## 2.11.6 CLIからコンフィグをインポートする
 
 ---
 
@@ -306,17 +306,16 @@ drwxrwxr-x 4 aoyama aoyama  4096 Mar  3 13:34 language
 
 動作確認のために、再度「サイト名」を `Drupal 8!` に変更して保存してください。
 
-これで、「cofig/sync以下のコンフィグファイル」と「現在の設定」が乖離している状態となります。
+これで、「config/sync以下のコンフィグファイル」と「現在の設定」が乖離している状態となります。
 
-インポートを行う前に `/admin/config/development/configuration` にアクセスして、「管理UIからコンフィグをインポートする」で確認したときと同様に
-コンフィグに差分があることを確認してください。
+インポートを行う前に `/admin/config/development/configuration` にアクセスして、2.11.3 で確認したときと同様にコンフィグに差分があることを確認してください。
 
 ---
 
 コンフィグのインポートには `drush` の `config:import (cim)` サブコマンドを利用します。ターミナルから以下のようにコマンドを実行してください。
 
 ```txt
-$ vendor/bin/drush config:import
+$ vendor/bin/drush cim
 +------------+-------------+-----------+
 | Collection | Config      | Operation |
 +------------+-------------+-----------+
@@ -330,7 +329,7 @@ $ vendor/bin/drush config:import
 差分があるコンフィグの名称と確認ダイアログが表示されます。
 
 ---
-
+export
 `yes` と入力してインポートを確定させてください。
 
 ```txt
@@ -343,15 +342,19 @@ $ vendor/bin/drush config:import
 
 ---
 
-`/admin/config/development/configuration` にアクセスして差分がないことと、サイト名が「Drupal 8」に戻っていることを確認してください。
+`/admin/config/development/configuration` にアクセスして差分がないことと、およびサイト名が「Drupal 8」に戻っていることを確認してください。
 
 ---
 
 <!-- _class: lead -->
-## Configを元に別の環境を新規に立ち上げる
+## 2.11.7 Configを元に別の環境を新規に立ち上げる
+
+最後に、既存のコンフィグを元に新規にサイトに立ち上げてみましょう。
 
 ---
 
-TBD.
+## まとめ
 
----
+このセクションではコンフィグマネジメントの基本的な機能を解説しました。
+
+コンフィグをコードで管理することにより、「設定の変更」もCI/CDに組み込んで自動化することが出来るようになります。
