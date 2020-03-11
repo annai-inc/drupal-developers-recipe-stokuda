@@ -34,7 +34,7 @@ _class: invert
 ---
 
 <!-- _class: lead -->
-## Content Entity と Config Entity
+## 2.13.1 Content Entity と Config Entity
 
 ---
 
@@ -99,7 +99,7 @@ Drupalでは、一般ユーザーの「コンテンツ編集」と管理者ユ�
 ---
 
 <!-- _class: lead -->
-## DB内でコンフィグがどのように管理されているか
+## 2.13.2 DB内でコンフィグがどのように管理されているか
 
 ---
 
@@ -125,13 +125,21 @@ data BLOB NULL DEFAULT NULL,
 );
 
 sqlite> select * from config where name = 'system.site';
-|system.site|a:10:{s:4:"uuid";s:36:"14814b92-3cc4-41c7-820d-27c54cb203b5";s:4:"name";s:9:"Drupal 8!";s:4:"mail";s:17:"admin@example.org";s:6:"slogan"; (...)}
+collection  name         data 
+----------  -----------  --------
+            system.site  a:10:{s:4:"uuid";s:36:"14814b92-3cc4-41c7-820d-27c54cb203b5";s:4:"name";s:9:"Drupal 8!";s:4:"mail";s:17:"admin@example.org";...
 ```
 
 ---
 
+Drupalがコンフィグをファイルとしてエクスポートする時は単にDBに保存されているPHPのオブジェクトをデシリアライズして、ymlに変換しているだけです。シンプルですね。
+
+Drupal 7では [Features](https://www.drupal.org/project/features) というモジュールでコンフィグをphpのコードとして生成する方法が多く採用されていましたが、Drupal 8ではymlとして出力されるため可読性が大きく向上し、内部のデータ構造も非常にシンプルに設計し直されています。
+
+---
+
 <!-- _class: lead -->
-## Configの衝突や不整合について
+## 2.13.3 Configの衝突や不整合について
 
 ---
 
@@ -241,7 +249,7 @@ index 0a6c4d9..95ca0b6 100644
 
 ---
 
-簡単に同じコンフィグを複数の人が変更する例を出しましたが、「新しくノードにフィールドを追加し、それをViewsにも出力したい」のような場合でも同様です。
+簡単な例として同じコンフィグを複数の人が変更するパターンで説明しましたが、「新しくノードにフィールドを追加し、それをViewsにも出力したい」のような場合でも同様です。
 
 このケースでは、「Viewsでフィールドを出力する」ためには、手前のタスクとして「ノードにフィールドを追加する」事が必要になります。
 
