@@ -16,13 +16,13 @@ _class: invert
 ---
 
 <!-- _class: lead -->
-## コーディングスタンダード
+## 2.6.1 コーディングスタンダード
 
 ---
 
-### editorconfig
+### 2.6.1.1 editorconfig
 
-2.1章で説明したとおり、Drupalのコードには `.editorconfig` が含まれ ています (editorconfigって何だっけ？という方は2.1章を読み直しましょう)。
+2.1章で説明したとおり、Drupalのコードには `.editorconfig` が含まれています (editorconfigって何だっけ？という方は2.1章を読み直しましょう)。
 
 editorconfigでは、インデント幅や改行コードなどコードに関する基本的ないくつかのフォーマットを定義することができます。
 
@@ -30,15 +30,15 @@ Visual Studio CodeやVim、Emacsなどの主要なエディタや、PHPStormな�
 
 ---
 
-### phpcsによるコーディング規約のチェック
+### 2.6.1.2 phpcsによるコーディング規約のチェック
 
 Drupalのコーディングスタンダードのドキュメントは [Coding standards](https://www.drupal.org/docs/develop/standards) にあります。
 
-これに対応するPHPの代表的なlintツールである [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) のルールも [drupal/coder](https://packagist.org/packages/drupal/coder) というライブラリ名で packagist.orgに公開されています。これを使って自分の書いたコードがコーディングスタンダードに準拠しているか確認できるようにしましょう。
+これに対応するPHPの代表的なlintツールである [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) のルールも [drupal/coder](https://packagist.org/packages/drupal/coder) というライブラリ名でpackagist.orgに公開されています。これを使って自分の書いたコードがコーディングスタンダードに準拠しているか確認できるようにしましょう。
 
 ---
 
-```sh
+```txt
 # "drupal/coder" をglobalにインストール
 $ composer global requre drupal/coder
 
@@ -58,7 +58,7 @@ $ phpcs --config-set default_standard Drupal,DrupalPractice
 
 それでは、hello_worldモジュールのコードをチェックしてみましょう。
 
-```sh
+```txt
 $ phpcs web/modules/custom/hello_world -v
 Registering sniffs in the Drupal standard... 
 Registering sniffs in the DrupalPractice standard... 
@@ -73,7 +73,7 @@ Processing HelloWorldController.php [PHP => 306 tokens in 54 lines]... DONE in 2
 
 特に問題がなければ、`errors` と `warnings` が0件になります。もし、コーディングスタンダードに準拠していないコードが検出された場合は、先に進まずにここで直してしまいましょう。
 
-ただし、以降のセクションの解説の都合で、あえて設計的な警告が出るような差プルコードが一時的に含まれるケースもあります。
+ただし、以降のセクションの解説の都合で、あえて設計的な警告が出るようなサンプルコードが一時的に含まれるケースもあります。
 
 そのため、フォーマット以外に関する警告が出る場合は、それらは一旦は無視してください。
 
@@ -102,7 +102,7 @@ Drupalのコーディングスタンダードやdrupal/coderについて、も�
 ---
 
 <!-- _class: lead -->
-## xdebugによるリモートデバッグ
+## 2.6.2 xdebugによるリモートデバッグ
 
 ---
 
@@ -115,7 +115,7 @@ xdebugに関してDrupalに独自なものは全くありませんので解説�
 ---
 
 <!-- _class: lead -->
-## develモジュール
+## 2.6.3 develモジュール
 
 ---
 
@@ -130,11 +130,11 @@ develには以下のような機能が含まれています。
 
 それでは、さっそくdevelモジュールを有効にしてみましょう。`/admin/modules` の `DEVELOPMENT` パッケージにある4つのモジュール全てにチェックを付けて有効化してください。
 
-![devel module](../assets/02_module_basics/06_debug_environmentdevel_submodules.png)
+![devel module](../assets/02_module_basics/06_debug_environment_devel_submodules.png)
 
 ---
 
-### ダミーコンテンツの生成
+### 2.6.3.1 ダミーコンテンツの生成
 
 ダミーコンテンツの生成機能は、先ほど有効化したモジュールうちの一つ、`Devel Generate` モジュールで提供されています。
 
@@ -148,13 +148,13 @@ develには以下のような機能が含まれています。
 
 ---
 
-これらの機能は `DevelGenerateBase` というプラグインのベースクラスから派生しています。このクラスを継承することで独自のデータ生成処理を作ることも可能です。
-
 試しにいくつかのデータを生成してみてください。
+
+これらの機能は `DevelGenerateBase` というプラグインのベースクラスから派生しています。このクラスを継承することで独自のデータ生成処理を作ることも可能です。
 
 ---
 
-### パフォーマンス等を可視化するプロファイラー
+### 2.6.3.2 パフォーマンス等を可視化するプロファイラー
 
 プロファイラーに関する機能は `Web Profiler` モジュールで提供されています。
 
@@ -288,7 +288,7 @@ develには以下のような機能が含まれています。
 
 ---
 
-### デバッグ支援のためのヘルパー関数
+### 2.6.3.3 デバッグ支援のためのヘルパー関数
 
 Develモジュールには、デバッグ支援のためのヘルパー関数が多数用意されています。
 
@@ -329,7 +329,7 @@ Develモジュールには、デバッグ支援のためのヘルパー関数が
 
 ---
 
-### ローカル環境向けのデバッグ設定
+### 2.6.3.4 ローカル環境向けのデバッグ設定
 
 これまでは、フックやルートを追加する度に手動でキャッシュをクリアしてきました。この他にもjs/cssの追加など、ローカル環境での開発中にキャッシュクリアが必要となるシーンは頻繁にあります。
 
@@ -416,7 +416,7 @@ $ cp web/sites/example.settings.local.php web/sites/default/settings.local.php
 
 ## ストレッチゴール
 
-1. 利用しているエディタ・IDE環境で、ファイルを保存した時にphpcs(またはphpcbf)によるコードフォーマットのチェックを自動的に行えるようにし、どのように実現したか説明してください。
+1. 利用しているエディタ・IDE環境で、リアルタイムもしくはファイルを保存した時にphpcs(またはphpcbf)によるコードフォーマットのチェックを自動的に行えるようにし、どのように実現したか説明してください。
 
 2. 利用しているエディタ・IDE環境で、xdebugによるリモートデバッグが実行できるようにし、どのように実現したか説明してください。
 
