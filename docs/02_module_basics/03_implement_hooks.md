@@ -15,7 +15,7 @@ _class: invert
 
 ---
 
-## フックとは
+## 2.3.1 フックとは
 
 フックとは、「発生したあるイベントに連動して独自の処理を追加する」ための仕組みです。まず、**「フック(hook)という概念自体はDrupal独自のものではない」** ことを念頭に置いてください。
 
@@ -35,7 +35,7 @@ _class: invert
 
 ---
 
-## Drupalのフック
+## 2.3.2 Drupalのフック
 
 さて、フックの概念が理解できたところで「Drupalのフックとは？」を説明してきます。Drupalのフックは **「特定の命名規則で実装されたグローバル関数」** として実装します。
 
@@ -44,7 +44,7 @@ _class: invert
 
 ---
 
-## フックの命名規則
+## 2.3.3 フックの命名規則
 
 フックは `{module_name}_{hook_name}` という命名規則で実装します。また、ドキュメント上では `{module_name}` の部分は `hook` という名前になっている点に注意してください。
 
@@ -52,7 +52,7 @@ _class: invert
 
 ---
 
-## フックの探し方 (ソースコードから探す)
+## 2.3.4 フックの探し方 (ソースコードから探す)
 
 コアやモジュールが外部から拡張可能なフックを提供する場合、 `{module_name}.api.php` というファイルでドキュメントを書くことが推奨されています。
 
@@ -132,7 +132,7 @@ function hook_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_
 
 ---
 
-## フックの探し方 (Webサイトから探す)
+## 2.3.5 フックの探し方 (Webサイトから探す)
 
 https://api.drual.org からもフックを探すことができます。
 https://api.drupal.org/api/drupal/core%21core.api.php/group/hooks/8.8.x
@@ -143,7 +143,7 @@ https://api.drupal.org/api/drupal/core%21core.api.php/group/hooks/8.8.x
 
 ---
 
-## hello_word_helpの実装
+## 2.3.6 hello_word_helpの実装
 
 それでは、hello_worldモジュールに `hello_word_help` を実装していきましょう。
 先述したとおり、Drupalのフックはグローバル関数として実装する必要があります。
@@ -182,12 +182,11 @@ function hello_world_help($route_name, RouteMatchInterface $route_match) {
 
 ---
 
-
 Drupalはモジュールがどのようなフックを実装しているかを把握していますが、その情報はキャッシュされています(都度、ソースコードを解析してフックの実装の有無を確認していたら遅いですよね？)。
 
 先ほど実装した `hello_world_help` がDrupalに認識されるように、drushを使ってキャッシュをクリアしましょう。
 
-```sh
+```txt
 $ vendor/bin/drush cr
 ```
 
