@@ -9,18 +9,18 @@ _class: invert
 
 ---
 
-## はじめに
+## 2.2.1 はじめに
 
-Drupalのモジュールで実現できる機能は非常に多岐に渡ります。
+Drupalのモジュールで実現できる機能は非を微修正常に多岐に渡ります。
 また、Drupal 8以降は[Symfony](https://symfony.com/doc/4.4/configuration.html)やいくつかの[PSR](https://www.php-fig.org/psr/)の知識が必要となっており、Drupal自体の理解の前に覚えなくてはならない要素がたくさんあります。
 
-開発者向けのサンプルとして公開されている[Exampleモジュール](https://www.drupal.org/project/examples)や、DrupalConsoleでscaffolding(自動生成)されるコードは包括的でとても参考になりますが、未経験者への情報量としては多すぎます。
+開発者向けのサンプルとして公開されている[Exampleモジュール](https://www.drupal.org/project/examples)や、DrupalConsoleでscaffolding(自動生成)されるコードは包括的でとても参考になりますが、未経験者への情報量としては多すぎるのが難点です。
 
 そのため、まずは何の機能を持たないhello_worldモジュールを開発するところから始めましょう。
 
 ---
 
-## モジュールのソースコードの配置先
+## 2.2.2 モジュールのソースコードの配置先
 
 前のセクションで説明したとおり、contribute moduleやカスタムモジュールは `web/modules` ディレクトリに格納されます。
 
@@ -60,7 +60,7 @@ Drupalのモジュールで実現できる機能は非常に多岐に渡りま�
 「Drupalのルールはこれだ」と丸暗記や手順で覚えるのではなく、「drupalではcomposer.jsonのinstaller-pathsでライブラリのtype毎にファイルの配置先を振り分けている」というような考え方で理解するようにしてください。
 
 抽象化して理解する習慣をつけることで、composerで構成管理されているLaravelやSymfonyで書かれた他のコードを見る時にも、知識を応用することができようになります。
-(もちろん、これがgemやnpm等でも考え方は同じです)
+(もちろん、これがgemやnpm等、言語自体が変わっても考え方は同じです)
 
 ---
 
@@ -72,7 +72,7 @@ Drupalのモジュールで実現できる機能は非常に多岐に渡りま�
 
 ---
 
-## hello_worldモジュールの開発
+## 2.2.3 hello_worldモジュールの開発
 
 それでは、いよいよモジュールのコードを書いていきましょう。
 (ここまで長かったですね！)
@@ -140,11 +140,11 @@ $ git add web/modules/custom
 $ git commit -m "congratulations! This is my first module!"
 ```
 
-以降は明記しませんが、このようにgitでソースコードの変更を管理していってください。あとで見直したり、不具合が発生した場合の切り分けやロールバックなどを考えると、gitのコミットはなるべく細かい単位で行うことを推奨します。
+以降は明記しませんが、このように適宜gitでソースコードの変更を管理していってください。あとで見直したり、不具合が発生した場合の切り分けやロールバックなどを考えると、gitのコミットはなるべく細かい単位で行うことを推奨します。
 
 ---
 
-## モジュールに説明を追加する
+## 2.2.4 モジュールに説明を追加する
 
 さて、descriptionを省略したため管理UI上でモジュールの説明が表示されていません。
 
@@ -169,7 +169,7 @@ description: Hello World module
 
 ---
 
-## モジュールの識別子(Machine name)
+## 2.2.5 モジュールの識別子(Machine name)
 
 モジュールには `Machine name` と呼ばれるユニークなIDが付与されます。
 
@@ -188,12 +188,12 @@ description: Hello World module
 
 ---
 
-## hello_worldモジュールの有効化
+## 2.2.5 hello_worldモジュールの有効化
 
 それでは、モジュールを有効化してみましょう。
 モジュールの有効化は `drush` コマンドを使って以下のように実行します。
 
-```sh
+```txt
 $ vendor/bin/drush en hello_world
 ```
 
@@ -226,5 +226,5 @@ $ vendor/bin/drush pml |grep hello_world
 
 ## ストレッチゴール
 
-- `package` キーを追加して、モジュールが `Custom` パッケージに所属するように変更してください。
-- `version` キーを追加して、モジュールのバージョンを `8.x-1.0` に設定してください。
+1. `package` キーを追加して、モジュールが `Custom` パッケージに所属するように変更してください。
+2. `version` キーを追加して、モジュールのバージョンを `8.x-1.0` に設定してください。
