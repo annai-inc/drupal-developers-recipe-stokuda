@@ -24,7 +24,7 @@ https://www.drupal.org/docs/8/api/routing-system/routing-system-overview
 
 ---
 
-リクエストが来ると、ルーティングシステムがそのルート(パス)に対して処理を担当するコントローラーを判断し、コントローラーがレスポンスを生成して返します。これは、 1章の「リクエストからレスポンスまでの流れ」で説明したとおりです。
+リクエストが来ると、ルーティングシステムがそのルート(パス)に対して処理を担当するコントローラーを判断し、コントローラーがレスポンスを生成して返します。これは1章の「リクエストからレスポンスまでの流れ」で説明したとおりです。
 
 ご存知の通り、ルーティングやコントローラーといった考え方はDrupalやSymfony独自のものではなく、どのWebアプリケーションフレームワークでも持っている概念です。
 
@@ -32,14 +32,14 @@ https://www.drupal.org/docs/8/api/routing-system/routing-system-overview
 
 本セクションでは、Drupalに特有な要素にフォーカスして詳しく説明します。
 
-もし、これらの概念について理解が不足していると感じる場合は、抽象化して理解をするために、まずはDrupal以外のドキュメントを参照することを推奨します(Drupal以外に使ったことのあるフレームワークのドキュメントや入門書などでOKです)。
+もし、これらの概念について理解が不足していると感じる場合は、抽象化して理解.するために、まずはDrupal以外のドキュメントを参照することを推奨します(Drupal以外に使ったことのあるフレームワークのドキュメントや入門書などでOKです)。
 
 それでは、 `/hello` にアクセスすると `Hello World!` を表示する簡単な機能を開発してみましょう。
 
 ---
 
 <!-- _class: lead -->
-## 簡単なルーティングとコントローラーの実装
+## 2.5.1 簡単なルーティングとコントローラーの実装
 
 ---
 
@@ -47,7 +47,7 @@ Drupalでは、 `{module_name}.routing.yml` でルーティングの定義をす
 
 Drupal 7以前で開発した事がある方は `hook_menu()` でルーティングの定義をしたことがあるかもしれませんが、このフックはDrupal 8からは削除されています。
 
-Drupal 8からはルーティングに [Symofony Routingコンポーネント](https://symfony.com/doc/current/routing.html) が採用され、実装方法が大きく変更されています (逆にLaravelやSymofonyの開発者にとっては馴染みのある方法に近くなっています)。
+Drupal 8からはルーティングに [Symofony Routingコンポーネント](https://symfony.com/doc/current/routing.html) が採用され、実装方法が大きく変更されています (逆にLaravelやSymfonyの開発者にとっては馴染みのある方法に近くなっています)。
 
 ---
 
@@ -102,7 +102,7 @@ class HelloWorldController extends ControllerBase {
 ---
 
 <!-- _class: lead -->
-## ルーティングの定義
+## 2.5.2 ルーティングの定義
 
 ---
 
@@ -117,7 +117,7 @@ ymlのルート要素、つまり `hello_world.hello` は **ルート名** で�
 
 ### **path**
 
-その名の通り、ルートが反応するパスを定義します。今回は固定値としていますが、もちろん、 `/user/1`、 `/user/2` のようにidなどをパラメータに取るパスも定義可能です (後ほど解説します)。
+その名の通り、ルートが反応するパスを定義します。今回は固定値としていますが、もちろん `/user/1`、 `/user/2` のようにidなどをパラメータに取るパスも定義可能です (後ほど解説します)。
 
 ### **defaults**
 
@@ -130,6 +130,7 @@ ymlのルート要素、つまり `hello_world.hello` は **ルート名** で�
 このルートに対して処理を行うコントローラーのメソッド名です。 [namespace](https://www.php.net/manual/en/language.namespaces.rationale.php) は省略せずに記載する必要があります。
 
 Drupalの仕様として、Drupal自体のnamespaceは `\Drupal`、モジュールのnamespaceは `\Drupal\{module_name}` となります。
+
 それより下のnamespaceは[PSR-4](https://www.php-fig.org/psr/psr-4/) に従います。以下のコンテンツも合わせて参照してください。
 - [Namespaces](https://www.drupal.org/docs/develop/coding-standards/namespaces)
 - [PSR-4 namespaces and autoloading in Drupal 8](https://www.drupal.org/docs/develop/standards/psr-4-namespaces-and-autoloading-in-drupal-8)
@@ -153,7 +154,7 @@ Drupalの仕様として、Drupal自体のnamespaceは `\Drupal`、モジュー�
 ---
 
 <!-- _class: lead -->
-## コントローラーの実装
+## 2.5.3 コントローラーの実装
 
 ---
 
@@ -178,7 +179,7 @@ Render arraysについては本コンテンツで別途解説します。
 ---
 
 <!-- _class: lead -->
-## パラメータを受け取るルート
+## 2.5.4 パラメータを受け取るルート
 
 ---
 
@@ -253,19 +254,19 @@ hello_world.say_something:
 ---
 
 <!-- _class: lead -->
-## オブジェクトを受け取るルート
+## 2.5.4 オブジェクトを受け取るルート
 
 ---
 
 パスの文字列をコントローラーに渡す機能が作成できました。しかし、ほとんどのシステムでは `/some_model/{id}` のようなルートにアクセスがあった場合、実際に関心があるデータは文字列としてのidではなく、このidを持つ何らかのオブジェクト(モデル)であるケースの方が多いと思います。
 
-コントローラーのメソッド内で「idの文字列からデータベースを検索し目的のオブジェクトをロードする」コードを書くことはもちろん可能ですが、ルートが多くなると非常に冗長になります。
+コントローラーのメソッド内で「idの文字列からデータベースを検索し目的のオブジェクトをロードする」というコードを書くことはもちろん可能ですが、ルートが多くなると非常に冗長になります。
 
 ---
 
 他の多くのフレームワークがそうであるように、Drupalもパスのパラメータからオブジェクトを自動的にロードし、コントローラーのメソッドに渡すことができます。
 
-それは、もう少し実践的なサンプルとして `/inspect_user/{user}` にアクセスするとユーザーアカウントの情報を表示する機能を開発してみましょう。
+それでは、もう少し実践的なサンプルとして `/inspect_user/{user}` にアクセスするとユーザーアカウントの情報を表示する機能を開発してみましょう。
 
 ---
 
@@ -351,7 +352,7 @@ use Drupal\Core\Session\AccountInterface;
 
 Drupalでルートのパラメータを変換する処理は、[ParamConverterInterface](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21ParamConverter%21ParamConverterInterface.php/interface/ParamConverterInterface/) というインターフェースで実現されています。
 
-今回は `type` に `entity:user` を指定しましたが、これを `AccountInterface` のオブジェクトに変換 (upcast)する処理は [\Drupal\Core\ParamConverter\EntityConverter](https://github.com/drupal/drupal/blob/8.8.x/core/lib/Drupal/Core/ParamConverter/EntityConverter.php) で実装されています。
+今回は `type` に `entity:user` を指定しましたが、パスで文字列として指定されたidを `AccountInterface` のオブジェクトに変換 (upcast)する処理は [\Drupal\Core\ParamConverter\EntityConverter](https://github.com/drupal/drupal/blob/8.8.x/core/lib/Drupal/Core/ParamConverter/EntityConverter.php) で実装されています。
 
 ---
 
