@@ -22,7 +22,7 @@ Drupalでは、設定を参照・保存するAPIや、設定を管理するた�
 ---
 
 <!-- _class: lead -->
-## 管理画面のルーティング
+## 2.8.1 管理画面のルーティング
 
 ---
 
@@ -54,7 +54,7 @@ hello_world.setting_form:
 また、必須ではありませんが次のメリットがあるため、設定画面の `path` は `/admin/config/` 以下にすることを推奨します。
 
 - コアのツールバーモジュールが `/admin/config` へのリンクを提供している
-- `/admin/config` 以下は管理用テーマが適用されるため、テーマの機能による副作用が起こらない
+- `/admin/config` 以下は管理用テーマが適用されるため、テーマの機能による副作用が起こりにくい
 
 2点目はDrupalの開発経験が少ないとピンと来ないかもしれませんが、テーマがコアが提供するcss/jsやDOMを考慮せずに実装され、管理画面が正常に動かなかったりレイアウトが崩れるというのは、Drupalでは比較的よく発生する問題です。
 
@@ -81,7 +81,7 @@ _form: A class name implementing Drupal\Core\Form\FormInterface. See form API in
 ---
 
 <!-- _class: lead -->
-## 管理画面の実装
+## 2.8.2 管理画面の実装
 
 ---
 
@@ -156,7 +156,7 @@ class HelloWorldConfigurationForm extends ConfigFormBase {
 ---
 
 <!-- _class: lead -->
-## 保存した設定を参照する
+## 2.8.3 保存した設定を参照する
 
 ---
 
@@ -177,7 +177,7 @@ class HelloWorldConfigurationForm extends ConfigFormBase {
 ---
 
 <!-- _class: lead -->
-## 動作確認とコードの解説
+## 2.8.4 動作確認とコードの解説
 
 ---
 
@@ -215,7 +215,7 @@ Drupalで設定用のフォームを開発する場合は、`ConfigFormBase` を
 
 ---
 
-### getEditableConfigNames
+### 2.8.4.1 getEditableConfigNames
 
 `getEditableConfigNames` は、設定フォームが書き換え可能なコンフィグのキーの配列を返します。今回のサンプルでは `hello_world.settings` としました。
 
@@ -223,13 +223,13 @@ Drupalで設定用のフォームを開発する場合は、`ConfigFormBase` を
 
 ---
 
-### getFormId
+### 2.8.4.2 getFormId
 
 `getFormId` はフォームのIDを返します。決まったルールはありませんが、IDにモジュール名を含めるなどしてユニークになるように実装しましょう。
 
 ---
 
-### buildForm
+### 2.8.4.3 buildForm
 
 `buildForm` でフォームの構造を定義します。
 
@@ -243,27 +243,27 @@ Drupalで設定用のフォームを開発する場合は、`ConfigFormBase` を
 
 親クラスの `ConfigFormBase` (正確には `config.factory` サービス経由)でこのインターフェースのインスタンスが初期化されています。そのため、単に `$this->config` でコンフィグにアクセスすることができます。
 
-また、親クラスが `ConfigFormBase` の場合は保存(submit)ボタンは親クラスで定義されているので、最後に親クラスの同名のメソッドを実行しています。
+また、親クラスが `ConfigFormBase` の場合は保存(submit)ボタンのコールバックは親クラスで定義されているので、最後に親クラスの同名のメソッドを実行しています。
 
 ---
 
-### submitForm
+### 2.8.4.4 submitForm
 
 `submitForm` では、入力された値をコンフィグに保存しています。
 
-今回はテキストで入力してテキストで保存していますが、保存する際にフォーマットの変換等が必要な場合はこのメソッドに実装することになります。
+今回は入力されたテキストの値をそのまま保存していますが、保存する際にフォーマットの変換等が必要な場合はこのメソッドに実装することになります。
 
 Drupal 7では、 `system_settings_form` というAPIでフォームを作成した場合、変換等が不要な場合はsubmit関数の実装を省略できましたが、Drupal 8では必ず実装する必要があります。
 
 ---
 
-### validateForm
+### 2.8.4.5 validateForm
 
 今回は実装しませんでしたが、 [validateForm](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21FormInterface.php/function/FormInterface%3A%3AvalidateForm/) を実装すると、保存前にバリデーションを行うことができます。
 
 ---
 
-### コンフィグの保存先
+### 2.8.5 コンフィグの保存先
 
 保存されたコンフィグの実体はデータベースの `config` というテーブルに格納されます。
 
@@ -279,7 +279,7 @@ select * from config where name = 'hello_world.settings';
 
 もちろん、このセクションで開発したコンフィグもymlのエクスポート対象になります。
 
-継続的なデプロイを実現する非常な強力な機能なので、実際のプロダクトでは積極的に活用してください。
+継続的なデプロイを実現する非常な強力な機能なので、実際のプロダクトでは積極的に活用してください。Config Managementについては2.11〜2.13章で詳しく解説します。
 
 ---
 
