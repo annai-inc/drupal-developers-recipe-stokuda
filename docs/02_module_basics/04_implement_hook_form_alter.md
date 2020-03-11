@@ -15,7 +15,7 @@ _class: invert
 
 ---
 
-## 既存のフォームの振る舞いを変更するフック: hook_form_alter
+## 2.4.1 既存のフォームの振る舞いを変更するフック: hook_form_alter
 
 Drupalは主にCMSとして利用されているフレームワークです。
 そのため、コアや他のモジュールが生成したフォームに対して、振る舞いを変更するためのインターフェースがデフォルトで提供されています。
@@ -26,9 +26,8 @@ Drupalは主にCMSとして利用されているフレームワークです。
 
 ---
 
-## hook_form_alterの実装
-
 それでは、`hook_form_alter` の実装をしてみましょう。
+
 今回は例として、ユーザー登録フォームに **「入力されたパスワードが8文字以上かどうかをチェックし、8文字未満の場合はエラーメッセージを表示する」** 機能を追加します。
 
 ---
@@ -57,7 +56,7 @@ Drupalは主にCMSとして利用されているフレームワークです。
 
 ---
 
-「おや？」っと思われたかもしれませんが、実はDrupalのデフォルトではパスワードの文字数はチェックされません。[かなり昔から議論はされています](https://www.drupal.org/project/drupal/issues/1824800)が、なかなか標準の機能としては取り込まれていません。
+「おや？」っと思われたかもしれませんが、実はDrupalのデフォルトではパスワードの文字数はチェックされません。[かなり昔から議論はされていますが](https://www.drupal.org/project/drupal/issues/1824800)、なかなか標準の機能としては取り込まれていません。
 
 この振る舞いはセキュリティ的にはかなり弱いですよね。この問題を解決するために `hook_form_alter` を実装して文字数をチェックしましょう。
 
@@ -81,7 +80,7 @@ web/core/lib/Drupal/Core/Entity/entity.api.php
 
 `web/core/lib/Drupal/Core/Form/form.api.php` がそれらしいですね。
 
-ちなみに、「grepを使って検索したソースコードを参照する」という例で情報の探し方を示しましたが、ブラウザで [hook_form_alter](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21form.api.php/function/hook_form_alter/8.8.x) を見ても同じ情報にアクセスできます。
+ちなみに、「grepを使って検索したソースコードを参照する」という例で情報の探し方を示しましたが、ブラウザで [hook_form_alter](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21form.api.php/function/hook_form_alter/) を見ても同じ情報にアクセスできます。
 
 重要なのは **「情報を探すために必要な要素を理解すること」** であり、参照する媒体は何でも構いません。
 
@@ -100,9 +99,10 @@ web/core/lib/Drupal/Core/Entity/entity.api.php
  *
  ...
 ```
-このフックがフォームがレンダリングされる前に振る舞いを変更するためのものということが分かります。ノードの場合は、 `$form_state->getFormObject()->getEntity()` でノードのデータにアクセスできることが分かります。
 
 ---
+
+このフックがフォームがレンダリングされる前に振る舞いを変更するためのものということが分かります。また、ノードの場合は、 `$form_state->getFormObject()->getEntity()` でノードのデータにアクセスできるようです。
 
 ```plain
  *
@@ -185,7 +185,9 @@ hook_form_alter には以下の引数が渡されます。
 
 ---
 
-先ほど確認したドキュメントの通り、 `hook_form_alter` は全てのフォームの生成時に実行されます。そのため、特定のフォームだけで処理を実行するためには、まずは対象のフォームのIDを知る必要があります。フォームのIDはフォームを生成しているコードの [getFormId()](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21FormBuilder.php/function/FormBuilder%3A%3AgetFormId/8.8.x) メソッドから読み取ることもできますが、それよりもブラウザ上でDOMから確認したほうが簡単です。
+先ほど確認したドキュメントの通り、 `hook_form_alter` は全てのフォームの生成時に実行されます。そのため、特定のフォームだけで処理を実行するためには、まずは対象のフォームのIDを知る必要があります。
+
+フォームのIDはフォームを生成しているコードの [getFormId()](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21FormBuilder.php/function/FormBuilder%3A%3AgetFormId/8.8.x) メソッドから読み取ることもできますが、それよりもブラウザ上でDOMから確認したほうが簡単です。
 
 `/admin/people/create` にアクセスしてフォームの `id` 属性を確認すると、 `user-register-form` になっていることが分かります。この `id` 属性の `-` を `_` に置き換えたものがフォームのIDになります。
 
@@ -226,7 +228,7 @@ Drupalでフォームの入力値を検証するための伝統的な方法は�
 
 この辺りの仕様は、[Form API](https://www.drupal.org/docs/8/api/form-api) と呼ばれるものになっています。
 
-この仕様は非常にボリュームが大きく、基本的な部分の説明だけでも10セクションは超えてしまうので、現時点では詳細な理解は必要ありません。
+この仕様は非常にボリュームが大きく、基本的な部分の説明だけでも10セクションは超えてしまいます。本コンテンツの後半で後ほど解説しますので、現時点では詳細な理解は必要ありません。
 
 ---
 
@@ -264,12 +266,12 @@ function hello_world_validate_password_length(array &$form, FormStateInterface $
 
 ---
 
-Form APIの仕様がわからないとこのコードの妥当性は判断できないため、簡単に説明すると以下のようになります。
+Form APIの仕様がわからないとこのコードの妥当性は判断できないのですが、簡単に説明すると以下のようになります。
 
 - `$form` 変数の `#validate` キーに関数名(またはメソッド名)を指定すると、フォームをサブミットした際に実行される検証処理を登録できる
 - 登録する関数名に制約はないが、引数として `array &$form` と `FormStateInterface $form_state` を受け取る必要がある(引数の型や順序、個数が違う場合は実行されない)
 - `FormStateInterface::getValue()` でフォームの入力値を取得できる
-- `FormStateInterface::setErrorByName()` でエラーが発生した要素とエラメッセージを登録できる
+- `FormStateInterface::setErrorByName()` でエラーが発生した要素にエラーメッセージを登録できる
 
 ---
 
