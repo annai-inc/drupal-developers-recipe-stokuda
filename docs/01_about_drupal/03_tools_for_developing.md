@@ -5,7 +5,7 @@ _class: invert
 ---
 
 <!-- _class: lead -->
-# Drupalの開発ツール
+# 1.3 Drupalの開発ツール
 
 ---
 
@@ -13,17 +13,19 @@ _class: invert
 
 ---
 
-## Drupalの実行環境
+## 1.3.1 Drupalの実行環境
 
 次のセクションからは、実際にDrupalを動かしコードを書いていきます。そのため、今後はDrupalを稼働させるための環境や、IDE・エディタ等が必要になります。
 
-以降に、用途やケースごとにいくつか代表的なツールを紹介します。実際の導入する場合の詳細な情報は、リンク先を参照してください。
+以降に用途やケースごとにいくつか代表的なツールを紹介します。
 
 ---
 
 ### ACQUIA DEV DESKTOP
 
-もし、スキル的にローカル環境の構築が難しい場合は、[Acquia](http://acquia.com) が提供している[https://www.acquia.com/jp/drupal/acquia-dev-desktop](ACQUIA DEV DESKTOP) が利用できます。これは、Windows、Linux、またはMacOSでDrupalを動かすためのアプリケーションスタック全体を提供します。
+もし、スキル的にローカル環境の構築が難しい場合は、[Acquia](http://acquia.com) が提供している[https://www.acquia.com/jp/drupal/acquia-dev-desktop](ACQUIA DEV DESKTOP) が利用できます。
+
+これは、Windows、Linux、またはMacOSでDrupalを動かすためのアプリケーションスタック全体を提供します。
 
 ---
 
@@ -53,35 +55,35 @@ ACQUIA DEV DESKTOPは導入は簡単ですが、ホストOS上で直接アプリ
 
 ---
 
-## IDE、エディタ
+## 1.3.2 IDE、エディタ
 
 どんなツールでもDrupalの開発は可能ですが、 [PHPStorm](https://www.jetbrains.com/phpstorm/) が最も初期設定の手間がかかりません。
 
 Drupal向けのプラグインが提供されていたり、Docker環境との接続も標準でサポートされています。
 
-また、PHPデバッガーを実行する必要はありませんが、XdebugまたはZend Debuggerを実行できると便利です。
+また、必ずしもPHPデバッガーを実行する必要はありませんが、XdebugまたはZend Debuggerを実行できると便利です。
 
 デバッグだけでなくコードリーディングのためにも、PHPデバッガーの利用をお勧めします。
 
 ---
 
-## バージョン管理
+## 1.3.3 バージョン管理
 
-現代のソフトウェア開発はバージョン管理された環境で行う必要があり、Drupalではgitが採用されています。本コンテンツのサンプルコードを取得するためにも、ローカル環境にgitが必要になります。
+現代のソフトウェア開発はバージョン管理された環境で行う必要があり、Drupalではgitが採用されています。
 
 また、プロジェクトにより [github-flow](http://scottchacon.com/2011/08/31/github-flow.html) や [git-flow](https://danielkummer.github.io/git-flow-cheatsheet/index.html) を採用している場合は、これらのフローを支援するツールの使い方やフローの理解も必要になります。
 
 ---
 
-## Composer
+## 1.3.4 Composer
 
-以前のセクションで紹介したように、Drupal 8のインストールはComposerテンプレートを介して行うのが最適です。ですが、[Drupal.orgのgitリポジトリから直接インストールする](https://www.drupal.org/project/drupal/git-instructions)こともできます。
+Drupal 8のインストールはComposerテンプレートを介して行うのが最適です。ですが、[Drupal.orgのgitリポジトリから直接インストールする](https://www.drupal.org/project/drupal/git-instructions)こともできます。
 
 どちらの方法でインストールするにせよ、Composer使って依存するライブラリをインストールする必要があります。そのため、Composerの基本的な使用方法を理解しておきましょう。
 
 ---
 
-## APIドキュメントとコーディング標準
+## 1.3.5 APIドキュメントとコーディング標準
 
 どんな言語やフレームワークであれ、優れたコードを作成するには多くの背景知識が必要です(もちろん、本コンテンツ目的も可能な限り多くの背景知識を提供することです)。
 
@@ -89,7 +91,7 @@ Drupal向けのプラグインが提供されていたり、Docker環境との�
 
 ### APIドキュメント
 
-DrupalのAPIドキュメントは https://api.drupal.org/api/drupal に公開されています。これらのほぼ全ては、[Doxygen](http://www.doxygen.nl/) を利用して個度に埋め込まれたコメントから生成されています。
+DrupalのAPIドキュメントは https://api.drupal.org/api/drupal に公開されています。これらのほぼ全ては、[Doxygen](http://www.doxygen.nl/) を利用してコードに埋め込まれたコメントから生成されています。
 
 ---
 
@@ -109,6 +111,8 @@ Drupal関するコーディング標準は https://www.drupal.org/docs/develop/s
 
 エディタやIDEの機能を利用して、コードのフォーマットに関する問題を自動的に検出できるようにしておきましょう。
 
+コーディング標準については2.6章で詳しく解説します。
+
 ---
 
 ### Drupalのバージョン毎の変更点
@@ -119,7 +123,7 @@ Drupalのバージョン毎の変更点は https://www.drupal.org/list-changes/d
 
 ---
 
-## Develモジュール
+## 1.3.6 Develモジュール
 
 開発環境に [Devel](http://drupal.org/project/devel) モジュールを導入すると便利です。これには、開発者がDrupalコードを作成およびデバッグできるように設計されたいくつかのツールが含まれています。
 
@@ -131,11 +135,13 @@ Drupalのバージョン毎の変更点は https://www.drupal.org/list-changes/d
 
 残念な事に、この機能はコアには含まれていないため、composerで別途インストールする必要があります。
 
+Develモジュールについては2.6章で詳しく解説します。
+
 ---
 
-## Drush (the Drupal Shell)
+## 1.3.7 Drush (the Drupal Shell)
 
-場合によっては、コンソールで1つのコマンドでいくつかのタスクを実行する方がはるかに簡単です。
+場合によっては、GUIからの操作よりコンソールでいくつかのコマンドを実行する方がはるかに簡単です。
 
 [Drush](http://drupal.org/project/drush) はコマンドラインDrupalインターフェイスを提供し、コンソールで数回のキーストロークでタスクを実行するために使用できます。
 
@@ -149,10 +155,11 @@ Drupalのバージョン毎の変更点は https://www.drupal.org/list-changes/d
 
 ただし、[Composer template](https://github.com/drupal-composer/drupal-project) を使ってインストールした場合には最初から含まれています。
 
+drushの使い方については、以降のセクションで適宜解説します。
+
 ---
 
-
-## DrupalConsole
+## 1.3.8 DrupalConsole
 
 Drupal 8からはDrupalConsoleというCLIツールも開発されました。
 
@@ -168,10 +175,12 @@ DrupalConsoleの代表的な使い方については、本コンテンツで随�
 
 ---
 
-## 開発環境用の設定
+## 1.3.9 開発環境用の設定
 
 ローカル環境で開発を行うときは、デバッグ機能を有効にしたりキャッシュ機能を無効化すると効率的です。
 
 これらの設定のサンプルは、`sites/example.settings.local.php` にあります。
 
 キャッシュを常に無効にして開発することにより、キャッシュを有効にすると適切に機能しない特定の側面を見落とす危険性があることに注意してください。したがって、これらの設定のオン・オフは実施する開発やタスクの条件に応じて適切に変更すべきです。
+
+これについては2.6章で詳しく解説します。
