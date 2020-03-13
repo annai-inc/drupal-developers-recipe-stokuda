@@ -9,30 +9,17 @@ _class: invert
 
 ---
 
-このセクションでは、いよいよローカル環境上で実際にDrupalを動かしていきます。
-
----
-
 ## ソースコードのダウンロード
 
-ターミナルから以下のコマンドを実行し、Drupalに必要なソースコードをダウンロードします。
-
 ```
-$ composer create-project drupal-composer/drupal-project:8.x-dev --no-interaction drupal_developers_recipe
+$ composer create-project drupal-composer/drupal-project:8.x-dev --no-interaction drupal_training_book_code
 ```
 
----
-
-カレントディレクトリに `drupal_developers_recipe` というディレクトリが生成されます。
-ディレクトリの内容を確認してみましょう。正常に完了していれば以下のように出力されます。
-
 ```
-$ cd drupal_developers_recipe
+$ cd drupal_training_book_code
 $ ls
 config  drush  scripts  vendor  web  composer.json  composer.lock  LICENSE  load.environment.php  phpunit.xml.dist  README.md
 ```
-
----
 
 `composer create-project` で利用可能なその他のオプションは [composerのドキュメント](https://getcomposer.org/doc/03-cli.md#create-project) を参照してください。
 
@@ -41,7 +28,6 @@ config  drush  scripts  vendor  web  composer.json  composer.lock  LICENSE  load
 ## サイトの初期化
 
 それではサイトを初期化しましょう。シンプルな環境でも動作するように今回はデータベースとしてsqliteを利用します。
-
 ```
 $ vendor/bin/drupal site:install standard --db-type="sqlite" --no-interaction
 
