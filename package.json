@@ -1,7 +1,7 @@
 {
-  "name": "drupal_training_book",
-  "version": "1.0.0",
-  "description": "",
+  "name": "drupal_developers_recipe",
+  "version": "0.1.0",
+  "description": "A training book for Drupal developer, internal use only.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,8 +9,9 @@
   "engines": {
     "node": "12.x"
   },
-  "author": "",
-  "license": "ISC",
+  "private": true,
+  "author": "Yoshikazu Aoyama <y_aoyama@annai-labs.com>",
+  "license": "UNLICENSED",
   "dependencies": {
     "@marp-team/marp-cli": "^0.17.2"
   }
