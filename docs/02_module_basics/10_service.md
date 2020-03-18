@@ -321,11 +321,13 @@ services:
 
 ルートレベルの要素は必ず `services` にする必要があります。
 
-その子要素はサービス名です。ここでは `hello_world.messenger` としています。サービス名にモジュールの名称を必ずしも含める必要はありませんが、サービス名はシステム全体でユニークにする必要があります。
+その子要素はサービス名です。ここでは `hello_world.messenger` としています。
+
+サービス名にモジュールの名称を必ずしも含める必要はありませんが、サービス名はシステム全体でユニークにする必要があります。
 
 ---
 
-`class` にサービスの実装クラスを指定します。先のコードでは名前空間を `Service` で区切っていますが、サービスの名前空間に制約は特にありません。
+`class` にはサービスの実装クラスを指定します。先のコードでは名前空間を `Service` で区切っていますが、サービスの名前空間に制約は特にありません。
 
 Drupalの場合、「このクラスはサービスである」という宣言をするためのPHPのインターフェースは存在しないため、可読性のために `Service` で名前空間を区切っています。
 
@@ -428,7 +430,7 @@ develモジュールを有効にすると、管理UI (/devel/container/service) 
 
 ---
 
-先ほど実装した `hello_world.messenger` サービスが認識されているか確認してみましょう。web profilerを有効にして「コンテナ情報」(`/devel/container/service` へのリンク)をクリックしてください。
+先ほど実装した `hello_world.messenger` サービスが認識されているか確認してみましょう。web profilerモジュールを有効にして「コンテナ情報」(`/devel/container/service` へのリンク)をクリックしてください。
 
 ![service container menu](../assets/02_module_basics/10_service/service_container_list_menu.png)
 
@@ -442,7 +444,9 @@ develモジュールを有効にすると、管理UI (/devel/container/service) 
 
 ### 2.10.4.3 drush(CLI)で確認する
 
-drushの `devel:services` サブコマンドでサービスの一覧を取得できます。しかし、情報量が少ないため、CLIから情報を取得する場合は次に紹介するDrupalConsoleを使う方法を推奨します。
+drushの `devel:services` サブコマンドでサービスの一覧を取得できます。
+
+しかし、情報量が少ないため、CLIから情報を取得する場合は次に紹介するDrupalConsoleを使う方法を推奨します。
 
 ```txt
 $ vendor/bin/drush devel:services
@@ -680,13 +684,11 @@ interface ContainerInjectionInterface {
 
 ---
 
-もし、ここまでの調査に時間がかかったようであれば、ここで一旦進むのを止め、利用しているIDE・エディタ環境を見直してください。
+もし、ここまでの調査や操作に時間がかかったようであれば、ここで一旦進むのを止め、利用しているIDE・エディタ環境を見直してください。
 
 具体的には、クラス名やインターフェース名などを選択して、コードの`Impelementation`, `Type Definition`, `Declaration` などにジャンプできる環境を、構築にコストをかけてでも今すぐ用意しましょう。
 
-この環境があるだけで、このレベルの調査であればほんの数分で終わるはずです。
-
-本コンテンツのトレーニングをする期間だけ考えても、かけたコストに対するリターンは十分にあります。トレーニング終了後にプロダクトの開発を行う期間を含めて考えると、これほど効果の高い投資はありません。
+この環境があるだけで、このレベルの調査であればほんの数分で終えることができるようになります。
 
 ---
 
@@ -696,7 +698,11 @@ interface ContainerInjectionInterface {
 
 `new static` の引数には、 `ContainerInterface::get` した値を設定しています。つまり、サービスですね。
 
-`new static` はオブジェクトを生成するため、内部でコンストラクタを呼び出します。つまり、最終的には、`HelloWorldController::__construct` が呼ばれる事になります。
+---
+
+`new static` はオブジェクトを生成するため、内部でコンストラクタを呼び出します。
+
+つまり、最終的には、`HelloWorldController::__construct` が呼ばれる事になります。
 
 ---
 

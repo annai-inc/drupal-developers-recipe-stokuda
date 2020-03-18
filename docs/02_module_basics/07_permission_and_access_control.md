@@ -23,7 +23,7 @@ Drupalはコアの機能として [ロースベースのアクセス制御(RBAC)
 
 ---
 
-フレームワーク自体に機能がない場合、ビジネスやプロジェクトの都合に合わせて使うライブラリを選択できる柔軟性がある半面、以下のような問題もあります。
+フレームワーク自体に機能がない場合、ビジネスやプロジェクトの都合に合わせて使うライブラリを選択できる半面、以下のような問題もあります。
 
 - 採用したライブラリが活発にメンテナンスされなくなる、フレームワークのメジャーアップデートにすぐに(もしくは永久に)対応しない場合がある
 - マイナーなライブラリを選択すると技術情報が少ない
@@ -32,7 +32,7 @@ Drupalはコアの機能として [ロースベースのアクセス制御(RBAC)
 
 ---
 
-ちなみにRuby on Railsのユーザー、パーミッション、ロールは個別のライブラリに分割されているものが多く、1.x〜3.xくらいの世代ではライブラリ自体の隆盛も早かったため、Railsのメジャーアップデートの度に苦労した覚えがあります。
+ちなみにRuby on Railsのユーザー、パーミッション、ロールは個別のライブラリに分割されているものが多く、Rails 1.x〜3.xくらいの世代ではライブラリ自体の隆盛も大きかったため、Railsのメジャーアップデートの度に苦労した覚えがあります。
 
 フレームワーク自体でRBACの機能が提供されていると、このような（ビジネスとしてはあまり本質的ではない)問題が発生しないのは大きなメリットです。
 
@@ -156,7 +156,7 @@ hello_world.hello:
 
 なお、 `,` と `+` の前後にスペースを含めると権限の名称が正しく認識されないので注意が必要です。
 
-詳細は [Structure of routes](https://www.drupal.org/docs/8/api/routing-system/structure-of-routes) の `_permission` の部分を参照してください。
+詳細は [Structure of routes](https://www.drupal.org/docs/8/api/routing-system/structure-of-routes) の `_permission` のセクションを参照してください。
 
 ---
 
@@ -179,7 +179,9 @@ hello_world.hello:
 
 ---
 
-`hello_world.routing.yml` の `hello_world.say_something` ルートの定義を以下の様に変更してください。この変更により、 `/say_something/{message}` にアクセスするためには `administrator` ロールが必要になります。
+`hello_world.routing.yml` の `hello_world.say_something` ルートの定義を以下の様に変更してください。
+
+この変更により、 `/say_something/{message}` にアクセスするためには `administrator` ロールが必要になります。
 
 ```yml
 hello_world.say_something:
@@ -280,7 +282,7 @@ Drupalのコアでは、このインターフェースを実装した以下の�
 - [AccessResultNeutral](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Access%21AccessResultNeutral.php/class/AccessResultNeutral)
 - [AccessResultForbidden](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Access%21AccessResultForbidden.php/class/AccessResultForbidden)
 
-※このインターフェースを実装した独自のクラスのを定義し、そのインスタンスを返しても構わないのですが、その必要性があるケースは少ないと思います。
+このインターフェースを実装した独自のクラスのを定義し、そのインスタンスを返しても構わないのですが、その必要性があるケースは少ないと思います。
 
 ---
 

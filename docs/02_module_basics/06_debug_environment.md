@@ -34,7 +34,9 @@ Visual Studio CodeやVim、Emacsなどの主要なエディタや、PHPStormな�
 
 Drupalのコーディングスタンダードのドキュメントは [Coding standards](https://www.drupal.org/docs/develop/standards) にあります。
 
-これに対応するPHPの代表的なlintツールである [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) のルールも [drupal/coder](https://packagist.org/packages/drupal/coder) というライブラリ名でpackagist.orgに公開されています。これを使って自分の書いたコードがコーディングスタンダードに準拠しているか確認できるようにしましょう。
+これに対応するPHPの代表的なlintツールである [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) のルールも [drupal/coder](https://packagist.org/packages/drupal/coder) というライブラリ名でpackagist.orgに公開されています。
+
+これを使って自分の書いたコードがコーディングスタンダードに準拠しているか確認できるようにしましょう。
 
 ---
 
@@ -43,7 +45,7 @@ Drupalのコーディングスタンダードのドキュメントは [Coding st
 $ composer global requre drupal/coder
 
 # phpcsコマンドにパスを通す
-# "drupal/coder" がphpcsに依存しているため先のコマンドでインストールされます
+# "drupal/coder" がphpcsに依存しているため、phpcsは先のコマンドでインストールされます
 $ export PATH=$PATH:"$(composer -q global config data-dir)/$(composer -q global config bin-dir)"
 
 # "drupal/coder が定義しているコーディングスタンダードをphpcsのコンフィグに追加
@@ -130,7 +132,7 @@ develには以下のような機能が含まれています。
 
 それでは、さっそくdevelモジュールを有効にしてみましょう。`/admin/modules` の `DEVELOPMENT` パッケージにある4つのモジュール全てにチェックを付けて有効化してください。
 
-![devel module](../assets/02_module_basics/06_debug_environment_devel_submodules.png)
+![devel module](../assets/02_module_basics/06_debug_environment/devel_submodules.png)
 
 ---
 
@@ -144,7 +146,7 @@ develには以下のような機能が含まれています。
 
 ---
 
-![50%](../assets/02_module_basics/06_debug_environment/devel_generate_contents.png)
+![width:1100px](../assets/02_module_basics/06_debug_environment/devel_generate_contents.png)
 
 ---
 
@@ -168,7 +170,7 @@ develには以下のような機能が含まれています。
 
 #### Drupalに関する情報
 
-一番左のDrupalアイコンのタブでは、Drupalのバージョンやインストールプロファイル、drupal.orgのドキュメントへのリンクなどが表示されます。
+Drupalのバージョンやインストールプロファイル、drupal.orgのドキュメントへのリンクなどが表示されます。
 
 ![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_drupal.png)
 
@@ -176,7 +178,7 @@ develには以下のような機能が含まれています。
 
 #### 開発要ツールへのリンク集
 
-次のタブでは、キャッシュのクリア、ルート、エンティティ、フィールド、セッション、サービスコンテナの一覧、phpinfo()などを標示することができます。
+キャッシュのクリア、ルート、エンティティ、フィールド、セッション、サービスコンテナの一覧、phpinfo()などを表示することができます。
 
 ![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_tools.png)
 
@@ -184,7 +186,7 @@ develには以下のような機能が含まれています。
 
 #### PHPに関する情報
 
-次のタブでは、PHPに関する情報が表示されます。
+PHPに関する情報が表示されます。
 
 ![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_php.png)
 
@@ -192,7 +194,7 @@ develには以下のような機能が含まれています。
 
 #### 処理時間とメモリ使用量
 
-次のタブでは、PHPの処理時間やメモリ使用量が表示されます。
+PHPの処理時間やメモリ使用量が表示されます。
 
 ![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_time_memory.png)
 
@@ -200,7 +202,7 @@ develには以下のような機能が含まれています。
 
 #### ネットワーク情報
 
-次のタブでは、TTFBなどネットワークに関する情報が表示されます。
+TTFBなどネットワークに関する情報が表示されます。
 
 ![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_network.png)
 
@@ -208,7 +210,7 @@ develには以下のような機能が含まれています。
 
 #### データベースクエリの統計情報
 
-次のタブでは、発行されたDBのクエリの統計情報が表示されます。
+発行されたDBのクエリの統計情報が表示されます。
 
 タブをクリックして詳細レポートを見ると、クエリの詳細内容やクエリの発行元などの詳細を確認することができます。
 
@@ -218,7 +220,7 @@ develには以下のような機能が含まれています。
 
 #### カレントユーザーの情報
 
-次のタブでは、現在ログインしているカレントユーザーの情報が表示されます。
+現在ログインしているカレントユーザーの情報が表示されます。
 
 ![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_current_user.png)
 
@@ -226,7 +228,7 @@ develには以下のような機能が含まれています。
 
 #### Viewsの情報
 
-次のタブでは、現在アクセスしているURLで、どのようなViewsが使われているかの情報が表示されます。
+現在アクセスしているURLで、どのようなViewsが使われているかの情報が表示されます。
 
 タブをクリックして詳細レポートを見ると、利用されているviewsのidや処理時間などの詳細を確認することができます。
 
@@ -236,7 +238,7 @@ develには以下のような機能が含まれています。
 
 #### ブロックの情報
 
-次のタブでは、ブロック情報が表示されます。
+ブロック情報が表示されます。
 
 タブをクリックして詳細レポートを見ると、利用されているブロックのidや配置先のリージョンなどの詳細を確認することができます。
 
@@ -246,19 +248,19 @@ develには以下のような機能が含まれています。
 
 #### フォームの情報
 
-次のタブでは、現在アクセスしているURLで、どのようなフォームが使われているかの情報が表示されます。
+現在アクセスしているURLで、どのようなフォームが使われているかの情報が表示されます。
 
 `hook_form_alter` を実装する際にDOMからフォームのidを確認しましたが、こちらで確認した方がより簡単です。
 
 タブをクリックして詳細レポートを見ると、利用されているフォームのidや生成元のメソッドなどの詳細を確認することができます。
 
-![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_blocks.png)
+![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_form.png)
 
 ---
 
 #### モジュールの情報
 
-次のタブでは、現在有効になっているモジュールとテーマの情報が表示されます。
+現在有効になっているモジュールとテーマの情報が表示されます。
 
 `/admin/modules` や `/admin/appearance` と違い、タブをクリックして詳細レポートを見ると、モジュールやテーマの `.info.yml` のパスを確認することができます。
 
@@ -268,7 +270,7 @@ develには以下のような機能が含まれています。
 
 #### キャッシュの情報
 
-次のタブでは、Drupalの内部キャッシュ情報が表示されます。
+Drupalの内部キャッシュ情報が表示されます。
 
 タブをクリックして詳細レポートを見ると、キャシュのIDやヒット数などの詳細を確認することができます。
 
@@ -278,13 +280,15 @@ develには以下のような機能が含まれています。
 
 #### アセットの情報
 
-次のタブでは、アセット(js,css)の情報が表示されます。
+アセット(js,css)の情報が表示されます。
 
 ![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_asset.png)
 
 ---
 
-駆け足でWeb Profilerでどのような情報が確認できるかを紹介しました。全ての機能を利用する必要はありませんので、なんとなくどんな機能があるかを把握しておき、開発で必要になったら活用するようにしてください。
+駆け足でWeb Profilerでどのような情報が確認できるかを紹介しました。
+
+全ての機能を利用する必要はありませんので、なんとなくどんな機能があるかを把握しておき、開発で必要になったら活用するようにしてください。
 
 ---
 
@@ -337,7 +341,9 @@ Develモジュールには、デバッグ支援のためのヘルパー関数が
 
 ---
 
-`web/sites/default/settings.php` を開いて末尾を見てください。以下の様になっていると思います。
+`web/sites/default/settings.php` を開いて末尾を見てください。次のようになっていると思います。
+
+---
 
 ```php
 /**
@@ -377,7 +383,9 @@ Drupalで特定環境向けの設定を行う場合、以下の行をコメン�
 
 ---
 
-ちなみにコメントに書かれている通り、この3行は `settings.php` の末尾にあるのが望ましいのですが、Drupalがインストール時にsettings.phpの末尾にいくつかの設定を追記するため、インストール後は末尾ではなくなっています。
+ちなみにコメントに書かれている通り、この3行は `settings.php` の末尾にあるのが望ましい姿です。
+
+しかし、Drupalがインストール時にsettings.phpの末尾にいくつかの設定を追記するため、インストール後は末尾ではなくなっています。
 
 例えば、先のコードだと `settings.local.php` が先に読まれてからDB接続の設定がされているため、 `settings.local.php` でDB接続の設定を変更することができません。
 
@@ -385,9 +393,9 @@ Drupalで特定環境向けの設定を行う場合、以下の行をコメン�
 
 ---
 
-次に、 `web/sites/default/settings.local.php` を新規に作成しましょう。サンプル設定が `web/sites/example.settings.local.php` にあるので、これをそのままコピーして使います。
+次に、 `web/sites/default/settings.local.php` を新規に作成しましょう。コアで提供しているサンプルファイルが `web/sites/example.settings.local.php` にあるので、これをそのままコピーして使います。
 
-```sh
+```txt
 $ cp web/sites/example.settings.local.php web/sites/default/settings.local.php
 ```
 
@@ -410,6 +418,7 @@ $ cp web/sites/example.settings.local.php web/sites/default/settings.local.php
 ## まとめ
 
 このセクションでは、エディタ・デバッグ環境の整備に役立つ情報を紹介しました。
+
 「木こりのジレンマ」が有名な例ですが、良い仕事をするにはまず良い道具を整備する事が重要です。どんな道具を使っても構いませんが、効率の良い環境作りに継続的にコストをかけるようにしてください。
 
 ---
@@ -419,5 +428,7 @@ $ cp web/sites/example.settings.local.php web/sites/default/settings.local.php
 1. 利用しているエディタ・IDE環境で、リアルタイムもしくはファイルを保存した時にphpcs(またはphpcbf)によるコードフォーマットのチェックを自動的に行えるようにし、どのように実現したか説明してください。
 
 2. 利用しているエディタ・IDE環境で、xdebugによるリモートデバッグが実行できるようにし、どのように実現したか説明してください。
+
+---
 
 3. Develモジュールを無効にすると `dpm` 関数が利用できないため、 `/inspect_user/1` にアクセスすると例外が発生します。これを回避するために、Develモジュールが有効になっている場合のみ、`dpm` 関数を実行するように修正してください。

@@ -9,18 +9,25 @@ _class: invert
 
 ---
 
+<!-- _class: lead -->
 ## 2.2.1 はじめに
 
-Drupalのモジュールで実現できる機能は非を微修正常に多岐に渡ります。
-また、Drupal 8以降は[Symfony](https://symfony.com/doc/4.4/configuration.html)やいくつかの[PSR](https://www.php-fig.org/psr/)の知識が必要となっており、Drupal自体の理解の前に覚えなくてはならない要素がたくさんあります。
+---
 
-開発者向けのサンプルとして公開されている[Exampleモジュール](https://www.drupal.org/project/examples)や、DrupalConsoleでscaffolding(自動生成)されるコードは包括的でとても参考になりますが、未経験者への情報量としては多すぎるのが難点です。
+Drupalのモジュールで実現できる機能は非常に多岐に渡ります。
+
+また、Drupal 8以降は[Symfony](https://symfony.com/doc/4.4/configuration.html)やいくつかの[PSR](https://www.php-fig.org/psr/)の知識が必要となっており、Drupal自体の理解の前に覚えなくてはならない要素もたくさんあります。
+
+開発者向けのサンプルとして公開されている[Exampleモジュール](https://www.drupal.org/project/examples)や、DrupalConsoleでscaffolding(自動生成)されるコードは包括的で非常に参考になりますが、未経験者への情報量としては多すぎるのが難点です。
 
 そのため、まずは何の機能を持たないhello_worldモジュールを開発するところから始めましょう。
 
 ---
 
+<!-- _class: lead -->
 ## 2.2.2 モジュールのソースコードの配置先
+
+---
 
 前のセクションで説明したとおり、contribute moduleやカスタムモジュールは `web/modules` ディレクトリに格納されます。
 
@@ -57,10 +64,10 @@ Drupalのモジュールで実現できる機能は非を微修正常に多岐�
 
 このようにcomposer.jsonの断片からだけでも、様々な情報を読み取ることができます。
 
-「Drupalのルールはこれだ」と丸暗記や手順で覚えるのではなく、「drupalではcomposer.jsonのinstaller-pathsでライブラリのtype毎にファイルの配置先を振り分けている」というような考え方で理解するようにしてください。
+「Drupalのルールはこれだ」と丸暗記や手順で覚えるのではなく、「Drupalではcomposer.jsonのinstaller-pathsでライブラリのtype毎にファイルの配置先を振り分けている」というような考え方で理解するようにしてください。
 
 抽象化して理解する習慣をつけることで、composerで構成管理されているLaravelやSymfonyで書かれた他のコードを見る時にも、知識を応用することができようになります。
-(もちろん、これがgemやnpm等、言語自体が変わっても考え方は同じです)
+(もちろん、これはgemやnpmなど、言語自体が変わっても考え方は同じです)
 
 ---
 
@@ -68,11 +75,14 @@ Drupalのモジュールで実現できる機能は非を微修正常に多岐�
 
 慣習的には `web/modules/custom/` 以下に配置されますが、Drupalは`web/modules` 以下を再帰的に読み込んでモジュールの存在をチェックするため、 `web/modules` 以下であればどこに配置してもモジュールは認識されます。
 
-本コンテンツでは、web/modules/custom/` 以下に配置していきます。
+本コンテンツでは、`web/modules/custom/` 以下に配置していきます。
 
 ---
 
+<!-- _class: lead -->
 ## 2.2.3 hello_worldモジュールの開発
+
+---
 
 それでは、いよいよモジュールのコードを書いていきましょう。
 (ここまで長かったですね！)
@@ -83,9 +93,9 @@ Drupalのモジュールで実現できる機能は非を微修正常に多岐�
 
 Drupalにモジュールを認識させるために最低限必要なことは、`{module_name}.info.yml` を作成することです。
 
-それでは、 `web/modules/custom/hello_world` というディレクトリと、その下に `web/modules/custom/hello_world/hello_world.info.yml` を作成しましょう。ymlファイルの中身はまだ空のままで構いません。
+それでは、 `web/modules/custom/hello_world` というディレクトリと、その下に `hello_world.info.yml` を作成しましょう。ymlファイルの中身はまだ空のままで構いません。
 
-つまり、ルートディレクトリから確認すると以下のようになります。
+つまり、ルートディレクトリから確認すると以下のようなファイル構成になるようにします。
 
 ```bash
 $ find web/modules/custom
@@ -104,7 +114,7 @@ type: module
 core: 8.x
 ```
 
-この `name`、`type`、`core` が `{module_name}.info.yml` に必須で必要なキーとなります。その他のキーも含めて、 `{module_name}.info.yml` では次のようなキーが指定できます。
+この `name`、`type`、`core` が `{module_name}.info.yml` に必須なキーとなります。その他のキーも含めて、 `{module_name}.info.yml` では次のようなキーが指定できます。
 
 ---
 
@@ -140,11 +150,16 @@ $ git add web/modules/custom
 $ git commit -m "congratulations! This is my first module!"
 ```
 
-以降は明記しませんが、このように適宜gitでソースコードの変更を管理していってください。あとで見直したり、不具合が発生した場合の切り分けやロールバックなどを考えると、gitのコミットはなるべく細かい単位で行うことを推奨します。
+以降は明記しませんが、このように適宜gitでソースコードの変更を管理していってください。
+
+あとで見直したり、不具合が発生した場合の切り分けやロールバックなどを考えると、gitのコミットはなるべく細かい単位で行うことを推奨します。
 
 ---
 
+<!-- _class: lead -->
 ## 2.2.4 モジュールに説明を追加する
+
+---
 
 さて、descriptionを省略したため管理UI上でモジュールの説明が表示されていません。
 
@@ -169,7 +184,10 @@ description: Hello World module
 
 ---
 
+<!-- _class: lead -->
 ## 2.2.5 モジュールの識別子(Machine name)
+
+---
 
 モジュールには `Machine name` と呼ばれるユニークなIDが付与されます。
 
@@ -188,9 +206,15 @@ description: Hello World module
 
 ---
 
-## 2.2.5 hello_worldモジュールの有効化
+<!-- _class: lead -->
+## 2.2.6 hello_worldモジュールの有効化
+
+---
 
 それでは、モジュールを有効化してみましょう。
+
+ここでは管理UIからではなく、Drushを使ってCLIから有効化します。
+
 モジュールの有効化は `drush` コマンドを使って以下のように実行します。
 
 ```txt

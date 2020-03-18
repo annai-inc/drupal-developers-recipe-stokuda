@@ -15,7 +15,10 @@ _class: invert
 
 ---
 
+<!-- _class: lead -->
 ## 2.3.1 フックとは
+
+---
 
 フックとは、「発生したあるイベントに連動して独自の処理を追加する」ための仕組みです。まず、**「フック(hook)という概念自体はDrupal独自のものではない」** ことを念頭に置いてください。
 
@@ -35,16 +38,23 @@ _class: invert
 
 ---
 
+<!-- _class: lead -->
 ## 2.3.2 Drupalのフック
+
+---
 
 さて、フックの概念が理解できたところで「Drupalのフックとは？」を説明してきます。Drupalのフックは **「特定の命名規則で実装されたグローバル関数」** として実装します。
 
 例えば、Drupal 7ではノードが読み込まれた時に実行される `hook_node_load` というフックがあります。このフックを実装することによって、ノードが読み込まれた後、表示される前に新たなデータを追加したり、逆に見せたくないデータを削除するような機能を追加することができます。
-※説明しやすいので例に出しましたが、このフックはDrupal 8にはありません。
+
+※説明しやすいので例に出しましたが、このフックはDrupal 8にはありません。:sweat_smile:
 
 ---
 
+<!-- _class: lead -->
 ## 2.3.3 フックの命名規則
+
+---
 
 フックは `{module_name}_{hook_name}` という命名規則で実装します。また、ドキュメント上では `{module_name}` の部分は `hook` という名前になっている点に注意してください。
 
@@ -52,7 +62,10 @@ _class: invert
 
 ---
 
+<!-- _class: lead -->
 ## 2.3.4 フックの探し方 (ソースコードから探す)
+
+---
 
 コアやモジュールが外部から拡張可能なフックを提供する場合、 `{module_name}.api.php` というファイルでドキュメントを書くことが推奨されています。
 
@@ -132,9 +145,12 @@ function hook_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_
 
 ---
 
+<!-- _class: lead -->
 ## 2.3.5 フックの探し方 (Webサイトから探す)
 
-https://api.drual.org からもフックを探すことができます。
+---
+
+コアが提供するフックは以下のURLで確認することができます。
 https://api.drupal.org/api/drupal/core%21core.api.php/group/hooks/8.8.x
 
 ちなみに、このサイトはDrupalのソースコードを元に自動生成されています。
@@ -143,9 +159,12 @@ https://api.drupal.org/api/drupal/core%21core.api.php/group/hooks/8.8.x
 
 ---
 
-## 2.3.6 hello_word_helpの実装
+<!-- _class: lead -->
+## 2.3.6 hook_helpの実装
 
-それでは、hello_worldモジュールに `hello_word_help` を実装していきましょう。
+---
+
+それでは、hello_worldモジュールに `hook_help` を実装していきましょう。
 先述したとおり、Drupalのフックはグローバル関数として実装する必要があります。
 
 Drupalでは `{module_name}.module` というファイルに関数を定義するとグローバル関数として扱われます。

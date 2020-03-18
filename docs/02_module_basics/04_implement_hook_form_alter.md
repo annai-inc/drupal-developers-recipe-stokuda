@@ -15,7 +15,10 @@ _class: invert
 
 ---
 
-## 2.4.1 既存のフォームの振る舞いを変更するフック: hook_form_alter
+<!-- _class: lead -->
+## 2.4.1 既存のフォームの振る舞いを変更するフック
+
+---
 
 Drupalは主にCMSとして利用されているフレームワークです。
 そのため、コアや他のモジュールが生成したフォームに対して、振る舞いを変更するためのインターフェースがデフォルトで提供されています。
@@ -28,7 +31,7 @@ Drupalは主にCMSとして利用されているフレームワークです。
 
 それでは、`hook_form_alter` の実装をしてみましょう。
 
-今回は例として、ユーザー登録フォームに **「入力されたパスワードが8文字以上かどうかをチェックし、8文字未満の場合はエラーメッセージを表示する」** 機能を追加します。
+今回は例として、ユーザー登録フォームに **「入力されたパスワードが8文字以上かどうかをチェックし、8文字未満の場合はエラーメッセージを表示する」** という機能を追加します。
 
 ---
 
@@ -56,13 +59,14 @@ Drupalは主にCMSとして利用されているフレームワークです。
 
 ---
 
-「おや？」っと思われたかもしれませんが、実はDrupalのデフォルトではパスワードの文字数はチェックされません。[かなり昔から議論はされていますが](https://www.drupal.org/project/drupal/issues/1824800)、なかなか標準の機能としては取り込まれていません。
+「おや？」っと思われたかもしれませんが、実はDrupalのデフォルトではパスワードの文字数はチェックされません。[かなり昔から議論はされていますが](https://www.drupal.org/project/drupal/issues/1824800)、なかなか標準の機能としては取り込まれていない状況が続いています。
 
 この振る舞いはセキュリティ的にはかなり弱いですよね。この問題を解決するために `hook_form_alter` を実装して文字数をチェックしましょう。
 
 ---
 
 では、`hook_form_alter` のドキュメントを見てみましょう。
+
 前のセクションで説明したとおり、フックのドキュメントは `{module_name}.api.php` というファイルに記載されています。
 
 ただし、モジュールではなくコアライブラリが提供するフックについては `{component}.api.php` というファイルになっています。
@@ -80,7 +84,7 @@ web/core/lib/Drupal/Core/Entity/entity.api.php
 
 `web/core/lib/Drupal/Core/Form/form.api.php` がそれらしいですね。
 
-ちなみに、「grepを使って検索したソースコードを参照する」という例で情報の探し方を示しましたが、ブラウザで [hook_form_alter](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21form.api.php/function/hook_form_alter/) を見ても同じ情報にアクセスできます。
+「grepを使って検索したソースコードを参照する」という例で情報の探し方を示しましたが、ブラウザで [hook_form_alter](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21form.api.php/function/hook_form_alter/) を見ても同じ情報にアクセスできます。
 
 重要なのは **「情報を探すために必要な要素を理解すること」** であり、参照する媒体は何でも構いません。
 
@@ -102,7 +106,9 @@ web/core/lib/Drupal/Core/Entity/entity.api.php
 
 ---
 
-このフックがフォームがレンダリングされる前に振る舞いを変更するためのものということが分かります。また、ノードの場合は、 `$form_state->getFormObject()->getEntity()` でノードのデータにアクセスできるようです。
+このフックがフォームがレンダリングされる前に振る舞いを変更するためのものということが分かります。
+
+また、ノードの場合は、 `$form_state->getFormObject()->getEntity()` でノードのデータにアクセスできるようです。
 
 ```plain
  *
@@ -187,7 +193,9 @@ hook_form_alter には以下の引数が渡されます。
 
 先ほど確認したドキュメントの通り、 `hook_form_alter` は全てのフォームの生成時に実行されます。そのため、特定のフォームだけで処理を実行するためには、まずは対象のフォームのIDを知る必要があります。
 
-フォームのIDはフォームを生成しているコードの [getFormId()](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21FormBuilder.php/function/FormBuilder%3A%3AgetFormId/8.8.x) メソッドから読み取ることもできますが、それよりもブラウザ上でDOMから確認したほうが簡単です。
+フォームのIDはフォームを生成しているコードの [getFormId](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21FormBuilder.php/function/FormBuilder%3A%3AgetFormId/8.8.x)メソッドから読み取ることもできますが、それよりもブラウザ上でDOMからも確認できます。
+
+---
 
 `/admin/people/create` にアクセスしてフォームの `id` 属性を確認すると、 `user-register-form` になっていることが分かります。この `id` 属性の `-` を `_` に置き換えたものがフォームのIDになります。
 
@@ -195,7 +203,7 @@ hook_form_alter には以下の引数が渡されます。
 
 ---
 
-![user register form 3](../assets/02_module_basics/04_implement_hook_form_alter/user_register_form_3.png)
+![width:1100px](../assets/02_module_basics/04_implement_hook_form_alter/user_register_form_3.png)
 
 ---
 
@@ -294,7 +302,9 @@ Form APIの仕様がわからないとこのコードの妥当性は判断でき
 
 ---
 
-(ここで安心してはいけませんよ。8文字以上のパスワードを入力すれば、ユーザーが登録できることも確認しておきましょう！)
+ここで安心してはいけませんよ！
+
+8文字以上のパスワードを入力すれば、ユーザーが登録できることも確認しておきましょう！
 
 ---
 
@@ -308,9 +318,9 @@ Form APIの仕様がわからないとこのコードの妥当性は判断でき
 
 ---
 
-例えば、このセクションのフックと同様の機能を `Constraint` というプラグイン (`Plugin`)のサブクラスを拡張して実現することもできます。
+例えば、このセクションのフックと同様の機能を `Constraint` というプラグインのサブクラスを拡張して実現することもできます。
 
-`Constraint` を実装するには、`Plugin` の理解が先に必要になりますので、これに関しては本コンテンツの後半で説明します。
+これを実装するにはプラグインの理解が先に必要になりますので、本コンテンツの後半で別途説明します。
 
 ---
 

@@ -43,11 +43,11 @@ hello_world.setting_form:
 
 ---
 
-`_form` というキーが新しく出てきた以外に、特に新しい要素はありませんね（？？な場合は2.5章、2.7章をやり直しましょう)。
+`_form` というキーが新しく出てきた以外に、特に新しい要素はありませんね（？？な場合は2.5章、2.7章を見直しましょう)。
 
 `_permission` で指定している `administer site configuration` は、あらかじめコアで定義されているサイト全体を管理するための権限です。
 
-この権限は非常に強いため、実際のプロダクトでコードを書く場合は、モジュール専用の管理権限を定義したほうが望ましいです。
+この権限は非常に強いため、実際のプロダクトでコードを書く場合は、モジュール専用の管理権限を定義したほうが望ましいです(このセクションの最後のストレッチゴールで修正しましょう)。
 
 ---
 
@@ -56,7 +56,7 @@ hello_world.setting_form:
 - コアのツールバーモジュールが `/admin/config` へのリンクを提供している
 - `/admin/config` 以下は管理用テーマが適用されるため、テーマの機能による副作用が起こりにくい
 
-2点目はDrupalの開発経験が少ないとピンと来ないかもしれませんが、テーマがコアが提供するcss/jsやDOMを考慮せずに実装され、管理画面が正常に動かなかったりレイアウトが崩れるというのは、Drupalでは比較的よく発生する問題です。
+2点目はDrupalの開発経験が少ないとピンと来ないかもしれませんが、カスタムテーマがコアが提供するcss/jsやDOMを考慮せずに実装され、管理画面が正常に動かなかったりレイアウトが崩れるというのは、Drupalでは比較的よく発生する問題です。
 
 ---
 
@@ -86,6 +86,7 @@ _form: A class name implementing Drupal\Core\Form\FormInterface. See form API in
 ---
 
 では、`_form` で指定したフォームのクラスを書いていきましょう。
+
 `src/Form/HelloWorldConfigurationForm.php` を新規に作成し、以下のように実装してください (コードの解説は後で行います)。
 
 ---
@@ -225,7 +226,9 @@ Drupalで設定用のフォームを開発する場合は、`ConfigFormBase` を
 
 ### 2.8.4.2 getFormId
 
-`getFormId` はフォームのIDを返します。決まったルールはありませんが、IDにモジュール名を含めるなどしてユニークになるように実装しましょう。
+`getFormId` はフォームのIDを返します。
+
+決まったルールはありませんが、IDにモジュール名を含めるなどしてユニークになるように実装しましょう。
 
 ---
 
@@ -294,7 +297,7 @@ select * from config where name = 'hello_world.settings';
 
 ---
 
-このセクションで解説したの内容のドキュメントは [ConfigFormBase with Simple Configuration API](https://www.drupal.org/docs/8/api/form-api/configformbase-with-simple-configuration-api) にありますので合わせて参照してください。
+このセクションで解説したの内容のドキュメントは [ConfigFormBase with Simple Configuration API](https://www.drupal.org/docs/8/api/form-api/configformbase-with-simple-configuration-api) にありますので、不明点がある場合は合わせて参照してください。
 
 ---
 

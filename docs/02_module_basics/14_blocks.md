@@ -137,9 +137,6 @@ class HelloWorldBlock extends BlockBase implements ContainerFactoryPluginInterfa
 
 自信がない方は、いったん戻って [【Drupal 8入門】ブロックレイアウトとコンタクトフォーム作成](https://thinkit.co.jp/article/10079) を参照してください。
 
-
----
-
 「second sidebar」リージョンに先ほど作成した「Hello world Block」ブロックを配置してください。
 
 ---
