@@ -4,6 +4,7 @@
   "description": "A training book for Drupal developer, internal use only.",
   "main": "index.js",
   "scripts": {
+    "start": "npx marp --server docs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
@@ -13,6 +14,8 @@
   "author": "Yoshikazu Aoyama <y_aoyama@annai-labs.com>",
   "license": "UNLICENSED",
   "dependencies": {
-    "@marp-team/marp-cli": "^0.17.2"
+    "@marp-team/marp-cli": "^0.17.2",
+    "express": "^4.17.1",
+    "serve-index": "^1.9.1"
   }
 }
