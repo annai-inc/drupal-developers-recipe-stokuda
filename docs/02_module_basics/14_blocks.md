@@ -55,7 +55,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Hello World block.
  *
- * @Block(\
+ * @Block(
  *  id = "hello_world_block",
  *  admin_label = @Translation("Hello world block"),
  * )
