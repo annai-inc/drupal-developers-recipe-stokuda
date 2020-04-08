@@ -634,7 +634,7 @@ $this->setCacheBackend($cache_backend, 'hello_world_calculator_info_plugins');
 
 では、プラグインマネージャーのキャッシュの保存先を設定しています。
 
-Drupal 8のデフォルトの設定では、`$cache_backend` は `DatabaseBackend` になっています。また、プラグインマネージャーのキャッシュは `cache_discovery` に保存されるようになってします。
+Drupal 8のデフォルトの設定では、`$cache_backend` は `DatabaseBackend` になっています。また、プラグインマネージャーのキャッシュは `cache_discovery` に保存されるようになっています。
 
 そのため、次のようなSQLを実行するとキャッシュの内容を確認することができます。
 
