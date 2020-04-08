@@ -77,13 +77,13 @@ Drupal 7ではフックさえ理解すれば機能の拡張を行うことがで
 ---
 
 <!-- _class: lead -->
-## 2.15.2 Tips: Drupal 8におけるフロントエンドとバックエンドの境界
+## 2.15.2 Tips: Drupalにおけるフロントエンドとバックエンドの境界
 
 ---
 
 ところで、編集画面や表示画面の細かな調整は、他のフレームワークではフロントエンド側、つまりテンプレートやjavascriptなどで行う方が一般的です。
 
-しかし、Drupalではこのウィジェットとフォーマッターのレイヤーが存在するため、フロントエンドに関わる部分だとしても、大きな割合をDrupalのプラグインとしてPHPで開発することになる場合もあります
+しかし、Drupalではこのウィジェットとフォーマッターのレイヤーが存在するため、フロントエンドに関わる部分だとしても、主要な部分をDrupalのプラグインとしてPHPで開発することになる場合も多くあります
 
 「フロントエンド」や「Themeing」と言った言葉から連想するタスクや責任範囲、必要になるスキルは人によって様々だと思いますが、良いプロダクトを開発するためには道具として利用するフレームワークの設計思想をよく理解する必要があります。
 
@@ -93,9 +93,9 @@ Drupal 7ではフックさえ理解すれば機能の拡張を行うことがで
 
 フレームワークの作法を無視した実装は、将来的にはユーザーからのクレームや不具合、メンテナンスの破綻に繋がります。
 
-もし、あなたがUIの変更に関しての判断を求められる場合、「ちょっとした画面の調整だから、PHPを理解している開発者じゃなくてもできるはずだ」という思い込みは捨てましょう。
+もしあなたがUIの変更に関しての判断を求められる場合、「ちょっとした画面の調整だから、PHPを理解している開発者じゃなくてもできるはずだ」という思い込みは一度捨てましょう。
 
-自身でDrupalの内部設計やベストプラクティスを勉強するか、十分に知見のあるエンジニアに相談した上で判断することをお勧めします。
+「どのように設計するのが最適なのか」という視点で、自身や十分に知見のあるエンジニアに相談して判断するようにすることを推奨します。
 
 ---
 
@@ -196,7 +196,7 @@ interface PluginInspectionInterface {
 
 の2つが宣言されていることが分かります。
 
-それぞれのメソッドの詳細については後ほど解説するので、次に進みましょう。
+それぞれのメソッドの詳細については最後にまとめて解説するので、次に進みましょう。
 
 ---
 
@@ -278,7 +278,7 @@ Drupalで独自のプラグインを実装する場合はこのクラスを継�
 
 また、先ほど定義した `CalculatorInterface` を実装するように宣言しています。
 
-`ContainerFactoryPluginInterface` は前の章で解説したとおり、プラグインのファクトリーメソッドを共通化するためのインターフェースです。忘れてしまった方は2.14章を再度読み直しましょう。
+`ContainerFactoryPluginInterface` は前の章で解説したとおり、「プラグインのファクトリーメソッドを共通化するためのインターフェース」です。忘れてしまった方は2.14章を再度読み直しましょう。
 
 ---
 
@@ -287,7 +287,11 @@ Drupalで独自のプラグインを実装する場合はこのクラスを継�
 
 ---
 
-いよいよプラグインの具象クラスを実装しましょう、といきたいところですが、その前にもう一つ、Drupalのプラグインにとって非常に重要なコンポーネントである `アノテーション` を実装する必要があります。
+いよいよプラグインの具象クラスを実装しましょう、と行きたいところですが、その前にもう一つ、Drupalのプラグインにとって非常に重要なコンポーネントである `アノテーション` を実装する必要があります。
+
+※正確には、アノテーションは「プラグインを発見可能にする」ためのいくつかある方法の1つなのですが、最も利用されている方法なので今回はこれを採用します。
+
+---
 
 Javaでの開発経験があるエンジニアにとってはおなじみですね。「アノテーションとは？」という解説は本コンテンツではケアしませんので、 [Annotation - Wikipedia](https://en.wikipedia.org/wiki/Annotation#Software_engineering) などを参照してください。
 
@@ -343,7 +347,7 @@ class Calculator extends Plugin {
 
 ※正確には `AnnotationInterface` を実装していれば親クラスは何でもよいのですが、例によって車輪の再発明になるだけなので `Drupal\Component\Annotation\Plugin` から派生させたほうがいいでしょう。
 
-ここでは、`id` と `label` の2つの属性を定義しています。
+ここでは、`id` と `label` の2つのプロパティを定義しています。
 
 これでようやく、プラグインの具象クラスが依存する周辺のコンポーネントが全て用意できました。
 
@@ -468,7 +472,7 @@ Drupalに特有のシンタックスについては、[The annotation syntax](ht
 
 ---
 
-アノテーションが具体的にどのように動作するかについては、プラグインマネージャーを作成してからまとめて解説します。
+このプラグインがアノテーションを介してどのように動作するかについては、プラグインマネージャーを作成してからまとめて解説します。
 
 ---
 
@@ -477,24 +481,23 @@ Drupalに特有のシンタックスについては、[The annotation syntax](ht
 
 ---
 
-ここまでで３つのプラグインの実装が完了したので、今度はプラグインを制御するプラグインマネージャーを実装していきましょう。
+ここまでで３つのプラグインの実装が完了したので、プラグインを制御するプラグインマネージャーを実装していきましょう。
 
-プラグインマネージャーは、Drupalのサービスとして実装する必要があります。「サービスってなんだっけ？」という方は2.10章を読み直しましょう。
+プラグインマネージャーは、Drupalのサービスとして実装する必要があります。「サービスってなんだっけ？」という方は2.10章を読み直してください。
 
-次のように `hello_world.services.yml` に `plugin.manager.calculator` を定義してください。
+それでは、次の定義を `hello_world.services.yml` の `services` の子要素に追加してください。
 
 ---
 
 ```yml
-services:
-  hello_world.messenger:
-    class: '\Drupal\hello_world\Service\HelloWorldMessenger'
   plugin.manager.calculator:
     class: '\Drupal\hello_world\Plugin\CalculatorPluginManager'
     parent: default_plugin_manager
 ```
 
-`parent` に `default_plugin_manager` が設定されている点に注目してください。これは、あるサービスが親サービスに依存する際に指定するキーです。これはDrupalに特有のものではないため、詳細は [Symfonyのドキュメント](https://symfony.com/doc/4.4/service_container/parent_services.html) を参照してください。
+`parent` に `default_plugin_manager` が設定されている点に注目してください。これは、あるサービスが親サービスに依存する際に指定するキーです。
+
+これはDrupalに特有のものではないため、詳細は [Symfonyのドキュメント](https://symfony.com/doc/4.4/service_container/parent_services.html) を参照してください。
 
 次に、サービスが参照するプラグインマネージャーのクラスを次のように実装します。
 
@@ -540,6 +543,131 @@ class CalculatorPluginManager extends DefaultPluginManager {
 }
 
 ```
+
+---
+
+コードを簡単に見てみましょう。
+
+親クラスである `DefaultPluginManager` のコンストラクタを呼び出していますね。親クラスのコンストラクタの定義を見てみましょう。
+
+---
+
+```php
+  /**
+   * Creates the discovery object.
+   *
+   * @param string|bool $subdir
+   *   The plugin's subdirectory, for example Plugin/views/filter.
+   * @param \Traversable $namespaces
+   *   An object that implements \Traversable which contains the root paths
+   *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param string|null $plugin_interface
+   *   (optional) The interface each plugin should implement.
+   * @param string $plugin_definition_annotation_name
+   *   (optional) The name of the annotation that contains the plugin definition.
+   *   Defaults to 'Drupal\Component\Annotation\Plugin'.
+   * @param string[] $additional_annotation_namespaces
+   *   (optional) Additional namespaces to scan for annotation definitions.
+   */
+  public function __construct(
+    $subdir,
+    \Traversable $namespaces,
+    ModuleHandlerInterface $module_handler,
+    $plugin_interface = NULL,
+    $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin',
+    array $additional_annotation_namespaces = []) {
+
+    $this->subdir = $subdir;
+    $this->namespaces = $namespaces;
+    $this->pluginDefinitionAnnotationName = $plugin_definition_annotation_name;
+    $this->pluginInterface = $plugin_interface;
+    $this->moduleHandler = $module_handler;
+    $this->additionalAnnotationNamespaces = $additional_annotation_namespaces;
+  }
+```
+
+---
+
+このコンストラクタの引数を簡単に解説します。
+
+**$subdir**
+
+マネージャーが管理するプラグインの具象クラスが定義されているディレクトリのパスを指定します。今回のサンプルでは `Plugin/Calculator` ディレクトリにプラグインの具象クラスを作成したため、このパスを指定しています。この引数の値はパスであり、ネームスペースではない点に注意してください。
+
+**$namespaces**
+
+ルートパスが含まれた `\Traversable` オブジェクト。そのまま親クラスのコンストラクタに渡します。
+
+---
+
+**$module_handler**
+
+`ModuleHandlerInterface` のオブジェクト。そのまま親クラスのコンストラクタに渡します。
+
+**$plugin_interface**
+
+プラグインが実装するインターフェース。今回のサンプルコードでは `Drupal\hello_world\Plugin\CalculatorInterface` になります。
+
+---
+
+**$plugin_definition_annotation_name**
+
+プラグインのメタデータが定義されているアノテーションクラス。今回のサンプルコードでは `Drupal\hello_world\Annotation\Calculator` になります。この引数は、プラグインのディスカバリをアノテーション以外の方法で実装している場合は省略することができます。
+
+---
+
+サブクラス側のコンストラクタに戻りましょう。
+
+```php
+$this->alterInfo('hello_world_calculator_info');
+```
+
+のように `alterInfo` を設定することで、他のモジュールで `hook_hello_world_calculator_info` というフックを実装すると、このプラグインマネージャーの振る舞いを変更することができるようになります。
+
+---
+
+```php
+$this->setCacheBackend($cache_backend, 'hello_world_calculator_info_plugins');
+```
+
+では、プラグインマネージャーのキャッシュの保存先を設定しています。
+
+Drupal 8のデフォルトの設定では、`$cache_backend` は `DatabaseBackend` になっています。また、プラグインマネージャーのキャッシュは `cache_discovery` に保存されるようになってします。
+
+そのため、次のようなSQLを実行するとキャッシュの内容を確認することができます。
+
+---
+
+```
+$ vendor/bin/drush sqlc
+
+sqlite> .mode line
+sqlite> .schema cache_discovery
+CREATE TABLE cache_discovery (
+cid VARCHAR(255) NOT NULL DEFAULT '', 
+data BLOB NULL DEFAULT NULL, 
+expire INTEGER NOT NULL DEFAULT 0, 
+created FLOAT NOT NULL DEFAULT 0, 
+serialized INTEGER NOT NULL DEFAULT 0, 
+tags TEXT NULL DEFAULT NULL, 
+checksum VARCHAR(255) NOT NULL, 
+ PRIMARY KEY (cid)
+);
+CREATE INDEX cache_discovery_expire ON cache_discovery (expire);
+CREATE INDEX cache_discovery_created ON cache_discovery (created);
+sqlite> select * from cache_discovery where cid = 'hello_world_calculator_info_plugins';
+       cid = hello_world_calculator_info_plugins
+      data = a:3:{s:5:"twice";a:5:{s:2:"id";s:5:"twice";s:5:"label";O:48:"Drupal\Core\StringTranslation\TranslatableMarkup":3:{s:9:"
+    expire = -1
+   created = 1586228675.582
+serialized = 1
+      tags = 
+  checksum = 0
+```
+
+`data` カラムにプラグインのメタデータやネームスペースが格納されているのが分かりますね。　
 
 ---
 
@@ -695,24 +823,82 @@ class HelloWorldController extends ControllerBase {
 
 - クラスのプロパティに `$pluginManager` を追加
 - ファクトリーメソッドとコンストラクタで `$pluginManager` を初期化するように変更
-- `/calculate/{val}` にアクセスされた時に計算結果を返す `calculate` メソッドを追加。`getCalculatorPluginId` の結果を元に計算に利用するプラグインをランダムに決定し、`$pluginManager` 経由でプラグインのインスタンスを生成して結果を出力する。
+- `/calculate/{val}` にアクセスされた時に計算結果を返す `calculate` メソッドを追加。`getCalculatorPluginId` の結果を元に計算に利用するプラグインをランダムに決定し、プラグインマネージャーの `createInstance` メソッドでプラグインのインスタンスを生成して結果を出力する。
 
 ---
 
 それでは、`/calculate{val}` に何度かアクセスしてみてください。
 
-プラグインのIDと、そのプラグインのロジックに対応した計算結果が表示されれば成功です。
+プラグインのIDと、そのプラグインのロジックに対応した計算結果がランダムに表示されれば成功です。
 
 ![](../assets/02_module_basics/15_plugin/caluclation_result.png)
 
 ---
 
 <!-- _class: lead -->
-## 2.15.5 プラグインが動作する仕組み
+## [Tips] プラグインが認識されないときは
 
 ---
 
-TBD.
+アノテーションによるプラグインの自動検出は非常に便利なのですが、typo等のちょっとしたミスでプラグインが認識されないようなバグがよく発生します。
+
+DrupalConsoleの `debug:plugin` サブコマンドを使うと、Drupalが認識しているプラグインのステータスを確認することができるのでぜひ活用してください。
+
+---
+
+```
+$ vendor/bin/drupal debug:plugin
+ ----------------------------- -------------------------------------------------------------------- 
+  Plugin type                   Plugin manager class                                                
+ ----------------------------- --------------------------------------------------------------------      
+  calculator                    \Drupal\hello_world\Plugin\CalculatorPluginManager
+
+$ vendor/bin/drupal debug:plugin calculator
+ -------------- ------------------------------------------------------------ 
+  Plugin ID      Plugin class                                                
+ -------------- ------------------------------------------------------------ 
+  pass_through   Drupal\hello_world\Plugin\Calculator\PassThroughCalculator  
+  square         Drupal\hello_world\Plugin\Calculator\SquareCalculator       
+  twice          Drupal\hello_world\Plugin\Calculator\TwiceCalculator        
+ -------------- ------------------------------------------------------------
+```
+
+---
+
+<!-- _class: lead -->
+## [Tips] プラグインのコードの自動生成
+
+---
+
+今回は1つずつ理解を進めるためにプラグインに関するコードを１つずつ手動で作成しました。
+
+DrupalConsoleの以下のサブコマンドを使うことで、アノテーションやプラグインのコードの多くを自動生成することができます。
+- [generate:plugin:skeleton](https://hechoendrupal.gitbooks.io/drupal-console/en/commands/generate-plugin-skeleton.html)
+- [generate:plugin:type:annotation](https://hechoendrupal.gitbooks.io/drupal-console/en/commands/generate-plugin-type-annotation.html) 
+
+この機能は積極的に活用すべきですが、自動生成されたコードには不要な実装が含まれる事も多くあります。生成されたコードの内容は全てしっかりと把握しておきましょう。
+
+---
+
+<!-- _class: lead -->
+## 2.15.6 プラグインマネージャーがプラグインを検出する仕組み
+
+---
+
+プラグインマネージャーの `createInstance` メソッドの実体は `Drupal\Core\Plugin\Factory\ContainerFactory` で定義されてします。
+
+このメソッドの中では、次のような処理が行われています。
+
+1. プラグインマネージャーのコンストラクタに設定したパラメータから、自身が管理するプラグインのクラス情報やアノテーションで指定したidなどのメタデータをパースする。
+2. createInstanceメソッドの引数で指定されたidと一致するプラグインをパースした情報から検索する
+
+---
+
+3. プラグインが `ContainerFactoryPluginInterface` を実装している場合は `create` メソッドで、その他の場合は直接コンストラクタを実行してプラグインのインスタンスを生成する。
+
+HelloWorldControllerが `createInstance` を呼び出している箇所にブレークポイントを貼り、ステップ実行しながら1-3の動きを確認してみてください。
+
+※かなり簡単に書いていますが、内部実装はもう少し細かく複数のレイヤーに抽象化されています。
 
 ---
 
