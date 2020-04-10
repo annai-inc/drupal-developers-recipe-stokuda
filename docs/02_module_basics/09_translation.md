@@ -244,11 +244,8 @@ HelloWorldController のベースクラスである [ControllerBase](https://git
 それでは `modules/custom/hello_world/translations/ja.po` に先ほどのコードの変更に対応する定義を追加しましょう。
 
 ```txt
-msgid "About"
-msgstr "このモジュールについて"
-
-msgid "This is an hello world module."
-msgstr "これはハローワールドモジュールです。"
+msgid "User id: %user_id, username: %user_name"
+msgstr "ユーザーID: %user_id, ユーザー名: %user_name"
 ```
 
 ---
