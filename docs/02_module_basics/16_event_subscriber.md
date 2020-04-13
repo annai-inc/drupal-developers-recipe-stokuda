@@ -38,7 +38,7 @@ Drupal 8では、このインターフェースは完全に撤廃されました
 
 ---
 
-まず、Drupal 8でリダイレクトをどのように実装するかを簡単に解説します。
+コードを書き始める前に、Drupal 8でリダイレクトをどのように実装するかを簡単に解説します。
 
 「1.1.5 リクエストからレスポンスまでの流れ」ですでに解説している通り、Drupal 8の一連のライフライクルは、Symfony HttpFoundationコンポーネントの [Request](https://symfony.com/doc/current/components/http_foundation.html#request) を受け取り [Response](https://symfony.com/doc/current/components/http_foundation.html#response) を返すのが基本的な流れになります。
 
@@ -58,7 +58,7 @@ return new \Symfony\Component\HttpFoundation\Response('hello');
 
 この実装方法はDrupalのテーマレイヤーをバイパスするので、通常のユースケースでは使う必要性はありません。
 
-では、なぜこの例を提示したかというと、コントローラーでリダイレクトを行う場合も設計としては全く同じだからです。
+なぜこの例を提示したかというと、コントローラーでリダイレクトを行う場合も設計としては全く同じだからです。
 
 ---
 
@@ -74,9 +74,8 @@ return new \Symfony\Component\HttpFoundation\RedirectResponse('node/1');
 
 ---
 
-実際にプロダクトのコードを書く際は、RedirectResponseではなくRedirectResponseのサブクラスを使うほうが良いでしょう。
+Drupalでは、よりセキュリティに考慮したリダイレクトを実現するために、以下のサブクラスが用意されています。実際にプロダクトのコードを書く際は、RedirectResponseではなくこれらのサブクラスを使うほうが良いでしょう。
 
-Drupalでは、よりセキュリティに考慮したリダイレクトを実現するために、以下のサブクラスが用意されています。
 - [LocalRedirectResponse](https://github.com/drupal/drupal/blob/8.8.0/core/lib/Drupal/Core/Routing/LocalRedirectResponse.php)
 - [TrustedRedirectResponse](https://github.com/drupal/drupal/blob/8.8.0/core/lib/Drupal/Core/Routing/TrustedRedirectResponse.php)
 
@@ -85,10 +84,252 @@ Drupalでは、よりセキュリティに考慮したリダイレクトを実�
 <!-- _class: lead -->
 # 2.16.2 イベントサブスクライバー
 
-TBD
+---
+
+それでは、イベントサブスクライバーを実装していきます。
+
+Drupal 8をstandard profileでインストールすると、デフォルトでsearchモジュールが有効になっており、左のサイドバーから検索機能が利用できます。
+
+![](../assets/02_module_basics/16_event_subscriber/search_frontpage.png)
 
 ---
 
+このモジュールは、 `/search/node` というパスに検索結果を表示します。
+
+![](../assets/02_module_basics/16_event_subscriber/search_result.png)
+
+---
+
+hello_worldモジュールにイベントサブスクライバーを実装して、「**anonymousユーザーが /search/node にアクセスした時に https://google.com にリダイレクトする**」ように、イベントサブスクライバーを実装しましょう。
+
+---
+
+`hello_world.services.yml` に以下を追加してください。
+
+```yml
+  hello_world.redirect_subscriber:
+    class: '\Drupal\hello_world\EventSubscriber\HelloWorldRedirectSubscriber'
+    arguments: ['@current_user']
+    tags:
+      - { name: event_subscriber }
+```
+
+---
+
+TBD sevicesの解説
+
+---
+
+```txt
+$ vendor/bin/drupal debug:container
+ ...
+
+ cron                                                              Drupal\Core\ProxyClass\Cron                                            
+ csrf_token                                                        Drupal\Core\Access\CsrfTokenGenerator                                  
+ current_route_match                                               Drupal\Core\Routing\CurrentRouteMatch                                  
+ current_user                                                      Drupal\Core\Session\AccountProxy                                       
+ database                                                          Drupal\Core\Database\Connection                           
+
+ ... 
+```
+---
+
+次に、ymlで指定したクラスを実装してください。
+
+---
+
+```php
+<?php
+
+namespace Drupal\hello_world\EventSubscriber;
+
+use Symfony\Component\HttpKernel\KernelEvents;
+use Drupal\Core\Session\AccountProxyInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+
+/**
+ * An example of the EventSubscriber.
+ *
+ * Subscribes to the Kernel Request event and redirects to the google
+ * when the user has the "annoymouse" role.
+ */
+class HelloWorldRedirectSubscriber implements EventSubscriberInterface {
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  // (続く)
+}
+```
+
+---
+
+```php
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user.
+   */
+  public function __construct(AccountProxyInterface $current_user) {
+    $this->currentUser = $current_user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents() {
+    $events[KernelEvents::REQUEST][] = ['onRequest', 0];
+    return $events;
+  }
+
+  // (続く)
+```
+
+---
+
+```php
+  /**
+   * Handler for the kernel request event.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The response event.
+   */
+  public function onRequest(GetResponseEvent $event) {
+    $path = $event->getRequest()->getPathInfo();
+    if ($path !== '/search/node') {
+      return;
+    }
+
+    if ($this->currentUser->isAnonymous()) {
+      /** @var \Symfony\Component\HttpFoundation\RedirectResponse $response */
+      $response = new RedirectResponse('https://google.com');
+      $event->setResponse($response);
+    }
+  }
+
+}
+
+```
+---
+
+全てのイベントサブスクライバーは、 `EventSubscriberInterface` を実装する必要があります。
+
+サービスの定義で `arguments` に `@current_user` を指定したので、このクラスのコンストラクタでは引数でこれを受け取る必要があります。
+
+`@current_user` のオブジェクトは、 `AccountProxyInterface` としてコンストラクタに渡されます。
+
+---
+
+TBD...
+
+---
+
+それでは、動作を確認してみましょう。anonymousユーザーで `/search/node` にアクセスしてください。期待に反して例外が発生し、
+
+```
+Redirects to external URLs are not allowed by default, use \Drupal\Core\Routing\TrustedRedirectResponse for it.
+```
+
+が表示されたと思います。
+
+![](../assets/02_module_basics/16_event_subscriber/redirect_exception.png)
+
+---
+
+コントローラーやイベントサブスクライバーが `RedirectResponse` のインスタンスを返すと、Drupalはリダイレクト先が「安全なドメインかどうか」チェックし、安全ではないと判断した場合はこのメッセージが表示されます。
+
+この制御は、[RedirectResponseSubscriber::checkRedirectUrl](https://github.com/drupal/drupal/blob/8.8.0/core/lib/Drupal/Core/EventSubscriber/RedirectResponseSubscriber.php#L76) で実装されており、最終的には、[LocalAwareRedirectResponseTrait::isLocal](https://github.com/drupal/drupal/blob/8.8.0/core/lib/Drupal/Core/Routing/LocalAwareRedirectResponseTrait.php#L29) で安全かどうかが判断されます。
+
+---
+
+外部ドメインに対してリダイレクトをする場合、前述したとおり `TrustedRedirectResponse` を利用します。コードを次のとおり変更してください。
+
+```php
+use Drupal\Core\Routing\TrustedRedirectResponse;
+// ...
+
+    if ($this->currentUser->isAnonymous()) {
+      /** @var \Drupal\Core\Routing\TrustedRedirectResponse $response */
+      $response = new TrustedRedirectResponse('https://google.com');
+      $event->setResponse($response);
+    }
+```
+
+---
+
+それでは、キャッシュをクリアしてからanonymousユーザーで `/search/node` にアクセスしてください。Googleにリダイレクトされれば成功です。
+
+![](../assets/02_module_basics/16_event_subscriber/redirect_to_google.png)
+
+---
+
+しかし、実はこのコードにもまだバグがあります。
+
+キャッシュをクリアせずにDrupalにログインしてから `/search/node` にアクセスしてください。anonymousユーザー以外はリダイレクトされないはずですが、Googleにリダイレクトされると思います。
+
+これは、`TrustedRedirectResponse` が `CacheableResponseInterface` という「キャッシュ可能なレスポンス」として実装されているためです。
+
+---
+
+次のようにコードを変更して、レスポンスヘッダの [max-age](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control) が明示的に `0` になるようにしましょう。
+
+```php
+     if ($this->currentUser->isAnonymous()) {
+       /** @var \Drupal\Core\Routing\TrustedRedirectResponse $response */
+       $response = new TrustedRedirectResponse('https://google.com');
+       $response->getCacheableMetadata()->setCacheMaxAge(0);
+       $event->setResponse($response);
+     }
+```
+
+---
+
+再度キャッシュをクリアしてから、以下の動作になることを確認してください。
+
+1. anonymousユーザーで `/search/node` にアクセスすると、Googleにリダイレクトされること
+2. 1.のあとにDrupalにログインしてから　`/search/node` にアクセスすると、Googleにリダイレクトされずにsearchモジュールの検索画面が表示されること
+
+---
+
+なお、 `$response->setCacheMaxAge(0);` のように実装しても期待通り動作しない点に注意してください。TrustedRedirectResponseの場合、レスポンスを返す際にこのプロパティは参照されません。
+
+興味がある方は [CacheableSecuredRedirectResponse::fromResponse](https://github.com/drupal/drupal/blob/8.8.0/core/lib/Drupal/Core/Routing/CacheableSecuredRedirectResponse.php#L20) の実装を見てみましょう。
+
+---
+
+リダイレクトのレスポンスをキャッシュすべきかどうかはケースバイケースで判断する必要があります。
+
+今回の例ではレスポンスがロール毎に異なるため、ロール単位でキャッシュする、ユーザー単位でキャッシュする、完全にキャッシュしない、などの選択肢が考えられます。サンプルコードでは、実装を簡単にするために完全にキャッシュしない実装にしています。
+
+例えば「ユーザー単位でキャッシュする」という設計にした場合、ユーザーのロール設定が変わった時にキャッシュをクリアする処理もセットで考慮する必要があります。
+
+---
+
+Drupalにはある単位でキャッシュを制御するための [Cache Tag](https://www.drupal.org/docs/8/api/cache-api/cache-tags) という仕組みが用意されています。効率的にキャッシュしたい場合はこの仕組みを利用するのが良いでしょう。
+
+キャッシュについては本セクションの趣旨ではないので、ここでの詳細な解説は割愛しますが、本コンテンツの後半で解説します。
+
+----
+
 ## まとめ
 
-TBD
+このセクションでは、イベントサブスクライバーによるリダイレクトの実装について解説しました。
+
+リダイレクトの実装に当たっては、キャッシュのコントロールやセキュリティの問題が発生しないように、フレームワーク内部の動きもしっかりと把握しておきましょう。
+
+---
+
+## ストレッチゴール
+
+1. URLエイリアス (/admin/config/search/path) の機能を使い、 `/node/search` に `/mysearch` でもアクセスできるように設定してください。`/mysearch` にアクセスすると、実装したリダイレクトの処理が動作しないことが分かります。この問題を解消するために、リダイレクトするかどうかをパスではなくルート名で判断するように変更してください。なお、ルート名はDrupalConsoleのサブコマンドで確認することができます。
+
+---
+
+2. `/search/node` では検索キーワードを入力して検索結果をフィルターすることができます。Googleにリダイレクトする際に、検索キーワードをgoogle側に引き継ぐように変更してください。
