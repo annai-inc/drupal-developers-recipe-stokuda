@@ -48,7 +48,7 @@ Drupal 8では、このインターフェースは完全に撤廃されました
 
 ---
 
-しかし、もちろんRender Arraysではなく、コントローラーが直接Responseオブジェクトを返すこともできます。
+しかし、Render Arraysではなく、コントローラーが直接Responseオブジェクトを返すこともできます。
 
 例えば、以下の様に実装すると、`hello` という文字を含んだブランクページを表示することができます。
 
@@ -104,7 +104,21 @@ hello_worldモジュールにイベントサブスクライバーを実装して
 
 ---
 
-`hello_world.services.yml` に以下を追加してください。
+イベント処理の中心となるのは `event_dispatcher` サービスです。このサービスは、内部の実装的には `ContainerAwareEventDispatcher` のインスタンスになります。
+
+このサービスは、`Event` クラスのオブジェクトにラッピングされたペイロードをイベント名に応じて制御します。
+
+※別のセクションで独自のevent_dispatcherも開発しますのでお楽しみに！ :smile:
+
+---
+
+`EventSubscriberInterface` を実装したクラスに受信したいイベントとそのコールバックを定義すると、`event_dispatcher` から `Event` のオブジェクトが渡され、データや振る舞いに介入することができます。
+
+イベントサブスクライバーはサービスとして登録します。また、イベントサブスクライバーはサービスの定義の `tags` に `event_subscriber` をセットする必要があります。
+
+---
+
+それでは、`hello_world.services.yml` に以下を追加してください。
 
 ```yml
   hello_world.redirect_subscriber:
@@ -116,9 +130,11 @@ hello_worldモジュールにイベントサブスクライバーを実装して
 
 ---
 
-TBD sevicesの解説
+`class` には `EventSubscriberInterface` を実装したクラスを指定します
 
----
+`arguments` には、依存するサービスを `@+サービス名` の形式で指定します。
+
+なお、各サービスの名称は、DrupalConsoleの `debug:container` サブコマンドで確認することができます。
 
 ```txt
 $ vendor/bin/drupal debug:container
@@ -132,9 +148,22 @@ $ vendor/bin/drupal debug:container
 
  ... 
 ```
+
 ---
 
-次に、ymlで指定したクラスを実装してください。
+今回はアクセスしたユーザーのロール情報が必要になるので、 `@current_user` をargumentsに指定しました。
+
+また、先に解説したとおり `tags` には `event_subscriber` を必ずセットする必要があります。
+
+`arguments` と `tags` はここで初めて利用しましたが、Drupal特有のものではなくSymfonyのサービスコンテナを利用しているだけです。
+
+これらのパラメータの詳細については以下を参照してください。
+- [Service Parameters](https://symfony.com/doc/current/service_container.html#service-parameters)
+- [How to Work with Service Tags](https://symfony.com/doc/current/service_container/tags.html)
+
+---
+
+次に、ymlで指定したクラスを次のように実装してください。
 
 ---
 
@@ -223,11 +252,123 @@ class HelloWorldRedirectSubscriber implements EventSubscriberInterface {
 
 サービスの定義で `arguments` に `@current_user` を指定したので、このクラスのコンストラクタでは引数でこれを受け取る必要があります。
 
-`@current_user` のオブジェクトは、 `AccountProxyInterface` としてコンストラクタに渡されます。
+`@current_user` のオブジェクトは、`AccountProxyInterface` としてコンストラクタに渡されます。
+
+これは、先ほど少し出てきたDrupalConsoleの `debug:container` サブコマンドで確認することができます。`Interface(s)` の出力結果がサービスに渡ってくる引数のクラスです。
 
 ---
 
-TBD...
+```txt
+$ vendor/bin/drupal debug:container current_user
+ Service      Service                                                                                         
+ Class        Class                                                                                           
+ Interface(s) Drupal\Core\Session\AccountProxyInterface: Drupal\Core\Session\AccountProxyInterface            
+              Drupal\Core\Session\AccountInterface: Drupal\Core\Session\AccountInterface                      
+                                                                                                              
+ Methods      __construct(Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher = NULL) 
+              __sleep()                                                                                       
+              __wakeup()                                                                                      
+              getAccount()                                                                                    
+              getAccountName()                                                                                
+              getDisplayName()                                                                                
+              getEmail()                                                                                      
+              getLastAccessedTime()                                                                           
+              getPreferredAdminLangcode($fallback_to_default = true)                                          
+              getPreferredLangcode($fallback_to_default = true)                                               
+              getRoles($exclude_locked_roles = false)                                                         
+              getTimeZone()                                                                                   
+              getUsername()                                                                                   
+              hasPermission($permission)                                                                      
+              id()                                                                                            
+              isAnonymous()                                                                                   
+              isAuthenticated()                                                                               
+              setAccount(Drupal\Core\Session\AccountInterface $account)                                       
+              setInitialAccountId($account_id)
+```
+
+---
+
+`getSubscribedEvents` メソッドで、どのイベントを受信したいかを多次元配列で表明します。
+
+配列のキーはイベント名です。今回は `KernelEvents::REQUEST` としました。つまり、このイベントサブスクライバーは全てのHTTPリクエストの度に動作することになります。
+
+イベントにはSymfonyのコンポーネントで定義されているものの他に、Drupalが独自に定義しているイベントもあります。
+
+Symfonyが定義するイベントの詳細は以下のドキュメントを参照してください。
+- [The HttpKernel Component - Creating an Event Listener](https://symfony.com/doc/current/components/http_kernel.html#creating-an-event-listener)
+
+---
+
+Drupalが独自に定義しているイベントは、DrupalConsoleの `debug:event` サブコマンドで確認することができます。
+
+```txt
+$ vendor/bin/drupal debug:event
+ --------------------------------------------------------- 
+  Event Name                                               
+ --------------------------------------------------------- 
+  routing.route_finished                                   
+  config.save                                              
+  config.delete                                            
+  config.importer.missing_content                          
+  kernel.request                                           
+  routing.route_dynamic                                    
+  config.importer.validate                                 
+  routing.route_alter                                      
+  kernel.response                                          
+  kernel.exception                                         
+  kernel.view                                              
+  kernel.finish_request                                    
+  kernel.terminate                                         
+  config.importer.import                                   
+  config.transform.import                                  
+  config.transform.export                                  
+  kernel.controller                                        
+  render.page_display_variant.select                       
+  config_translation.populate_mapper                       
+  config.collection_info                                   
+  config.rename                                            
+  language.save_override                                   
+  language.delete_override                                 
+  locale.save_translation                                  
+  account.set                                              
+  entity_type.definition.create                            
+  entity_type.definition.update                            
+  entity_type.definition.delete                            
+  kernel.container.finish_container_initialize_subrequest  
+ ---------------------------------------------------------
+```
+
+---
+
+```txt
+vendor/bin/drupal debug:event routing.route_alter
+ ---------------------------------------------------------------------- ------------------------------------------------- 
+  Class                                                                  Method                                           
+ ---------------------------------------------------------------------- ------------------------------------------------- 
+  Drupal\Core\EventSubscriber\RouteMethodSubscriber                      onRouteBuilding: 5000                            
+  Drupal\devel\Routing\RouteSubscriber                                   onAlterRoutes: 0                                 
+  Drupal\Core\EventSubscriber\ModuleRouteSubscriber                      onAlterRoutes: 0                                 
+  Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber           onAlterRoutes: 0                                 
+  Drupal\big_pipe\EventSubscriber\NoBigPipeRouteAlterSubscriber          onRoutingRouteAlterSetNoBigPipe: 0               
+  Drupal\node\Routing\RouteSubscriber                                    onAlterRoutes: 0                                 
+  Drupal\node\EventSubscriber\NodeAdminRouteSubscriber                   onAlterRoutes: 0                                 
+  Drupal\field_ui\Routing\RouteSubscriber                                onAlterRoutes: 0                                 
+  Drupal\config_translation\Routing\RouteSubscriber                      onAlterRoutes: 0                                 
+  Drupal\Core\EventSubscriber\EntityRouteAlterSubscriber                 onRoutingRouteAlterSetType: -150                 
+  Drupal\views\EventSubscriber\RouteSubscriber                           onAlterRoutes: 0                                 
+  Drupal\system\EventSubscriber\AdminRouteSubscriber                     onAlterRoutes: 0                                 
+  Drupal\content_translation\Routing\ContentTranslationRouteSubscriber   onAlterRoutes: 0                                 
+  Drupal\Core\EventSubscriber\ParamConverterSubscriber                   onRoutingRouteAlterSetParameterConverters: -220  
+  Drupal\Core\Routing\RoutePreloader                                     onAlterRoutes: 0                                 
+  Drupal\Core\EventSubscriber\PathRootsSubscriber                        onRouteAlter: -1024                              
+ ---------------------------------------------------------------------- -------------------------------------------------
+```
+
+---
+
+配列の値にはコールバックメソッド名、優先度を順に設定します。サンプルコードでは、 `['onRequest', 0]` としています。
+
+優先度は低いほうが優先度が高く、先にコールバックメソッドが実行されます。コールバックメソッドが `setResponse` メソッドでレスポンス内容を設定した場合はそこで処理が終了し、それより優先度の低いイベントサブスクラバーのコールバックは実行されません。
 
 ---
 
@@ -245,7 +386,7 @@ Redirects to external URLs are not allowed by default, use \Drupal\Core\Routing\
 
 コントローラーやイベントサブスクライバーが `RedirectResponse` のインスタンスを返すと、Drupalはリダイレクト先が「安全なドメインかどうか」チェックし、安全ではないと判断した場合はこのメッセージが表示されます。
 
-この制御は、[RedirectResponseSubscriber::checkRedirectUrl](https://github.com/drupal/drupal/blob/8.8.0/core/lib/Drupal/Core/EventSubscriber/RedirectResponseSubscriber.php#L76) で実装されており、最終的には、[LocalAwareRedirectResponseTrait::isLocal](https://github.com/drupal/drupal/blob/8.8.0/core/lib/Drupal/Core/Routing/LocalAwareRedirectResponseTrait.php#L29) で安全かどうかが判断されます。
+この制御は [RedirectResponseSubscriber::checkRedirectUrl](https://github.com/drupal/drupal/blob/8.8.0/core/lib/Drupal/Core/EventSubscriber/RedirectResponseSubscriber.php#L76) で実装されており、最終的には、[LocalAwareRedirectResponseTrait::isLocal](https://github.com/drupal/drupal/blob/8.8.0/core/lib/Drupal/Core/Routing/LocalAwareRedirectResponseTrait.php#L29) で安全かどうかが判断されます。
 
 ---
 
@@ -272,7 +413,7 @@ use Drupal\Core\Routing\TrustedRedirectResponse;
 
 しかし、実はこのコードにもまだバグがあります。
 
-キャッシュをクリアせずにDrupalにログインしてから `/search/node` にアクセスしてください。anonymousユーザー以外はリダイレクトされないはずですが、Googleにリダイレクトされると思います。
+そのままキャッシュをクリアせずに、Drupalにログインしてから `/search/node` にアクセスしてください。anonymousユーザー以外はリダイレクトされないはずですが、Googleにリダイレクトされると思います。
 
 これは、`TrustedRedirectResponse` が `CacheableResponseInterface` という「キャッシュ可能なレスポンス」として実装されているためです。
 
@@ -314,7 +455,7 @@ use Drupal\Core\Routing\TrustedRedirectResponse;
 
 Drupalにはある単位でキャッシュを制御するための [Cache Tag](https://www.drupal.org/docs/8/api/cache-api/cache-tags) という仕組みが用意されています。効率的にキャッシュしたい場合はこの仕組みを利用するのが良いでしょう。
 
-キャッシュについては本セクションの趣旨ではないので、ここでの詳細な解説は割愛しますが、本コンテンツの後半で解説します。
+キャッシュについては本セクションの趣旨ではないので、ここでの詳細な解説は割愛しますが本コンテンツの後半で解説します。
 
 ----
 
