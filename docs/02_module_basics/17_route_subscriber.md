@@ -89,7 +89,9 @@ $ vendor/bin/drupal debug:router help.main
 
 `/admin/help`へのアクセスには `access administration pages` (日本語だと「管理ページとヘルプを利用」)の権限が必要であることが分かります。
 
-この権限チェックをバイパスするようにルートサブスクライバーを実装してみましょう。
+？？？という方は2.7章を読み直しましょう。
+
+この権限チェックをバイパスするようにルートサブスクライバーを実装してみます。
 
 イベントサブスクライバーと同様に、ルートサブスクライバーもサービスとして実装する必要があります。まずは `hello_world.routing.yml` に次のコードを追加してください。
 
@@ -140,18 +142,92 @@ class HelloWorldRouteSubscriber extends RouteSubscriberBase {
 
 ---
 
-TBD(parent classを含めたコードの解説)
+ルートサブスクライバーは `RouteSubscriberBase` のサブクラスとして実装します。
+
+[alterRoutes](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Routing%21RouteSubscriberBase.php/function/RouteSubscriberBase%3A%3AalterRoutes/) をoverrideすることで、既存のルート情報を変更することができます。
+
+引数で渡ってくる [RouteCollection](https://api.drupal.org/api/drupal/vendor%21symfony%21routing%21RouteCollection.php/class/RouteCollection/) 型の引数 `$collection` にはDrupalの全てのルート情報が格納されており、`get` メソッドで個別のルートオブジェクトを取得することができます。
+
+自分で実装するコードばかり見ていても理解は深まりませんので、親クラスのコードもざっと見てみましょう。
+
+---
+
+```php
+<?php
+
+namespace Drupal\Core\Routing;
+
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\RouteCollection;
+
+/**
+ * Provides a base implementation for RouteSubscriber.
+ */
+abstract class RouteSubscriberBase implements EventSubscriberInterface {
+
+  /**
+   * Alters existing routes for a specific collection.
+   *
+   * @param \Symfony\Component\Routing\RouteCollection $collection
+   *   The route collection for adding routes.
+   */
+  abstract protected function alterRoutes(RouteCollection $collection);
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents() {
+    $events[RoutingEvents::ALTER] = 'onAlterRoutes';
+    return $events;
+  }
+
+  /**
+   * Delegates the route altering to self::alterRoutes().
+   *
+   * @param \Drupal\Core\Routing\RouteBuildEvent $event
+   *   The route build event.
+   */
+  public function onAlterRoutes(RouteBuildEvent $event) {
+    $collection = $event->getRouteCollection();
+    $this->alterRoutes($collection);
+  }
+
+}
+
+```
+
+---
+
+前のセクションで利用した `EventSubscriberInterface` が実装されていることが分かりますね。
+
+`getSubscribedEvents` メソッドでは [RoutingEvents::ALTER](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Routing%21RoutingEvents.php/constant/RoutingEvents%3A%3AALTER/)(`routing.route_alter`) が受信対象のイベントとして設定されています。このイベントはDrupalが独自で定義しているものです。
+
+`alterRoutes` は抽象メソッドなので、サブクラス側でOverrideする必要があることが分かります。
+
+これで、`HelloWorldRouteSubscriber` がなぜ動くのかハッキリしましたね。
+
+---
+
+なお、ご存じの通りPHPには言語仕様としてJavaの[final](https://en.wikipedia.org/wiki/Final_(Java))のような修飾子はありません。
+
+そのため、サブクラス側で `getSubscribedEvents` をoverrideすると、`RoutingEvents::ALTER` 以外のイベントを受信することもできます。
+
+しかし、コードの可読性が低くなりクラスの責任範囲も大きくなるため、このような実装はお勧めしません。
+
+受信対象のイベントやビジネスロジックの目的毎に、イベントサブスクライバーを小さく分割することを推奨します。
 
 ---
 
 ## まとめ
 
-このセクションでは、ルートサブスクライバーによるリダイレクトの実装について解説しました。
+このセクションでは、ルートサブスクライバーにより既存のルーティングを変更する方法を解説しました。
 
-TBD.
+2.7章、2.16章の内容がしっかりと理解できていれば、特に難しいところはなかったと思います。
+
+今後、フックとして残っているAPIが更にイベントベースに変更されていくことが予想されます。イベントサブスクライバーの使い方をしっかりと押さえておきましょう。
 
 ---
 
 ## ストレッチゴール
 
-TBD.
+1. `/filter/tips` にアクセスしたら `HelloWorldController` の `hello` メソッドが動作するように、新しく別のルートサブスクライバーを実装してください。
