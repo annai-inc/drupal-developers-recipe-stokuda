@@ -468,7 +468,7 @@ Dynamic Queriesも、同じく `database` サービスから利用できます�
 
 `range` は `LIMIT` と `OFFSET` 句を発行するためのメソッドです。
 
-JOIN関連のメソッドを除いて、これらのメソッドは `$this` を返す [Fluent Interface](https://en.wikipedia.org/wiki/Fluent_interface) ようになっています。そのため、サンプルコードのようにメソッドチェーンで書く事ができます。
+JOIN関連のメソッドを除いて、これらのメソッドは `$this` を返す [Fluent Interface](https://en.wikipedia.org/wiki/Fluent_interface) になっています。そのため、サンプルコードのようにメソッドチェーンで書く事ができます。
 
 `execute` メソッドをコールするとSQLクエリが実行されます。`query` メソッドと同じく `\Drupal\Core\Database\StatementInterface` が戻るため、$rowsを設定する部分のコードはオブジェクトのプロパティが変わっているだけです。
 
