@@ -493,6 +493,8 @@ JOIN関連のメソッドを除いて、これらのメソッドは `$this` を�
 
 [Dynamic Queries](https://www.drupal.org/docs/8/api/database-api/dynamic-queries) に情報がまとまっているので目を通しておいてください。
 
+SELECT以外のクエリの実行方法については次のセクションで解説します。
+
 ---
 
 ## ストレッチゴール
