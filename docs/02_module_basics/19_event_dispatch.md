@@ -57,7 +57,7 @@ class HelloMessageEvent extends Event {
    *   Hello message.
    */
   public function setValue($message) {
-    $this->$message = $message;
+    $this->message = $message;
   }
 
   /**
