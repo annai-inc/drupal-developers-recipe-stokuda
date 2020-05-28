@@ -20,7 +20,7 @@ Drupalソースコードは [Drupal.org](https://www.drupal.org/download) から
 
 主要なメリットは以下のとおりです。
 
-- Drupalコアのcompose.jsonとプロダクトのcomposer.jsonを分離できる
+- Drupalコアのcompose.jsonとアプリケーションのcomposer.jsonを分離できる
 - Drush, DrupalConsole等の主要なツールが最初から組み込まれている
 - 一部のパラメータがセキュリティ的により安全に初期化される
 
@@ -90,9 +90,11 @@ Listening on "http://127.0.0.1:8088".
 ---
 
 <!-- _class: lead -->
-## 1.5.5 最初の状態でgitのレポジトリを作成する
+## 1.5.5 gitのレポジトリを作成する
 
-無事Drupalが動作したので、最初の状態でgitのレポジトリを作成しておきましょう。
+---
+
+無事Drupalが動作したので、この状態でgitのレポジトリを作成しておきましょう。
 
 ```txt
 $ git init
