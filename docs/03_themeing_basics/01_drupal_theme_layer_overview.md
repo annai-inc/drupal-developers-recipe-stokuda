@@ -35,6 +35,10 @@ Drupalでは、他のCMSやWebアプリケーションでも採用されてい�
 <!-- _class: lead -->
 ## 3.1.2 全体シーケンス (TBD)
 
+---
+
+TBD (個別の要素の解説の後の方がいいか？)
+
 @see https://www.drupal.org/docs/8/api/render-api/the-drupal-8-render-pipeline
 
 ---
@@ -93,25 +97,29 @@ twigではPHPは書けないため、テンプレートレイヤーではビジ�
 
 ---
 
+twigのシンタックスについては本コンテンツの趣旨ではないので、解説は行いません。
+
+必要に応じて [twigのドキュメント](https://twig.symfony.com/doc/3.x/) を参照してください。　
+
+---
+
 <!-- _class: lead -->
-## 3.1.4 Theme hooks
+## 3.1.4 Theme hookとPreprocess
 
 ---
 
 Drupalの機能を拡張する方法の１つとしてフックが利用できることを２章で学びました。テーマも同様にフックで拡張することができます。
 
-TBD: もう少しアーキテクチャレベルの解説を追加する。
-
 主な拡張ポイントは次の2つです。
 
-- hook_theme: テンプレート名とそのテンプレートに渡す変数のメタデータを定義する
-- [preprocess](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/group/themeable#sec_preprocess_templates): テンプレートに渡す変数の値を設定する
+- [hook_theme](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_theme/): 新しいテーマフックとそのメタデータ(テンプレート名やテンプレートで利用する変数名など)を定義する
+- [preprocess](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/group/themeable#sec_preprocess_templates): テンプレートに実際に渡す変数の値を設定する
 
 ---
 
 ここで、例としてコアのuserモジュールのコードを見てみましょう。
 
-`web/modules/user/user.module` には `hook_theme` の実装である `user_theme` が次のように実装されています。
+`web/modules/user/user.module` には `hook_theme` の実装である `user_theme` が次のように書かれています。
 
 ---
 
@@ -133,17 +141,111 @@ function user_theme() {
 
 ---
 
-`hook_theme` が返す配列のキーは、テンプレート名になります。
+`hook_theme` が返す配列のキーは、テーマフックの名称です。
 
-つまり、フックでは `user.html.twig`、 `username.html.twig` という2つのテンプレートが定義されます。
+各配列の要素が `template` というキーを持たない場合、テーマフックの名前がそのままテンプレート名として利用されています。
+
+つまり、このサンプルコードでは `user`, `username` という2つのテーマフックが定義され、それぞれ `user.html.twig`、 `username.html.twig` というテンプレートを通してレンダリングされることになります。
 
 先に `user` の方から見ていきましょう。
 
 
 ---
 
+TBD
+
+`render element` というキーは... (TBD)
+
+---
+
+次に `username` の方を見ていきましょう。
+
+`variables` というキーでは、テンプレートに渡す変数名とその初期値が定義されます。
+
+サンプルコードの例では、`account`, `attributes`, `link_options` という変数とその初期値が定義されている事がわかります。
+
+この定義があるおかけで、 `username.html.twig` というテンプレートの中でこれらの変数にアクセスできるようになります。
+
+---
+
+それでは、次に `username.html.twig` に渡す変数の値がどのように設定されているのか見ていきましょう。
+
+先に少し紹介したように、テンプレートに渡す変数の値を設定するのは `preprocess` の役割です。
+
+preprocessは「特定の命名規則で実装されたグローバル関数」として実装されます。
+
+---
+
+具体的には、[Preprocessing for Template Files](https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/group/themeable#sec_preprocess_templates) にリストされている次の関数が有効なpreprocessの関数名です。
+
+- template_preprocess(&$variables, $hook)
+- template_preprocess_HOOK(&$variables)
+- MODULE_preprocess(&$variables, $hook)
+- MODULE_preprocess_HOOK(&$variables)
+- ENGINE_engine_preprocess(&$variables, $hook)
+- ENGINE_engine_preprocess_HOOK(&$variables)
+- THEME_preprocess(&$variables, $hook)
+- THEME_preprocess_HOOK(&$variables)
+
+---
+
+複数の有効なproprocess関数がある場合、一番優先度の高い関数のみが実行されます。
+
+優先度は前のページの下にいくほど高くなります。
+
+つまり、
+
+- **コンテキスト(HOOK)を特定できる関数の方が優先度が高い**
+- **バックエンドよりフロントエンドに近いレイヤーで定義された関数の方が優先度高い**
+
+というルールになっています。
+
+---
+
+このルールに照らし合わせると、Drupalのデフォルトのコードツリーを使った場合は、userモジュールの `template_preprocess_username` という関数が使われていることが分かります。
+
+```txt
+$  ❯ grep -rnI preprocess_username .
+./core/modules/rdf/rdf.module:395:    // rdf_preprocess_username().
+./core/modules/rdf/rdf.module:415:function rdf_preprocess_username(&$variables) {
+./core/modules/rdf/rdf.module:455:  // Long usernames are truncated by template_preprocess_username(). Store the
+./core/modules/rdf/tests/src/Functional/UserAttributesTest.php:47:    // by template_preprocess_username (20 characters)
+./core/modules/user/user.module:478:function template_preprocess_username(&$variables) {
+./core/modules/user/templates/username.html.twig:22: * @see template_preprocess_username()
+./core/themes/classy/templates/user/username.html.twig:22: * @see template_preprocess_username()
+./core/themes/stable/templates/user/username.html.twig:22: * @see template_preprocess_username()
+```
+
+(この関数のコードの詳細な解説は割愛します)
+
+---
+
+先のルールは、言い換えると「コアやモジュールが定義したpreprocessやテンプレートは、他のモジュールやテーマで変更できる」ということになります。
+
+この考え方、特に「モジュールがデフォルトのpreprocessとテンプレートを定義できる」ということを理解するのはとても重要です。
+
+つまり、**「Themeingとはthemesディレクトリ以下のソースコードだけを触る仕事ではない」** ということです。
+
+ここを理解しないと、特定のテーマでしか動かなかったり拡張性に乏しい実装が生まれる原因になります。しっかりと押さえておいてください。
+
+---
+
+コアやモジュールが提供するデフォルトの実装から単にテンプレートを変えるだけではなく、テンプレート内で使う変数自体を新しく追加したい場合は、 [hook_theme_resgitory_alter](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_theme_registry_alter/) を使って、他で宣言されている `hook_theme` の内容を変更することもできます。
+
+---
+
 <!-- _class: lead -->
-## 3.1.5
+## 3.1.5 Theme hook suggestion
+
+---
+
+<!-- _class: lead -->
+## 3.1.6 Render Arrays
+
+---
+
+<!-- _class: lead -->
+## 3.1.5 レンダーパイプライン
 
 ---
 
