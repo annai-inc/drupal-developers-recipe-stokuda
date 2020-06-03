@@ -26,7 +26,7 @@ _class: invert
 
 ---
 
-Drupalでは、他のCMSやWebアプリケーションでも採用されているように「テーマ」と呼ばれるプレゼンテーションレイヤーの機能を差し替えることで、システムのデザインを自由に変更することができます。
+Drupalでは、他のCMSやWebアプリケーションにもあるような「テーマ」と呼ばれるプレゼンテーションレイヤーの機能を差し替えることで、デザインを自由に変更することができます。
 
 このセクションを通して、Drupalがデータをレンダリング（表示）する流れや、テーマを構成する要素を紹介します。
 
@@ -48,9 +48,9 @@ TBD (個別の要素の解説の後の方がいいか？)
 
 ---
 
-Drupal 7では、テンプレートエンジンとしてPHPそのものが使われていました。
+Drupal 7では、テンプレートエンジンとしてPHPそのもの(PHP Template)が使われていました。
 
-つまり、テンプレートは以下のように実装されます。
+例えば、テンプレートは以下のように実装されます。
 
 ```php
 <?php
@@ -62,24 +62,24 @@ print '<div class="wrapper">' . $data . '</div>';
 
 ---
 
-このサンプルコードの場合、`$data` という変数には、ビジネスロジックでアクセス制御を行い、なんらかの処理を実行した結果が格納されています。
+このサンプルコードの場合、`$data` という変数にはビジネスロジックでアクセス制御を行い、なんらかの処理を実行した結果が格納されています。
 
-しかし、テンプレート自身がPHPで実装されているため、下記のようにこの変数を無視してテンプレート側でDBにアクセスし、表示したいデータを取得するような実装もできてしまいます。
+しかし、テンプレート自身がPHPで実装されているため、下記のようにこの変数を無視してテンプレート側でDBにアクセスし、任意のデータを表示するような実装もできてしまいます。
 
 ```php
 <?php
 
-$my_data = get_some_secret_data();
-print '<div class="wrapper">' . $my_data . '</div>';
+$secret_data = get_some_secret_data();
+print '<div class="wrapper">' . $secret_data . '</div>';
 
 ?>
 ```
 
 ---
 
-もちろん、後述するtheme_hookのような「ビジネスロジックがテーマに変数を渡す仕組み」はDrupal 7の時点で提供されていました。しかし、これを使わずにテンプレートを魔改造する実装が一定の割合で存在するのが悲しい現実です。
+もちろん、後述するtheme_hookのような「ビジネスロジックがテーマに安全に変数を渡す仕組み」はDrupal 7の時点で提供されていました。しかし、これを使わずにテンプレートを魔改造する実装が一定の割合で存在するのが悲しい現実です。
 
-これは、特にDrupal初学者やOSSを活用して開発する経験が少ない開発者が陥りがちな問題です。
+これは、特にDrupal初学者やシステムの長期的なメンテナンス経験が少ない開発者が陥りがちな問題です。
 
 このような各レイヤーの責任区分が曖昧で蜜結合な実装は、メンテナンスを困難にし、場合によってはセキュリティーの問題を発生させます。
 
@@ -87,19 +87,21 @@ print '<div class="wrapper">' . $my_data . '</div>';
 
 Drupal 8では、テンプレートエンジンに[twig](https://twig.symfony.com/)が採用され、このような問題は発生しなくなりました。
 
-先のテンプレートはtwigだと以下のようになります。
+先のテンプレートはtwigだと次のようになります。
 
 ```twig
 <div class="wrapper">{{ data }}</div>
 ```
 
-twigではPHPは書けないため、テンプレートレイヤーではビジネスロジックから渡された変数のみで出力を生成することが強制されます。これはThemeingに関するDrupal 7からの大きな違いであり、制約であり、同時に大きなメリットでもあります。
+twigではPHPは書けないため、テンプレートレイヤーではビジネスロジックから渡された変数のみで出力を生成することが強制されます。また、特に何もしなくても文字列がデフォルトでエスケープされます。
+
+これはThemeingに関するDrupal 7からの大きな違いであり、制約であり、同時に大きなメリットでもあります。
 
 ---
 
 twigのシンタックスについては本コンテンツの趣旨ではないので、解説は行いません。
 
-必要に応じて [twigのドキュメント](https://twig.symfony.com/doc/3.x/) を参照してください。　
+必要に応じて [twigのドキュメント](https://twig.symfony.com/doc/3.x/) を参照してください。
 
 ---
 
@@ -108,7 +110,7 @@ twigのシンタックスについては本コンテンツの趣旨ではない�
 
 ---
 
-Drupalの機能を拡張する方法の１つとしてフックが利用できることを２章で学びました。テーマも同様にフックで拡張することができます。
+Drupalの機能を拡張する方法の１つとしてフックが利用できることを2章で学びました。テーマも同様にフックで拡張することができます。
 
 主な拡張ポイントは次の2つです。
 
@@ -143,9 +145,11 @@ function user_theme() {
 
 `hook_theme` が返す配列のキーは、テーマフックの名称です。
 
-各配列の要素が `template` というキーを持たない場合、テーマフックの名前がそのままテンプレート名として利用されています。
+各配列の要素が `template` というキーを持たない場合、テーマフックの名前がそのままテンプレート名として利用されます。
 
 つまり、このサンプルコードでは `user`, `username` という2つのテーマフックが定義され、それぞれ `user.html.twig`、 `username.html.twig` というテンプレートを通してレンダリングされることになります。
+
+※hook_themeの詳細は、この章の別のセクションで解説します。
 
 先に `user` の方から見ていきましょう。
 
@@ -172,11 +176,11 @@ TBD
 
 先に少し紹介したように、テンプレートに渡す変数の値を設定するのは `preprocess` の役割です。
 
-preprocessは「特定の命名規則で実装されたグローバル関数」として実装されます。
+preprocessは、モジュールのフックと同様に「特定の命名規則で実装されたグローバル関数」として実装されます。
 
 ---
 
-具体的には、[Preprocessing for Template Files](https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/group/themeable#sec_preprocess_templates) にリストされている次の関数が有効なpreprocessの関数名です。
+具体的には、[Preprocessing for Template Files](https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/group/themeable#sec_preprocess_templates) にリストされている次の関数が有効なpreprocessの関数名です。`HOOK` の部分には `hook_theme` で定義したフック名が入ります。
 
 - template_preprocess(&$variables, $hook)
 - template_preprocess_HOOK(&$variables)
@@ -189,9 +193,7 @@ preprocessは「特定の命名規則で実装されたグローバル関数」�
 
 ---
 
-複数の有効なproprocess関数がある場合、一番優先度の高い関数のみが実行されます。
-
-優先度は前のページの下にいくほど高くなります。
+複数の有効なproprocess関数がある場合は優先度の低いものから順次実行されます。優先度はリストの下にいくほど高くなります。
 
 つまり、
 
@@ -202,7 +204,7 @@ preprocessは「特定の命名規則で実装されたグローバル関数」�
 
 ---
 
-このルールに照らし合わせると、Drupalのデフォルトのコードツリーを使った場合は、userモジュールの `template_preprocess_username` という関数が使われていることが分かります。
+このルールに照らし合わせると、Drupalのデフォルトのコードツリーを使った場合は、`template_preprocess_username` と `rdf_preprocess_username` という関数が使われることが分かります。
 
 ```txt
 $  ❯ grep -rnI preprocess_username .
@@ -216,21 +218,79 @@ $  ❯ grep -rnI preprocess_username .
 ./core/themes/stable/templates/user/username.html.twig:22: * @see template_preprocess_username()
 ```
 
-(この関数のコードの詳細な解説は割愛します)
+`template_preprocess_username` のコードを少し覗いてみましょう。
 
 ---
 
-先のルールは、言い換えると「コアやモジュールが定義したpreprocessやテンプレートは、他のモジュールやテーマで変更できる」ということになります。
+```php
+/**
+ * Prepares variables for username templates.
+ *
+ * Default template: username.html.twig.
+ *
+ * Modules that make any changes to variables like 'name' or 'extra' must ensure
+ * that the final string is safe.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - account: The user account (\Drupal\Core\Session\AccountInterface).
+ */
+function template_preprocess_username(&$variables) {
+  // ...
+
+  // Populate link path and attributes if appropriate.
+  if ($variables['uid'] && $variables['profile_access']) {
+    // We are linking to a local user.
+    $variables['attributes']['title'] = t('View user profile.');
+    $variables['link_path'] = 'user/' . $variables['uid'];
+  }
+  elseif (!empty($account->homepage)) {
+  // ...
+```
+
+---
+
+preprocess関数では、参照渡しされている `$variables` という配列の変数にテンプレートに渡したい値を設定します。
+
+例えば、
+
+```php
+$variables['foo'] = "Foo!!!";
+```
+
+というコードを書くと、twigテンプレートで `foo` という変数が利用できるようになります。
+
+この観点で先程のコードを見てみると、`user_theme` で定義されている `attributes` という変数を設定していることが分かりますね。
+
+---
+
+ちなみに、`usrename.html.twig` がレンダリングしている箇所がどこかというと、下の画像の赤い部分です。
+
+![width:1100px](../assets/03_themeing_basics/01_drupal_theme_layer_overview/username_template.png)
+
+このように非常に小さな単位でテンプレートが分割されています。
+
+---
+
+先のpreprocessのルールに戻りましょう。
+
+このルールは、「コアやモジュールが定義したデフォルトのpreprocessやテンプレートは、他のモジュールやテーマで変更できる」ということになります。
 
 この考え方、特に「モジュールがデフォルトのpreprocessとテンプレートを定義できる」ということを理解するのはとても重要です。
 
-つまり、**「Themeingとはthemesディレクトリ以下のソースコードだけを触る仕事ではない」** ということです。
-
-ここを理解しないと、特定のテーマでしか動かなかったり拡張性に乏しい実装が生まれる原因になります。しっかりと押さえておいてください。
+先程見たuserやusernameのproprocessやテンプレートの実装は、テーマではなくモジュールが持っていましたね。
 
 ---
 
-コアやモジュールが提供するデフォルトの実装から単にテンプレートを変えるだけではなく、テンプレート内で使う変数自体を新しく追加したい場合は、 [hook_theme_resgitory_alter](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_theme_registry_alter/) を使って、他で宣言されている `hook_theme` の内容を変更することもできます。
+つまり、**「Themeingとはthemesディレクトリ以下のソースコードだけを触る仕事ではない」** ということです。
+
+ここを理解しないと、特定のテーマでしか動かなかったり、拡張性に乏しい実装が生まれる原因になります。しっかりと押さえておいてください。
+
+---
+
+コアやモジュールが提供するデフォルトの実装から単にテンプレートや既存の変数の値を変えるだけではなく、テンプレート内で使う変数自体を新しく追加したい場合もあります。
+
+このようなケースでは、[hook_theme_resgitory_alter](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_theme_registry_alter/) を使って、他で宣言されている `hook_theme` の内容を変更することもできます。
 
 ---
 
