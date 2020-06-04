@@ -361,7 +361,7 @@ Drupal内部で、これらがどのように処理されるのかを簡単に�
 
 ---
 
-全体のシーケンスについては、[Learn Drupal 8 Render Pipeline](https://www.slideshare.net/zyxware/learn-drupal-8-render-pipeline) で非常に詳しく解説されているので参考にしてください。
+全体のシーケンスについては、[The Drupal 8 render pipeline](https://www.drupal.org/docs/8/api/render-api/the-drupal-8-render-pipeline) で非常に詳しく解説されているので参考にしてください。
 
 ---
 
