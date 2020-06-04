@@ -22,24 +22,116 @@ _class: invert
 
 一般的には、ビジネスロジックとプレゼンテーションレイヤーを分離し、お互いの責任範囲を明確にするとともに粗結合にするアーキテクチャが採用されます。
 
-つまり、ビジネスロジックはデータの取扱だけに注力し、それがどのように出力されるかはケアしません。逆にプレゼンテーションレイヤーは、渡されたデータをどのように出力するかのみに注力します。
+つまり、ビジネスロジックはデータの取扱いだけに注力し、それがどのように出力されるかの詳細まではケアしません。逆にプレゼンテーションレイヤーは、渡されたデータをどのように出力するかのみに注力します。
 
 ---
 
 Drupalでは、他のCMSやWebアプリケーションにもあるような「テーマ」と呼ばれるプレゼンテーションレイヤーの機能を差し替えることで、デザインを自由に変更することができます。
 
-このセクションを通して、Drupalがデータをレンダリング（表示）する流れや、テーマを構成する要素を紹介します。
+このセクションを通して、Drupalがデータをレンダリング（表示）する流れや、テーマを構成する要素を紹介していきます。
 
 ---
 
 <!-- _class: lead -->
-## 3.1.2 全体シーケンス (TBD)
+## 3.1.2 HTMLを生成するまでの全体シーケンス (aka. Render Pipeline)
 
 ---
 
-TBD (個別の要素の解説の後の方がいいか？)
+先述したとおり、テーマの仕事はビジネスロジックが必要なデータを生成した後に行われます。
 
-@see https://www.drupal.org/docs/8/api/render-api/the-drupal-8-render-pipeline
+つまり、システムがリクエストを受けてからレスポンスを返す一連の流れの中では、後半部分でテーマが利用されます。
+
+レイヤーの分離の観点からは、テーマ開発者は全体の流れやビジネスロジックの部分はブラックボックスとして扱う、という考え方もあります。
+
+---
+
+しかし、そのような分業を行った場合は「何かを画面に出力する」タスクのうち、全体の70%程度はモジュール開発者(正確には、DrupalのAPIを理解しPHPでの開発ができる人)の仕事になりかねません。
+
+このスライドを最後まで読むと、なぜそうなるか雰囲気が掴めていると思います。
+
+特に小さなチームで効率の良い開発を行う場合、テーマ開発者やモジュール開発者というロールに関わらず、全体の流れや自分の担当となる部分の前後のつながりを理解しておくことはとても重要です。
+
+というわけで、まずは全体の流れについて解説していきます。
+
+---
+
+全体の流れは、Drupal.orgの[The Drupal 8 render pipeline](https://www.drupal.org/docs/8/api/render-api/the-drupal-8-render-pipeline) に非常にわかりやすくまとまっていますので、これを噛み砕いて説明していきます。
+
+とは言っても、全く新しい事をこれから覚えるわけではありません。ここまでのトレーニングで得たことを思い出してみましょう。
+
+「1.1.5 リクエストからレスポンスまでの流れ」でDrupalがリエクストを受けてからレスポンスを返すまでの流れの概要を解説しました。
+
+そして2.5.3章では、実際にあるルーティングを担当するコントローラーを作成し、Render Arrayとしてレスポンスを返すと、それが最終的にHTMLとして表示されることを学びました。
+
+----
+
+テーマレイヤーは、主にこの「Render ArrayをHTMLに変換する」部分を担当します。
+
+これまでに学んだことを思い出してきたでしょうか？
+
+忘れてしまった方は、先程示した資料のセクションを軽く見直してから次に進みましょう。
+
+---
+
+「1.1.5 リクエストからレスポンスまでの流れ」で説明した全体の流れは、実はDrupalに特有なものではありません。この全体の流れは [SynfomyのRender Pipeline](https://symfony.com/doc/3.4/components/http_kernel.html) そのものです。
+
+Drupalは、この流れの中で発生する [Kernek.view](https://symfony.com/doc/3.4/components/http_kernel.html#component-http-kernel-kernel-view) イベントに対してイベントハンドラーを登録することで、「Render ArrayをHTMLに変換して出力するテーマーレイヤー」を埋め込んでいます。
+
+---
+
+具体的には [MainContentViewSubscriber](https://github.com/drupal/drupal/blob/8.8.x/core/lib/Drupal/Core/EventSubscriber/MainContentViewSubscriber.php) というクラスの `onViewRenderArray` メソッドが「Render ArrayをHTMLに変換する」起点となります。
+
+正確には、必ずしもHTMLを返すわけではありません。
+
+実際にはHTTPリクエストが要求するフォーマット (html, json, etc)に対応したレンダラーがレスポンスを返します。
+
+これらのレンダラーは、[MainContentRendererInterface](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21MainContent%21MainContentRendererInterface.php/interface/MainContentRendererInterface/) を実装したクラスとして提供されています。
+
+---
+
+コアのコードツリーを見ると、いくつかのレンダラーが実装されていることがわかります。
+
+```txt
+$ grep -rnle "class .* implements .*MainContentRendererInterface" web
+web/core/modules/system/tests/modules/common_test/src/Render/MainContent/JsonRenderer.php
+web/core/lib/Drupal/Core/Render/MainContent/DialogRenderer.php
+web/core/lib/Drupal/Core/Render/MainContent/HtmlRenderer.php
+web/core/lib/Drupal/Core/Render/MainContent/AjaxRenderer.php
+```
+
+最終的には、`MainContentRendererInterface::renderResponse` がsymfonyのRender Pipelineへの応答の責任、つまり、[Response](https://symfony.com/doc/current/components/http_foundation.html#response) オブジェクトを生成を担当します。
+
+---
+
+HTMLをレンダリングする場合の例を見てみましょう。処理の起点は先の通り [HtmlRenderer::rederResponse](https://github.com/drupal/drupal/blob/8.8.x/core/lib/Drupal/Core/Render/MainContent/HtmlRenderer.php#L116) です。
+
+このメソッドは次のようなステップでRender ArrayをHTMLに変換します。
+
+1. `HtmlRenderer::prepare()` を呼び出し、Render Arrayに `#type` が `page` のデータがあるかを確認します。これは、最終的には `<body>` タグ内のコンテンツに変換されます。
+
+---
+
+2. もし `#type` が `page` のデータが存在しない場合は、`RenderEvents::SELECT_PAGE_DISPLAY_VARIANT ` イベントを起動してデータの生成を行います。デフォルトでは、`SimplePageVariant` が使われます。blockモジュールが有効な場合は、`BlockPageVariant` が使われ、各リージョンに配置したブロックコンテンツのデータが登録されます。PanelsやPage Managerといったレイアウトを変更するモジュールにも、このイベントに反応するハンドラーが実装されています。ここでは `page.html.twig` というテンプレートが利用されます。
+
+---
+
+3. [hook_page_attachments()](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_page_attachments/) と [hook_page_attachments_alter()](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_page_attachments_alter/) を起動し、ライブラリ(cssやjsなどのアセット)を追加します。
+
+4.`#type` が `page` のRender Arrayを `#type` が `html` のRender Arrayでラップし、[hook_page_top()](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_page_top/) と [hook_page_bottom()](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_page_bottom/) を起動します。
+
+---
+
+5. `#type` が `html` のRender Arrayを [RendererInterface::render](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21RendererInterface.php/function/RendererInterface%3A%3Arender/) に渡し、`html.html.twig` テンプレートを使ってデータをレンダリングします。これにより、HTMLの文字列が生成されます。
+
+6. HTMlの文字列を元に [Response](https://symfony.com/doc/current/components/http_foundation.html#response) のサブクラスである [HtmlResponse](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21HtmlResponse.php/class/HtmlResponse/) を生成します。
+
+※なお、インストール中や更新中、メンテナンス中や例外が発生した場合など、Drupalが完全なレスポンスを返せない場合には、代わりに [BareHtmlPageRenderer](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21BareHtmlPageRenderer.php/class/BareHtmlPageRenderer/) がレンダリングを担当します。
+
+---
+
+以上が、DrupalがRender ArrayをHTMLに変換する仕組みになります。抽象化層が多いですが、やっていることは単なるデータ変換です。
+
+[The Drupal 8 render pipeline](https://www.drupal.org/docs/8/api/render-api/the-drupal-8-render-pipeline) にここで解説した原文とシーケンス図が公開されていますので、しっかりと目を通しておいてください。
 
 ---
 
@@ -258,13 +350,13 @@ preprocess関数では、参照渡しされている `$variables` という配�
 $variables['foo'] = "Foo!!!";
 ```
 
-というコードを書くと、twigテンプレートで `foo` という変数が利用できるようになります。
+というコードを書くと、twigテンプレートで `foo` という変数が利用できるようになります。`$variales` の配列のキーの名前でtwigからはアクセスできるということですね。
 
-この観点で先程のコードを見てみると、`user_theme` で定義されている `attributes` という変数を設定していることが分かりますね。
+この観点で先程のコードを見てみると、`user_theme` で定義されている `attributes` という変数を設定していることが分かります。
 
 ---
 
-ちなみに、`usrename.html.twig` がレンダリングしている箇所がどこかというと、下の画像の赤い部分です。
+ちなみに、`username.html.twig` がレンダリングしている箇所がどこかというと、下の画像の赤い部分です。
 
 ![width:1100px](../assets/03_themeing_basics/01_drupal_theme_layer_overview/username_template.png)
 
@@ -301,11 +393,6 @@ $variables['foo'] = "Foo!!!";
 
 <!-- _class: lead -->
 ## 3.1.6 Render Arrays
-
----
-
-<!-- _class: lead -->
-## 3.1.5 レンダーパイプライン
 
 ---
 
