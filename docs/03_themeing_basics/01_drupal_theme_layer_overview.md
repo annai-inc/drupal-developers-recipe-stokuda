@@ -111,7 +111,7 @@ HTMLをレンダリングする場合の例を見てみましょう。処理の�
 
 ---
 
-2. もし `#type` が `page` のデータが存在しない場合は、`RenderEvents::SELECT_PAGE_DISPLAY_VARIANT ` イベントを起動してデータの生成を行います。デフォルトでは、`SimplePageVariant` が使われます。blockモジュールが有効な場合は、`BlockPageVariant` が使われ、各リージョンに配置したブロックコンテンツのデータが登録されます。PanelsやPage Managerといったレイアウトを変更するモジュールにも、このイベントに反応するハンドラーが実装されています。ここでは `page.html.twig` というテンプレートが利用されます。
+2. もし `#type` が `page` のデータが存在しない場合は、`RenderEvents::SELECT_PAGE_DISPLAY_VARIANT ` イベントを起動してデータの生成を行います。デフォルトでは、`SimplePageVariant` が使われます。blockモジュールが有効な場合は、`BlockPageVariant` が使われ、各リージョンに配置したブロックコンテンツのデータが登録されます。PanelsやPage Managerといったメインコンテンツエリアのレイアウトを変更するモジュールにも、このイベントに反応するハンドラーが実装されています。ここでは `page.html.twig` というテンプレートが利用されます。
 
 ---
 
@@ -395,6 +395,45 @@ $variables['foo'] = "Foo!!!";
 ## 3.1.6 Render Arrays
 
 ---
+
+[Ruby on Rails](https://guides.rubyonrails.org/action_controller_overview.html#methods-and-actions)ではコントローラークラスのインスタンス変数がそのままテンプレートでアクセスできます。
+
+Laravelでは、[view helper](https://laravel.com/docs/7.x/views)を通して変数をテンプレートに渡します。
+
+Drupalでは、それに対応するのが[Render Array](https://www.drupal.org/docs/drupal-apis/render-api/render-arrays) です。これにデータ自体や、テンプレート名などのメタデータを設定することでテンプレートとのやり取りを行います。
+
+---
+
+Render Arrayは `renderer` サービス(RendererInterface) によってレンダリングされます。
+
+また、Render Arrayは配列の各階層に1つ以上のエレメントを持っています。
+
+エレメントには `properties` と `children` の2種類があります。
+
+`properties` は `#` から始まる配列のキーを持ち、 `children` はそれ以外の文字から始まるキーを持ちます。
+
+`children` 自身も `properties` と `children` を持ちますが、rendererにどの階層をレンダリングするか伝えるために、各階層で少なくとも1つの `property` を持つ必要があります。
+
+----
+
+(TBD. Element Treeの図を入れる)
+
+`property` の名前は、[Render API](https://www.drupal.org/docs/drupal-apis/render-api) で定義されています。
+
+Render APIでは多数の `property` が定義されていますが、そのうちレンダリングのために必須なプロパティ、つまり「Render Arrayの各階層にいずれか1つが必要となる」プロパティのみをここで紹介します。
+
+---
+
+### 3.1.6.1 #Type
+
+`#type` プロパティは、`Render element` としてレンダリングするデータを意味します。
+
+Render elementはPlugin (2.15章を参照)であり、カプセル化され、ネスト可能なレンダリング可能なコンポーネントです。
+
+Render elementには2つのタイプがあります。 `generic`と `form input` です。後者はより複雑であり、バリデーションやデータの処理のための機能を持ちます。
+
+この2種類のRender elementは、それぞれ `ElementInterface` と `FormElementInterface` を実装したPluginとしてソースコードで確認することができます。
+
 
 ## まとめ
 
