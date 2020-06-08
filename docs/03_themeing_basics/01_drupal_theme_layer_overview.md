@@ -428,13 +428,68 @@ Render APIでは多数の `property` が定義されていますが、そのう�
 
 `#type` プロパティは、`Render element` としてレンダリングするデータを意味します。
 
-Render elementはPlugin (2.15章を参照)であり、カプセル化され、ネスト可能なレンダリング可能なコンポーネントです。
+Render elementはPlugin (2.15章を参照)であり、カプセル化され、ネストされたレンダリング可能なコンポーネントです。
 
 Render elementには2つのタイプがあります。 `generic`と `form input` です。後者はより複雑であり、バリデーションやデータの処理のための機能を持ちます。
 
+---
+
 この2種類のRender elementは、それぞれ `ElementInterface` と `FormElementInterface` を実装したPluginとしてソースコードで確認することができます。
+
+---
+
+### 3.1.6.2 #theme
+
+データを特定のTheme hookを使って出力する場合は `#theme` プロパティを指定します。
+
+通常、このプロパティを使う際は、 `hook_theme` で定義した変数に実際の値をマッピングするために他のプロパティを併用します。
+
+このプロパティに指定可能な値は、カスタムコードの `hook_theme` で定義したものだけではありません。DrupalコアやContirbuteモジュールで定義された多数のTheme hookの値も利用可能です。
+
+[drupal_common_theme()](https://github.com/drupal/drupal/blob/8.8.0/core/includes/theme.inc#L1743) 関数を見ると、コアで定義されているTheme hookの定義を確認することができます。
+
+---
+
+### 3.1.6.3 #markup
+
+`#markup` プロパティは、2章ですでに利用しましたね。以下のように直感的に記述することができます。
+
+```php
+    return [
+      "#markup" => '<span>' . $message . '</span>'
+    ];
+```
+
+`#theme` を使った実装が過剰であり、もっとシンプルに実装したい場合は、このプロパティを使うことができます。例えば、ある文字列に対して単に固定的に `<span>` タグでラップしたい場合などです。
+
+---
+
+このプロパティを使う場合、文字列は `\Drupal\Cmponent\Utility\Xss::filterAdmin` によって暗黙的にサニタイズされる点には注意してください。例えば、 `<script>` や `<style>` といったタグは利用することができません。
+
+---
+
+### 3.1.6.4 #plain_text
+
+単にプレーンテキストを表現したい場合は、 `#markup` の代わりに `#plain_text` プロパティが利用できます。
+
+高速にレスポンスを生成したい場合などに利用してください。
+
+
+---
+
+### 3.1.6.5 その他のプロパティ
+
+前述したとおり、[Render API](https://www.drupal.org/docs/drupal-apis/render-api)では他にも多数のプロパティが定義されています。
+
+Drupal.orgの　[Render Arrays](https://www.drupal.org/docs/drupal-apis/render-api/render-arrays) にプロパティの一覧のドキュメントがあるので、目を通しておいてください。
+
+---
 
 
 ## まとめ
 
-TBD
+このセクションでは、Drupalのテーマが全体の処理の流れでどの部分を担当するか、どのような機能を持つかなどの概要を解説しました。
+
+繰り返しになりますが、問題を解決するための個別の手順を覚えるのではなく、道具の設計思想や原理原則を理解するほうがとても重要です。
+
+次のセクションからは個別の要素の実装の解説に進みますが、この章を進める間はに不明点が出た場合はこのセクションを見直すようにしてください。
