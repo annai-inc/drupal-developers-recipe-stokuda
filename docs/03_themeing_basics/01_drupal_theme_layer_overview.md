@@ -18,15 +18,17 @@ _class: invert
 
 ---
 
+Drupalでは、他のCMSやWebアプリケーションにもあるような「テーマ」と呼ばれるプレゼンテーションレイヤーの機能を差し替えることで、デザインを自由に変更することができます。
+
 ビジネスロジックで生成したデータをどのように[プレゼンテーションレイヤー](https://en.wikipedia.org/wiki/Multitier_architecture)で出力するかは、Drupalに限らず多くのCMSやフレームワークで重要な要素の１つです。
 
 一般的には、ビジネスロジックとプレゼンテーションレイヤーを分離し、お互いの責任範囲を明確にするとともに粗結合にするアーキテクチャが採用されます。
 
-つまり、ビジネスロジックはデータの取扱いだけに注力し、それがどのように出力されるかの詳細まではケアしません。逆にプレゼンテーションレイヤーは、渡されたデータをどのように出力するかのみに注力します。
-
 ---
 
-Drupalでは、他のCMSやWebアプリケーションにもあるような「テーマ」と呼ばれるプレゼンテーションレイヤーの機能を差し替えることで、デザインを自由に変更することができます。
+つまり、ビジネスロジックはデータの取扱いだけに注力し、それがどのように出力されるかの詳細まではケアしません。逆にプレゼンテーションレイヤーは、渡されたデータをどのように出力するかのみに注力します。
+
+このように設計することでコンポーネント毎の責任が明確になり、メンテナンスや拡張性に優れたシステムが実装できます。
 
 このセクションを通して、Drupalがデータをレンダリング（表示）する流れや、テーマを構成する要素を紹介していきます。
 
@@ -47,9 +49,9 @@ Drupalでは、他のCMSやWebアプリケーションにもあるような「�
 
 しかし、そのような分業を行った場合は「何かを画面に出力する」タスクのうち、全体の70%程度はモジュール開発者(正確には、DrupalのAPIを理解しPHPでの開発ができる人)の仕事になりかねません。
 
-このスライドを最後まで読むと、なぜそうなるか雰囲気が掴めていると思います。
+(このスライドを最後まで読むと、なぜそうなるか雰囲気が掴めていると思います)
 
-特に小さなチームで効率の良い開発を行う場合、テーマ開発者やモジュール開発者というロールに関わらず、全体の流れや自分の担当となる部分の前後のつながりを理解しておくことはとても重要です。
+特に小さなチームで効率の良い開発を行う場合、テーマ開発者やモジュール開発者というロールに関わらず、全体の流れや自分の担当となる部分の前後のつながりを理解しておくことはとても重要です(これはもちろん、エンジニア個人のキャリアとしてもとても有益です)。
 
 というわけで、まずは全体の流れについて解説していきます。
 
@@ -61,11 +63,11 @@ Drupalでは、他のCMSやWebアプリケーションにもあるような「�
 
 「1.1.5 リクエストからレスポンスまでの流れ」でDrupalがリエクストを受けてからレスポンスを返すまでの流れの概要を解説しました。
 
-そして2.5.3章では、実際にあるルーティングを担当するコントローラーを作成し、Render Arrayとしてレスポンスを返すと、それが最終的にHTMLとして表示されることを学びました。
+そして2.5.3章では、実際にあるルーティングを担当するコントローラーを作成し、Render Arraysとしてレスポンスを返すと、それが最終的にHTMLとして表示されることを学びました。
 
 ----
 
-テーマレイヤーは、主にこの「Render ArrayをHTMLに変換する」部分を担当します。
+テーマレイヤーは、主にこの「Render ArraysをHTMLに変換する」部分を担当します。
 
 これまでに学んだことを思い出してきたでしょうか？
 
@@ -75,15 +77,13 @@ Drupalでは、他のCMSやWebアプリケーションにもあるような「�
 
 「1.1.5 リクエストからレスポンスまでの流れ」で説明した全体の流れは、実はDrupalに特有なものではありません。この全体の流れは [SynfomyのRender Pipeline](https://symfony.com/doc/3.4/components/http_kernel.html) そのものです。
 
-Drupalは、この流れの中で発生する [Kernek.view](https://symfony.com/doc/3.4/components/http_kernel.html#component-http-kernel-kernel-view) イベントに対してイベントハンドラーを登録することで、「Render ArrayをHTMLに変換して出力するテーマーレイヤー」を埋め込んでいます。
+Drupalは、この流れの中で発生する [Kernel.view](https://symfony.com/doc/3.4/components/http_kernel.html#component-http-kernel-kernel-view) イベントに対してイベントハンドラーを登録することで、「Render ArrayをHTMLに変換して出力するテーマーレイヤー」を実現しています。
 
 ---
 
 具体的には [MainContentViewSubscriber](https://github.com/drupal/drupal/blob/8.8.x/core/lib/Drupal/Core/EventSubscriber/MainContentViewSubscriber.php) というクラスの `onViewRenderArray` メソッドが「Render ArrayをHTMLに変換する」起点となります。
 
-正確には、必ずしもHTMLを返すわけではありません。
-
-実際にはHTTPリクエストが要求するフォーマット (html, json, etc)に対応したレンダラーがレスポンスを返します。
+正確には、必ずしもHTMLを返すわけではなく、HTTPリクエストが要求するフォーマット (html, json, etc)に対応したレンダラーがレスポンスを返します。
 
 これらのレンダラーは、[MainContentRendererInterface](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21MainContent%21MainContentRendererInterface.php/interface/MainContentRendererInterface/) を実装したクラスとして提供されています。
 
@@ -99,7 +99,7 @@ web/core/lib/Drupal/Core/Render/MainContent/HtmlRenderer.php
 web/core/lib/Drupal/Core/Render/MainContent/AjaxRenderer.php
 ```
 
-最終的には、`MainContentRendererInterface::renderResponse` がsymfonyのRender Pipelineへの応答の責任、つまり、[Response](https://symfony.com/doc/current/components/http_foundation.html#response) オブジェクトを生成を担当します。
+最終的には、`MainContentRendererInterface::renderResponse` がSymfonyのRender Pipelineへの応答の責任、つまり、[Response](https://symfony.com/doc/current/components/http_foundation.html#response) オブジェクトを生成を担当します。
 
 ---
 
@@ -119,13 +119,15 @@ HTMLをレンダリングする場合の例を見てみましょう。処理の�
 
 4.`#type` が `page` のRender Arrayを `#type` が `html` のRender Arrayでラップし、[hook_page_top()](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_page_top/) と [hook_page_bottom()](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_page_bottom/) を起動します。
 
+5. `#type` が `html` のRender Arraysを [RendererInterface::render](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21RendererInterface.php/function/RendererInterface%3A%3Arender/) に渡し、`html.html.twig` テンプレートを使ってデータをレンダリングします。
+
 ---
 
-5. `#type` が `html` のRender Arrayを [RendererInterface::render](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21RendererInterface.php/function/RendererInterface%3A%3Arender/) に渡し、`html.html.twig` テンプレートを使ってデータをレンダリングします。これにより、HTMLの文字列が生成されます。
+6. レンダリング処理は再帰的に行われ、HTML全体→メインコンテンツ全体(`<body>`タグ)→ブロック→ノード→フィールド→ラベルと値のように、大きな単位から小さな単位に進みながらそれぞれの単位ごとのテンプレートを元にデータを作成し、最終的にHTML全体のデータが文字列として生成されます。ここで `block.html.twig`、 `node.html.twig`、 `field.html.twig` などの小さなテンプレートが利用されます。
 
-6. HTMlの文字列を元に [Response](https://symfony.com/doc/current/components/http_foundation.html#response) のサブクラスである [HtmlResponse](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21HtmlResponse.php/class/HtmlResponse/) を生成します。
+3. HTMlの文字列を元に [Response](https://symfony.com/doc/current/components/http_foundation.html#response) のサブクラスである [HtmlResponse](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21HtmlResponse.php/class/HtmlResponse/) を生成します。
 
-※なお、インストール中や更新中、メンテナンス中や例外が発生した場合など、Drupalが完全なレスポンスを返せない場合には、代わりに [BareHtmlPageRenderer](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21BareHtmlPageRenderer.php/class/BareHtmlPageRenderer/) がレンダリングを担当します。
+※インストール中や更新中、メンテナンス中や例外が発生した場合など、Drupalが完全なレスポンスを返せない場合には、代わりに [BareHtmlPageRenderer](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21BareHtmlPageRenderer.php/class/BareHtmlPageRenderer/) がレンダリングを担当します。
 
 ---
 
@@ -169,7 +171,7 @@ print '<div class="wrapper">' . $secret_data . '</div>';
 
 ---
 
-もちろん、後述するtheme_hookのような「ビジネスロジックがテーマに安全に変数を渡す仕組み」はDrupal 7の時点で提供されていました。しかし、これを使わずにテンプレートを魔改造する実装が一定の割合で存在するのが悲しい現実です。
+もちろん、後述するtheme hookのような「ビジネスロジックがテーマに安全に変数を渡す仕組み」はDrupal 7の時点で提供されていました。しかし、これを使わずにテンプレートを魔改造する実装が一定の割合で存在するのが悲しい現実です。
 
 これは、特にDrupal初学者やシステムの長期的なメンテナンス経験が少ない開発者が陥りがちな問題です。
 
@@ -185,11 +187,13 @@ Drupal 8では、テンプレートエンジンに[twig](https://twig.symfony.co
 <div class="wrapper">{{ data }}</div>
 ```
 
-twigではPHPは書けないため、テンプレートレイヤーではビジネスロジックから渡された変数のみで出力を生成することが強制されます。また、特に何もしなくても文字列がデフォルトでエスケープされます。
+twigではPHPは書けないため、テンプレートレイヤーではビジネスロジックから渡された変数のみで出力を生成することが強制されます。
 
-これはThemeingに関するDrupal 7からの大きな違いであり、制約であり、同時に大きなメリットでもあります。
+また、特に何もしなくても文字列がデフォルトでエスケープされます。
 
 ---
+
+これらのtwigの特徴は、テーマ開発に関するDrupal 7からの大きな違いであり、制約であり、同時に大きなメリットでもあります。
 
 twigのシンタックスについては本コンテンツの趣旨ではないので、解説は行いません。
 
@@ -202,7 +206,9 @@ twigのシンタックスについては本コンテンツの趣旨ではない�
 
 ---
 
-Drupalの機能を拡張する方法の１つとしてフックが利用できることを2章で学びました。テーマも同様にフックで拡張することができます。
+Drupalの機能を拡張する方法の１つとしてフックが利用できることを2章で学びました。
+
+テーマも同様にフックで拡張することができます。
 
 主な拡張ポイントは次の2つです。
 
@@ -237,7 +243,7 @@ function user_theme() {
 
 `hook_theme` が返す配列のキーは、テーマフックの名称です。
 
-各配列の要素が `template` というキーを持たない場合、テーマフックの名前がそのままテンプレート名として利用されます。
+各配列の要素が `template` というキーを持たない場合、`{テーマフックの名前}.html.twig` という名前のテンプレートが利用されます。
 
 つまり、このサンプルコードでは `user`, `username` という2つのテーマフックが定義され、それぞれ `user.html.twig`、 `username.html.twig` というテンプレートを通してレンダリングされることになります。
 
@@ -274,14 +280,14 @@ preprocessは、モジュールのフックと同様に「特定の命名規則�
 
 具体的には、[Preprocessing for Template Files](https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/group/themeable#sec_preprocess_templates) にリストされている次の関数が有効なpreprocessの関数名です。`HOOK` の部分には `hook_theme` で定義したフック名が入ります。
 
-- template_preprocess(&$variables, $hook)
-- template_preprocess_HOOK(&$variables)
-- MODULE_preprocess(&$variables, $hook)
-- MODULE_preprocess_HOOK(&$variables)
-- ENGINE_engine_preprocess(&$variables, $hook)
-- ENGINE_engine_preprocess_HOOK(&$variables)
-- THEME_preprocess(&$variables, $hook)
-- THEME_preprocess_HOOK(&$variables)
+- **template_preprocess(&$variables, $hook)**
+- **template_preprocess_HOOK(&$variables)**
+- **MODULE_preprocess(&$variables, $hook)**
+- **MODULE_preprocess_HOOK(&$variables)**
+- **ENGINE_engine_preprocess(&$variables, $hook)**
+- **ENGINE_engine_preprocess_HOOK(&$variables)**
+- **THEME_preprocess(&$variables, $hook)**
+- **THEME_preprocess_HOOK(&$variables)**
 
 ---
 
@@ -350,7 +356,7 @@ preprocess関数では、参照渡しされている `$variables` という配�
 $variables['foo'] = "Foo!!!";
 ```
 
-というコードを書くと、twigテンプレートで `foo` という変数が利用できるようになります。`$variales` の配列のキーの名前でtwigからはアクセスできるということですね。
+というコードを書くと、twigテンプレートで `foo` という変数が利用できるようになります。`$variables` の配列のキーの名前でtwigからはアクセスできるということですね。
 
 この観点で先程のコードを見てみると、`user_theme` で定義されている `attributes` という変数を設定していることが分かります。
 
@@ -366,7 +372,7 @@ $variables['foo'] = "Foo!!!";
 
 先のpreprocessのルールに戻りましょう。
 
-このルールは、「コアやモジュールが定義したデフォルトのpreprocessやテンプレートは、他のモジュールやテーマで変更できる」ということになります。
+このルールは、「コアやモジュールが定義したデフォルトのpreprocessやテンプレートは、他のモジュールやテーマで変更できる」ということを意味します。
 
 この考え方、特に「モジュールがデフォルトのpreprocessとテンプレートを定義できる」ということを理解するのはとても重要です。
 
@@ -380,7 +386,7 @@ $variables['foo'] = "Foo!!!";
 
 ---
 
-コアやモジュールが提供するデフォルトの実装から単にテンプレートや既存の変数の値を変えるだけではなく、テンプレート内で使う変数自体を新しく追加したい場合もあります。
+コアやモジュールが提供するデフォルトを元に、単にテンプレートや既存の変数の値を変えるだけではなく、テンプレート内で使う変数自体を新しく追加したい場合もあります。
 
 このようなケースでは、[hook_theme_resgitory_alter](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_theme_registry_alter/) を使って、他で宣言されている `hook_theme` の内容を変更することもできます。
 
@@ -388,6 +394,8 @@ $variables['foo'] = "Foo!!!";
 
 <!-- _class: lead -->
 ## 3.1.5 Theme hook suggestion
+
+TBD.
 
 ---
 
@@ -400,23 +408,25 @@ $variables['foo'] = "Foo!!!";
 
 Laravelでは、[view helper](https://laravel.com/docs/7.x/views)を通して変数をテンプレートに渡します。
 
-Drupalでは、それに対応するのが[Render Array](https://www.drupal.org/docs/drupal-apis/render-api/render-arrays) です。これにデータ自体や、テンプレート名などのメタデータを設定することでテンプレートとのやり取りを行います。
+Drupalでは、それに対応するのが[Render Arrays](https://www.drupal.org/docs/drupal-apis/render-api/render-arrays) です。これにデータ自体やテンプレート名などのメタデータを設定することで、テンプレートとのやり取りを行います。
 
 ---
 
-Render Arrayは `renderer` サービス(RendererInterface) によってレンダリングされます。
+3.1.2章で解説した通り、Render Arraysは `renderer` サービスによってレンダリングされます。
 
-また、Render Arrayは配列の各階層に1つ以上のエレメントを持っています。
+Render Arraysは配列の各階層に1つ以上のエレメントを持っています。
 
-エレメントには `properties` と `children` の2種類があります。
+エレメントには `properties` (以下、プロパティ) と `children` の2種類があります。
 
-`properties` は `#` から始まる配列のキーを持ち、 `children` はそれ以外の文字から始まるキーを持ちます。
+プロパティ は `#` から始まる配列のキーを持ち、childrenはそれ以外の文字から始まるキーを持ちます。
 
-`children` 自身も `properties` と `children` を持ちますが、rendererにどの階層をレンダリングするか伝えるために、各階層で少なくとも1つの `property` を持つ必要があります。
+children自身もプロパティとchildrenを持つことができますが、rendererにどの階層をレンダリングするか伝えるために、各階層で少なくとも1つのプロパティを持つ必要があります。
 
 ----
 
 (TBD. Element Treeの図を入れる)
+
+---
 
 `property` の名前は、[Render API](https://www.drupal.org/docs/drupal-apis/render-api) で定義されています。
 
