@@ -183,7 +183,7 @@ description: My first awesome theme!!!.
 ---
 
 <!-- _class: lead -->
-## 2.2.5 テーマの識別子(Machine name)
+## 3.3.3 テーマの識別子(Machine name)
 
 ---
 
@@ -194,7 +194,7 @@ description: My first awesome theme!!!.
 ---
 
 <!-- _class: lead -->
-## 2.2.6 my_awesome_themeの有効化
+## 3.3.4 my_awesome_themeの有効化
 
 ---
 
@@ -213,31 +213,130 @@ $ vendor/bin/drush theme:enable my_awesome_theme
 
 `/admin/appearance` にアクセスしてください。以下のようにテーマが有効になっているはずです。
 
-![width:1100px](../assets/03_themeing_basics/03_theme_basic_structures/detect_custom_theme_1.png)
-
-TBD.
-まだ何の機能も実装していないため、今のところhello_worldモジュールの存在が確認できるのは、このモジュール一覧が表示されるパスだけです。
+![height:500px](../assets/03_themeing_basics/03_theme_basic_structures/install_custom_theme_1.png)
 
 ---
 
-モジュールの状態は `drush pml` でも確認することができます。
+<!-- _class: lead -->
+## 3.3.5 my_awesome_themeをデフォルトのテーマに設定する
+
+---
+
+Drupalでは複数のテーマを有効にし、ユーザー毎にどのテーマを使うか選択することもできます。
+
+そのため「デフォルトで利用するテーマはこれです」という設定があります。
+
+次のコマンドを実行してmy_awesome_themeをデフォルトのテーマにしましょう。
+
+```txt
+$ vendor/bin/drush -y config:set system.theme default my_awesome_theme
+```
+
+---
+
+`/admin/appearance` にアクセスしてください。以下のように「Set as default」のリンクがなくなっていれば、それがデフォルトで使われるテーマになります (ちょっとUIが分かりにくいですね...)。
+
+![height:500px](../assets/03_themeing_basics/03_theme_basic_structures/install_custom_theme_2.png)
+
+---
+
+また、Drupalでは「管理画面のテーマ」を一般ユーザーや匿名ユーザーが利用するテーマとは別に設定することができます。
+
+`/admin/appearance` の最下部の管理用テーマの設定があり、standard profileでDrupalをインストールした場合は `seven` に設定されています。
+
+![](../assets/03_themeing_basics/03_theme_basic_structures/default_admin_theme.png)
+
+
+---
+
+次のコマンドを実行すると、管理画面でもmy_awesome_themeを使うことができます(コマンドは実行しないてください)。
+
+```txt
+$ vendor/bin/drush -y config:set system.theme admin my_awesome_theme
+```
+
+管理画面にもカスタムテーマを適用する場合、Drupalのコアだけでも100程度はある全てのパスでレイアウトやJavascriptの機能が問題なく動くかを確認する必要があります。
+
+逆に言うと、管理画面でも動くように意識してカスタムテーマを開発する必要があります。
+
+---
+
+品質を厳粛に考えた場合は開発コストに見合わないケースがほとんどだと思いますので、管理画面にはコアが提供するテーマを使うことを強く推奨します。
+
+また、「管理画面」は特定のパス(例えば `/admin/` 以下)を意味しない点には注意してください。
+
+Drupalでは、個々のパスの処理を担当するコードで「このパスは管理用の機能を提供する」と宣言することができます。詳細は https://www.drupal.org/node/2224207 を参照してください。
+
+---
+
+それでは、トップページを開いてみましょう。次のようにあっさりとしたデザインでサイトが表示されれば成功です。
+
+![](../assets/03_themeing_basics/03_theme_basic_structures/install_custom_theme_3.png)
+
+---
+
+<!-- _class: lead -->
+## 3.3.6 ベーステーマを宣言する
+
+---
+
+さて、カスタムテーマが無事適用されたところで、出力されたHTMLを見てみましょう。
+
+ブラウザでトップページにアクセスしてHTMLのコードを表示してください。
+
+次のように `stable` というテーマのアセットやテンプレートが適用されているはずです。
+
+---
+
+![width:1100px](../assets/03_themeing_basics/03_theme_basic_structures/stable_sub_theme.png)
+
+---
+
+`{theme_name}.info.yml` で　`base theme` を指定しない場合、デフォルトでは `stable` を継承したサブテーマという扱いになります。
+
+この場合、 `stable` が実装しているプリプロセス、css/jsなどのアセット、テンプレートを活用できるというメリットがあります。
+
+一方で、デザインの自由度に制限があったり、セキュリティ更新やDrupalコアのバージョンアップの際にコードが変更され、意図しない動きやデザインになる可能性がある、というデメリットもあります。
+
+---
+
+開発する際の自由度やコントロール性を重視する場合は、`base theme` を `false` に設定することで、サブテーマを無効にできます。
+
+本コンテンツではこの方法を採用します。次のように `my_awesome_theme.info.yml` に `base them` の指定を追加してください。
+
+```yml
+name: My awesome theme
+type: theme
+core: 8.x
+description: My first awesome theme!!!.
+base theme: false
+```
+
+---
+
+ファイルを更新したら、一度キャッシュをクリアしましょう。
 
 ```
-$ vendor/bin/drush pml |grep hello_world
-  Other                 Hello World (hello_world)                                   Enabled
+$ vendor/bin/drush cr
 ```
+
+再度トップページにアクセスして出力されたHTMLのコードを表示してください。stable関連のファイルが使われなくなったことが分かると思います。
+
+---
+
+![width:1100px](../assets/03_themeing_basics/03_theme_basic_structures/no_base_theme.png)
 
 ---
 
 ## まとめ
 
-モジュール開発の最初の一歩として、機能を何も持たないhello_worldモジュールを開発し、Drupalがどのようにモジュールを認識するかの概要が理解できたと思います。
+テーマ開発の最初の一歩として、特に何の機能もデザインも追加されていないシンプルなテーマ開発し、Drupalがどのようにテーマを認識するかの概要を解説しました。
 
-次のセクションでは、伝統的なDrupalの機能拡張方法であるhookを実装していきます。
+以降のセクションでは、ページやブロックなどのコンポーネント毎にテーマにデザインや機能を追加していきます。
 
 ---
 
 ## ストレッチゴール
 
-1. `package` キーを追加して、モジュールが `Custom` パッケージに所属するように変更してください。
-2. `version` キーを追加して、モジュールのバージョンを `8.x-1.0` に設定してください。
+1. `package` キーを追加して、テーマが `Custom` パッケージに所属するように変更してください。
+2. `version` キーを追加して、テーマのバージョンを `8.x-1.0` に設定してください。
