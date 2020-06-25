@@ -93,9 +93,9 @@ Drupalにモジュールを認識させるために最低限必要なことは�
 
 ```bash
 $ find web/themes/custom
-web/modules/themes
-web/modules/themes/my_awesome_theme
-web/modules/themes/my_awesome_theme/my_awesome_theme.info.yml
+web/themes
+web/themes/custom/my_awesome_theme
+web/themes/custom/my_awesome_theme/my_awesome_theme.info.yml
 ```
 
 ---
@@ -108,7 +108,7 @@ type: theme
 core: 8.x
 ```
 
-この `name`、`type`、`core` が `{theme_name}.info.yml` に必須なキーとなります。その他のキーも含めて、 `{theme_name}.info.yml` では次のようなキーが指定できます。
+この `name`、`type`、`core` が {theme_name}.info.yml に必須なキーとなります。その他のキーも含めて、 {theme_name}.info.yml では次のようなキーが指定できます。
 
 ---
 
@@ -127,7 +127,21 @@ core: 8.x
 |dependencies|no|テーマが依存する他のモジュールやテーマ|
 |version|no|テーマのバージョン|
 
-TBD: テーマ特有のキーについても紹介する
+---
+
+|キー|必須|値|
+|---|---|---|
+|libraries|no|ロードするライブラリ(cssやjs)を定義します。|
+|base theme|no|ベーステーマの指定。指定しない場合は `stable` がベーステーマとなる。必須ではないが明示的に宣言することが推奨される。|
+|logo|no|サイトのデフォルトのロゴ。|
+|screenshot|no|テーマの管理画面で表示するスクリーンショット|
+|regions|no|リージョンの定義。|
+
+---
+
+ここまでが比較的よく使うことになるキーの一覧ですが、`{theme_name}.info.yml` に指定可能なキーは他にも多数あります。
+
+フォーマットの詳細については、[Defining a theme with an .info.yml file](https://www.drupal.org/docs/8/theming-drupal-8/defining-a-theme-with-an-infoyml-file) を参照してください。
 
 ---
 
