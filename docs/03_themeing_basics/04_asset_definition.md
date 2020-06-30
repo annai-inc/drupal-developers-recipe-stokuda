@@ -98,6 +98,8 @@ $ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js.ma
 
 (開発効率を上げるために `.map` ファイルの追加も忘れずに)
 
+---
+
 正しくファイルが配置されている場合、以下の4つのファイルが見つかります。
 
 ```
