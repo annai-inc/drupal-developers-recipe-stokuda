@@ -88,14 +88,25 @@ libraries:
 最後に参照するファイルを配置しましょう。
 
 ```
-$ mkdir -p web/theme/custom/my_awesome_theme/js
 $ mkdir -p web/theme/custom/my_awesome_theme/css
+$ mkdir -p web/theme/custom/my_awesome_theme/js
 $ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css --output web/theme/custom/my_awesome_theme/css/bootstrap.min.css
 $ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css.map --output web/theme/custom/my_awesome_theme/css/bootstrap.min.css.map
 $ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js --output web/theme/custom/my_awesome_theme/js/bootstrap.min.js
+$ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js.map --output web/theme/custom/my_awesome_theme/js/bootstrap.min.js.map
 ```
 
 (開発効率を上げるために `.map` ファイルの追加も忘れずに)
+
+正しくファイルが配置されている場合、以下の4つのファイルが見つかります。
+
+```
+$ find web/themes/custom/my_awesome_theme -type f|grep bootstrap
+web/themes/custom/my_awesome_theme/js/bootstrap.min.js
+web/themes/custom/my_awesome_theme/js/bootstrap.min.js.map
+web/themes/custom/my_awesome_theme/css/bootstrap.min.css.map
+web/themes/custom/my_awesome_theme/css/bootstrap.min.css
+```
 
 ---
 
