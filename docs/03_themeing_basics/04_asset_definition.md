@@ -16,13 +16,13 @@ Bootstrap 4のCSSとJavascriptをテーマのライブラリとして定義し�
 ---
 
 <!-- _class: lead -->
-## 3.4.1 ライブラリとは
+## 3.4.1 ライブラリの定義
 
 ---
 
-Drupal 8では、CSSやJavascriptなどのアセットは「ライブラリ」という単位で制御されます。
+Drupal 8では、CSSやJavascriptなどのアセットは「ライブラリ」という単位で管理されます。
 
-ライブラリには、複数のCSSとJavascriptを登録することができます。
+ライブラリは複数のCSSとJavascriptを持つことができます。
 
 また、ライブラリには別のライブラリとの依存関係を定義することができます。
 
@@ -40,11 +40,15 @@ base-styling:
       css/bootstrap.min.css: { minified: true }
   js:
     js/bootstrap.min.js: { minified: true }
+  dependencies:
+    - core/jquery
 ```
 
 ---
 
-`base-styling` の部分はライブラリの名称です。参照する前の名前空間としては、ここで定義する名称の前にモジュール名やテーマ名が付くため、名前の重複を気にする必要はありません。テーマの単位で管理しやすい名前を付けてください。
+それではコードを見ていきましょう。
+
+`base-styling` の部分はライブラリの名称です。名前空間としてはここで定義する名称の前にモジュール名やテーマ名が付くため、名前の重複を気にする必要はありません。テーマの単位で管理しやすい名前を付けてください。
 
 `version` はライブラリのバージョンです。特にフォーマットの規定はありません。
 
@@ -52,7 +56,7 @@ base-styling:
 
 `css` にはライブラリが参照するCSSファイルを指定します。`css` の直下の階層には優先度を指定します。これはDrupal特有のものではなく[SMACSS](https://smacss.com/)の定義です。
 
-上記のサンプルコードでは一番優先度が低い `theme` を指定しています。その下の階層にテーマのディレクトリを起点としたcssファイルのパスをリストで指定します。
+上記のサンプルコードでは一番優先度が低い `theme` を指定しています。その下の階層にテーマのディレクトリを起点としたcssファイルのパスを指定します。
 
 今回はminifiedされたCSSを利用するため、`minified` を `true` に設定しています。これにより、Drupalが再度ファイルをminifyすることを抑制できます。
 
@@ -65,6 +69,8 @@ base-styling:
 `js` にはライブラリが参照するJavascriptファイルを指定します。その下の階層にテーマのディレクトリを起点としたJavascriptファイルのパスをリストで指定します。
 
 CSSと同様にこちらもminifiedされたファイルを利用するため、`minified` を `true` に設定しています。
+
+ライブラリが他のライブラリに依存する場合、 `dependencies` に宣言します。Bootstrap4はjQueryに依存するため、コアで定義されている `core/jquery` への依存を宣言しました。
 
 ---
 
@@ -96,7 +102,9 @@ $ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js --
 $ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js.map --output web/theme/custom/my_awesome_theme/js/bootstrap.min.js.map
 ```
 
-(開発効率を上げるために `.map` ファイルの追加も忘れずに)
+開発効率を上げるためにソースマップ (`.map`) ファイルの追加も忘れずに行いましょう。
+
+ソースマップって何？という方は、「Set Up CSS and JS Preprocessors」の[Debugging and editing preprocessed content](https://developers.google.com/web/tools/setup/setup-preprocessors#debugging_and_editing_preprocessed_content) を参照してください。
 
 ---
 
@@ -104,10 +112,10 @@ $ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js.ma
 
 ```
 $ find web/themes/custom/my_awesome_theme -type f|grep bootstrap
-web/themes/custom/my_awesome_theme/js/bootstrap.min.js
-web/themes/custom/my_awesome_theme/js/bootstrap.min.js.map
-web/themes/custom/my_awesome_theme/css/bootstrap.min.css.map
-web/themes/custom/my_awesome_theme/css/bootstrap.min.css
+web/themes/custom/my_awesome_themes/js/bootstrap.min.js
+web/themes/custom/my_awesome_themes/js/bootstrap.min.js.map
+web/themes/custom/my_awesome_themes/css/bootstrap.min.css.map
+web/themes/custom/my_awesome_themes/css/bootstrap.min.css
 ```
 
 ---
