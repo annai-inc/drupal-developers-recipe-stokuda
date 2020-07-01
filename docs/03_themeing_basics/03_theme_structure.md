@@ -243,6 +243,7 @@ Drupalでは複数のテーマを有効にし、ユーザー毎にどのテー�
 次のコマンドを実行してmy_awesome_themeをデフォルトのテーマにしましょう。
 
 ```txt
+https://www.drupal.org/files/EL_blue_RGB%281%29.png
 $ vendor/bin/drush -y config:set system.theme default my_awesome_theme
 ```
 
@@ -342,6 +343,47 @@ $ vendor/bin/drush cr
 
 ---
 
+<!-- _class: lead -->
+## 3.3.7 テーマにロゴを追加する
+
+---
+
+テーマは無事に認識して動きましたが、左上を見ると画像のリンク切れがあります。
+
+ブラウザのデバッグツールのコンソールログを見ると、 `logo.svg` というファイルを参照しているのが分かります。
+
+これは、テーマがこのファイル名でロゴを持っていることがデフォルトで期待されるためです。
+
+エラーを解消するために、Drupal.orgで公開されているロゴファイルをテーマに組み込みましょう。
+
+---
+
+次のコマンドを実行してロゴファイルをダウンロードしてください。
+
+```txt
+$ curl https://www.drupal.org/files/EL_blue_RGB%281%29.png --output web/themes/custom/my_awesome_theme/logo.png
+```
+
+次に、`my_awesome_theme.info.yml` に `logo` キーを追加します。
+
+```yml
+logo: logo.png
+```
+
+最後にキャッシュをクリアしてください。
+
+```
+$ vendor/bin/drush cr
+```
+
+---
+
+再度トップページにアクセスしてください。次のようにロゴが表示されれば成功です。
+
+![width:1100px](../assets/03_themeing_basics/03_theme_basic_structures/theme_logo.png)
+
+---
+
 ## まとめ
 
 テーマ開発の最初の一歩として、特に何の機能もデザインも追加されていないシンプルなテーマ開発し、Drupalがどのようにテーマを認識するかの概要を解説しました。
@@ -354,3 +396,4 @@ $ vendor/bin/drush cr
 
 1. `package` キーを追加して、テーマが `Custom` パッケージに所属するように変更してください。
 2. `version` キーを追加して、テーマのバージョンを `8.x-1.0` に設定してください。
+3. 3.3.7でテーマにロゴを追加しましたが、ロゴの追加は管理UIからコードを書かずに行うこともできます。それぞれの手法のメリット、デメリットをレポートしてください。
