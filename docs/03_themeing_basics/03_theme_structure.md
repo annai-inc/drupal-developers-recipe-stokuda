@@ -317,7 +317,7 @@ Drupalでは、個々のパスの処理を担当するコードで「このパ�
 
 開発する際の自由度やコントロール性を重視する場合は、`base theme` を `false` に設定することで、サブテーマを無効にできます。
 
-本コンテンツではこの方法を採用します。次のように `my_awesome_theme.info.yml` に `base them` の指定を追加してください。
+本コンテンツではこの方法を採用します。次のように `my_awesome_theme.info.yml` に `base theme` の指定を追加してください。
 
 ```yml
 name: My awesome theme
