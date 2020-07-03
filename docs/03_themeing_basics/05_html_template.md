@@ -23,7 +23,8 @@ _cla次ss: invert
 トップページにアクセスしてHTMLの出力を見ると次のことが分かります。
 
 - `html.html.twig`, `html--node.html.twig`,  `html--front.html.twig` という３つのテンプレートファイルの候補がある
-- `web/core/modules/system/templates/html.html.twig` というファイルが最終的に使わている
+- `web/core/modules/system/templates/html.html.twig` というファイルが最終的に使われている
+
 ---
 
 ![width:1100px](../assets/03_themeing_basics/05_html_template/html_template.png)
