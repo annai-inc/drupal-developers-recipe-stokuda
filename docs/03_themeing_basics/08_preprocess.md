@@ -1,7 +1,7 @@
 ---
 marp: true
 theme: gaia
-_cla次ss: invert
+_class: invert
 ---
 
 <!-- _class: lead -->
@@ -16,12 +16,7 @@ _cla次ss: invert
 ---
 
 <!-- _class: lead -->
-## 3.8.1 Preprocess
-
----
-
-<!-- _class: lead -->
-## 3.8.2 カスタマイズしたテンプレートを削除する
+## 3.8.1 カスタマイズしたテンプレートを削除する
 
 ---
 
@@ -53,7 +48,7 @@ $ git revert {ブロックのテンプレートの追加、変更のコミット
 ---
 
 <!-- _class: lead -->
-## 3.8.3 Preprocess: hook_preprocess_HOOKの実装 (1)
+## 3.8.2 Preprocess: hook_preprocess_HOOKの実装 (1)
 
 ---
 
@@ -222,7 +217,7 @@ function my_awesome_theme_preprocess_block(&$variables) {
 ---
 
 <!-- _class: lead -->
-## 3.8.3 Preprocess: hook_preprocess_HOOKの実装 (3)
+## 3.8.4 Preprocess: hook_preprocess_HOOKの実装 (3)
 
 ---
 
