@@ -571,12 +571,12 @@ $ cp web/core/modules/system/templates/region.html.twig web/themes/custom/my_awe
 
 HTML的には大きなものではありませんが、テンプレートがコンポーネント単位で細かく分割されているためなかなかの作業量だったと思います。
 
-今回のサンプルコードでは、必要な知識が少なくて済むようにクラスをtwigテンプレートで直接指定しましたが、動的な要素があったり他の機能から上書きを許可したいような場合はpreprocessを実装することになります。
-
-preprocessの実装については、この章の後半で別途解説します。
+今回のサンプルコードでは、必要な知識が少なくて済むようにクラスをtwigテンプレートで直接指定しましたが、動的な要素があったり他の機能から上書きを許可したいような場合はpreprocessを実装することになります。preprocessについては、次のセクションで別途解説します。
 
 ---
 
 ## ストレッチゴール
 
-TBD
+1. 適当なノードを作成してノードの表示画面(`/node/{nid}`)にアクセスすると、以下のようにパンくずが表示されます。この部分にBootstrap4のBreadcrumbコンポーネントのスタイルが適用されるようにしてください。
+
+![width:1100px](../asserts/../assets/03_themeing_basics/07_region_block_menu_template/stretch_goal_1.png)
