@@ -1,7 +1,7 @@
 ---
 marp: true
 theme: gaia
-_cla次ss: invert
+_class: invert
 ---
 
 <!-- _class: lead -->
