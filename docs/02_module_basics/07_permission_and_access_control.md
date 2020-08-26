@@ -9,7 +9,7 @@ _class: invert
 
 ---
 
-Drupalはコアの機能として [ロースベースのアクセス制御(RBAC)](https://en.wikipedia.org/wiki/Role-based_access_control) をサポートしています。
+Drupalはコアの機能として [ロールベースのアクセス制御(RBAC)](https://en.wikipedia.org/wiki/Role-based_access_control) をサポートしています。
 
 言葉にすると簡単ですが、これはDrupalを採用する上での非常に大きなメリットの一つです。
 
@@ -160,7 +160,7 @@ hello_world.hello:
 
 ---
 
-また、詳細は解説は省きますが、 `permission_callbacks` というキーを定義することで、PHPのコードで権限を動的に定義することもできます。
+また、詳細な解説は省きますが、 `permission_callbacks` というキーを定義することで、PHPのコードで権限を動的に定義することもできます。
 
 例えば、Drupalのノードはコンテツタイプと呼ばれる独自のデータ型を持ったサブクラス（のようなもの）を管理UIから追加することができます。コンテンツタイプが新しく定義された場合、そのタイプに対するCRUDの権限の定義も自動的に追加されると便利です。
 
