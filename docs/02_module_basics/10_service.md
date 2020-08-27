@@ -71,7 +71,7 @@ Drupalのコアだけでも非常に多数のサービスが実装されてい�
 
 まずは、ロジックが持つ機能のインターフェースを宣言しましょう。
 
-`web/modules/custom/hello_world/EchoMessageServiceInterface.php` を以下のように実装してください。
+`web/modules/custom/hello_world//src/EchoMessageServiceInterface.php` を以下のように実装してください。
 
 ---
 
@@ -730,4 +730,4 @@ interface ContainerInjectionInterface {
 
 ---
 
-2. `NullMessenger` というクラスを新たに実装して、`HelloWorldController` がこのサービスを利用するに変更してください。各メソッドの実装では、固定で `null` を文字列として返してください。ただし、hello_worldモジュールがデフォルトで利用するサービスは `HelloWorldMessenger` のまま維持し、`settings.php` 経由で変更するようにしてください (2.6章にヒントがあります)。
+2. `NullMessenger` というクラスを新たに実装して、`HelloWorldController` がこのサービスを利用するように変更してください。各メソッドの実装では、固定で `null` を文字列として返してください。ただし、hello_worldモジュールがデフォルトで利用するサービスは `HelloWorldMessenger` のまま維持し、`settings.php` 経由で変更するようにしてください (2.6章にヒントがあります)。
