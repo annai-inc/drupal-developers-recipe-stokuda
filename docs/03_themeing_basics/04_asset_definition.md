@@ -74,6 +74,14 @@ CSSと同様にこちらもminifiedされたファイルを利用するため、
 
 ---
 
+Drupalコアが定義しているライブラリにどのようなものがあるかは、 `web/core/core.libraries.yml` や `web/core/modules/system/system.libraries.yml`  を参照してください。
+
+非常に恐ろしいことに、「Drupalコアに含まれているjQueryの参照方法が分からない」、「参考にしたスニペットや導入したいプラグインがDrupalとは違うバージョンのjQueryで動いている」という理由だけで、CDN等から違うバージョンのjQueryをロードするカスタム実装はよく見かけます。
+
+当然ですが、このような実装をしてしまうとコアの機能が正しく動く保証がなくなりますので、絶対に止めましょう。
+
+---
+
 `{theme_name}.libraries.yml` には他にも指定可能なキーが多数あります。詳細は [Adding stylesheets (CSS) and JavaScript (JS) to a Drupal theme](https://www.drupal.org/docs/theming-drupal/adding-stylesheets-css-and-javascript-js-to-a-drupal-theme) を参照してください。
 
 ---
