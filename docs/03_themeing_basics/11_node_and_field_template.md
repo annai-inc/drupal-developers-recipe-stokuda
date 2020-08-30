@@ -363,6 +363,20 @@ $ cp web/core/modules/system/templates/field.html.twig web/themes/custom/my_awes
 
 ---
 
+<!-- _class: lead -->
+## 3.11.5 その他のtwigテンプレート
+
+---
+
+3章全体を通していくつかのtwigテンプレートに触れてきましたが、Drupalコアが提供するtwigテンプレートは次のように他にもたくさんあります。
+
+- Views関連のコンポーネント
+- テキストエリア、セレクト、チェックボックスなどフォーム要素のコンポーネント
+- リンク、テーブル、リストなど汎用的なUIコンポーネント
+
+[Theme system overview](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/group/themeable/8.8.x) の末尾に利用可能なテンプレートの一覧がまとまっていますので一度目を通しておいてください。
+
+---
 
 ## まとめ
 
