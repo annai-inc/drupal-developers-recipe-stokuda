@@ -5,7 +5,7 @@ _class: invert
 ---
 
 <!-- _class: lead -->
-# 2.15 プラグインとクラスにプラグインマネージャー
+# 2.15 プラグインとプラグインマネージャー
 
 ---
 
@@ -762,7 +762,7 @@ class HelloWorldController extends ControllerBase {
   /**
    * Calculate value by Calculator Plugin at random.
    *
-   * @param int $val
+   * @params int $val
    *   Input value of calculation.
    *
    * @return array
