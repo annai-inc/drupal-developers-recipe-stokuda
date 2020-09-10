@@ -87,11 +87,3 @@ PHPのバージョンは `7.2`、Drupalのバージョンは `8.8.x` を基本�
 ![](../assets/00_about_this_contents/Edgar_Dale's_cone_of_learning.png)
 
 (https://en.wikipedia.org/wiki/Learning_pyramid)
-
----
-
-## 本コンテンツの用語について
-
-TBD
-
----
