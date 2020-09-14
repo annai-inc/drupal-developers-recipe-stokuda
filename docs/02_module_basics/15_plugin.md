@@ -5,7 +5,7 @@ _class: invert
 ---
 
 <!-- _class: lead -->
-# 2.15 プラグインとクラスにプラグインマネージャー
+# 2.15 プラグインとプラグインマネージャー
 
 ---
 
@@ -95,7 +95,7 @@ Drupal 7ではフックさえ理解すれば機能の拡張を行うことがで
 
 もしあなたがUIの変更に関しての判断を求められる場合、「ちょっとした画面の調整だから、PHPを理解している開発者じゃなくてもできるはずだ」という思い込みは一度捨てましょう。
 
-「どのように設計するのが最適なのか」という視点で、自身や十分に知見のあるエンジニアに相談して判断するようにすることを推奨します。
+「どのように設計するのが最適なのか」という視点を常に持ち、不安がある場合は十分に知見のあるエンジニアに相談して判断するようにすることを推奨します。
 
 ---
 
@@ -762,7 +762,7 @@ class HelloWorldController extends ControllerBase {
   /**
    * Calculate value by Calculator Plugin at random.
    *
-   * @param int $val
+   * @params int $val
    *   Input value of calculation.
    *
    * @return array

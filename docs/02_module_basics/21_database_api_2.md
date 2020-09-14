@@ -373,7 +373,7 @@ DrupalのhookシステムはDatebase APIでも活用することができます�
 
 ```php
 $result = $this->database->select('book', 'b')
-  ->fields(['id', 'name', 'description'])
+  ->fields('b', ['id', 'name', 'description'])
   ->addTag('book_selection')
   ->execute();
 ```

@@ -319,7 +319,7 @@ Develモジュールには、デバッグ支援のためのヘルパー関数が
 
 ---
 
-`/inspect_user/1` にアクセスると、`$user` オブジェクトの詳細がダンプされます。
+`/inspect_user/1` にアクセスすると、`$user` オブジェクトの詳細がダンプされます。
 
 ![dpm](../assets/02_module_basics/06_debug_environment/devel_dpm.png)
 

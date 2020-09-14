@@ -339,6 +339,31 @@ $ vendor/bin/drush cim
 
 ---
 
+また、コンフィグのインポートを行う前に差分を詳細にチェックしたいケースもあります。
+
+このような場合は、`--diff` オプションを付けると差分を表示することができます。
+
+```txt
+$ vendor/bin/drush cim --diff
+diff --git a/tmp/drush_tmp_1598834774_5f4c4856d5cae/system.site.yml b/tmp/drush_tmp_1598834775_5f4c48571f2d5/system.site.yml
+index 95877a9..836ac04 100644
+--- a/tmp/drush_tmp_1598834774_5f4c4856d5cae/system.site.yml
++++ b/tmp/drush_tmp_1598834775_5f4c48571f2d5/system.site.yml
+@@ -1,5 +1,5 @@
+ uuid: a6d7b114-8acb-4265-84a6-3393cb750a51
+-name: Drupal8!
++name: Drupal8
+ mail: info@example.com
+ slogan: ''
+ page:
+
+
+ Import the listed configuration changes? (yes/no) [yes]:
+ > 
+ ```
+ 
+---
+
 `yes` と入力してインポートを確定させてください。
 
 ```txt
@@ -348,8 +373,6 @@ $ vendor/bin/drush cim
  [notice] 構成の同期を完了します。
  [success] The configuration was imported successfully.
 ```
-
----
 
 `/admin/config/development/configuration` にアクセスして差分がないことと、およびサイト名が「Drupal 8」に戻っていることを確認してください。
 

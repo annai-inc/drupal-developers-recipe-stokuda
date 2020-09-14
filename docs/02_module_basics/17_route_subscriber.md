@@ -93,7 +93,7 @@ $ vendor/bin/drupal debug:router help.main
 
 この権限チェックをバイパスするようにルートサブスクライバーを実装してみます。
 
-イベントサブスクライバーと同様に、ルートサブスクライバーもサービスとして実装する必要があります。まずは `hello_world.routing.yml` に次のコードを追加してください。
+イベントサブスクライバーと同様に、ルートサブスクライバーもサービスとして実装する必要があります。まずは `hello_world.services.yml` に次のコードを追加してください。
 
 ---
 
@@ -230,4 +230,4 @@ abstract class RouteSubscriberBase implements EventSubscriberInterface {
 
 ## ストレッチゴール
 
-1. `/filter/tips` にアクセスしたら `HelloWorldController` の `hello` メソッドが動作するように、新しく別のルートサブスクライバーを実装してください。
+1. `/filter/tips` にアクセスしたら `HelloWorldController` の `helloWorld` メソッドが動作するように、新しく別のルートサブスクライバーを実装してください。
