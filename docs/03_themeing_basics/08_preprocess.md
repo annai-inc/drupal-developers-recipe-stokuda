@@ -28,18 +28,6 @@ _class: invert
 $ rm web/themes/custom/my_awesome_theme/templates/block--system-menu-block--main.html.twig
 ```
 
----
-
-レポジトリのgitのコミット粒度が適切であれば、手動で削除するのではなく `git revert` でコードを戻せるかもしれません。
-
-この場合は、先のrmコマンドの代わりに次のコマンドを実施してください。
-
-```
-$ git revert {ブロックのテンプレートの追加、変更のコミットのハッシュ値}
-```
-
----
-
 キャッシュをクリアしてからトップページにアクセスして、Navbarのスタイルが元に戻っていること、つまり、Bootstrap4のスタイルが適用されていないことを確認してください。
 
 ![](../asserts/../assets/03_themeing_basics/08_preprocess/preprocess_1.png)
@@ -48,6 +36,16 @@ $ git revert {ブロックのテンプレートの追加、変更のコミット
 
 <!-- _class: lead -->
 ## 3.8.2 Preprocess: hook_preprocess_HOOKの実装 (1)
+
+---
+
+テンプレートに変数を渡す方法はフレームワークによって異なります。
+
+例えば、[Ruby on Rails](https://guides.rubyonrails.org/action_controller_overview.html#methods-and-actions)ではコントローラークラスのインスタンス変数がそのままテンプレートで利用できます。
+
+Laravelでは [view helper](https://laravel.com/docs/7.x/views)を通して変数をテンプレートに渡します。
+
+Drupalでは [Preprocess](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/group/themeable#sec_preprocess_templates) を使ってテンプレートに変数を渡します。
 
 ---
 

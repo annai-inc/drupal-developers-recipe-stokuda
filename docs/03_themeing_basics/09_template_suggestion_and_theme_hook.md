@@ -420,7 +420,6 @@ $ grep -A4 -E "\s+theme.manager:$" web/core/core.services.yml
 
 このメソッドの中では以下が行われています。
 
-- デフォルトのTemplate Suggestion、テンプレートで利用可能な変数などの初期化
 - [Template Suggestionのフック呼び出し](https://github.com/drupal/drupal/blob/8.8.0/core/lib/Drupal/Core/Theme/ThemeManager.php#L240
 )
 - [Preprocessのフック呼び出し](https://github.com/drupal/drupal/blob/8.8.0/core/lib/Drupal/Core/Theme/ThemeManager.php#L287)
@@ -432,16 +431,7 @@ $ grep -A4 -E "\s+theme.manager:$" web/core/core.services.yml
 ---
 
 <!-- _class: lead -->
-## 3.9.3 デフォルトのTemplate Suggestion、テンプレートで利用可能な変数などの初期化
-
----
-
-TBD (テーマレジストリの解説が先に必要か？)
-
----
-
-<!-- _class: lead -->
-## 3.9.4 Template Suggestionのフック呼び出し
+## 3.9.3 Template Suggestionのフック呼び出し
 
 ---
 
@@ -512,7 +502,7 @@ Template Suggestionのフックは、名前の通りデータを出力する際�
 ---
 
 <!-- _class: lead -->
-## 3.9.5 Preprocessのフック呼び出し
+## 3.9.4 Preprocessのフック呼び出し
 
 ---
 
@@ -554,7 +544,7 @@ Preprocessフックの呼び出しの主要部分は、先のTemplate suggestion
 ---
 
 <!-- _class: lead -->
-## 3.9.6 HTML文字列の生成
+## 3.9.5 HTML文字列の生成
 
 ---
 
