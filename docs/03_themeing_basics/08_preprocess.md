@@ -20,8 +20,7 @@ _class: invert
 
 ---
 
-それではProprocessを実装しましょう、と行きたいところですが、その前にまずは前回のセクションでカスタマ[Preprocessing and modifying attributes in a .theme file](https://www.drupal.org/docs/8/theming-drupal-8/modifying-attributes-in-a-theme-file) 
-イズしたブロックのテンプレートを削除しましょう。
+それではProprocessを実装しましょう、と行きたいところですが、その前にまずは前回のセクションでカスタマイズしたブロックのテンプレートを削除しましょう。
 
 次のコマンドを実行してテンプレートを削除してください。
 
@@ -88,13 +87,13 @@ Preprocessは [hook_preprocess_HOOK](https://api.drupal.org/api/drupal/core%21li
 
 [Preprocessing and modifying attributes in a .theme file](https://www.drupal.org/docs/8/theming-drupal-8/modifying-attributes-in-a-theme-file) のサンプルコードを見ると、そのような実装になっていることがわかると思います。
 
-また、このページの末尾にある [A search through the API of preprocess implementations in the core.](https://api.drupal.org/api/drupal/8.8.x/search/preprocess) から他のテーマの実装、例えば [bartik_preprocess_menu](https://api.drupal.org/api/drupal/core%21themes%21bartik%21bartik.theme/function/bartik_preprocess_menu/8.8.x) を見ても、同様の実装がされています。
+また、このページの末尾にある [A search through the API of preprocess implementations in the core.](https://api.drupal.org/api/drupal/8.8.x/search/preprocess) から他のテーマの実装、例えば [bartik_preprocess_menu](https://api.drupal.org/api/drupal/core%21themes%21bartik%21bartik.theme/function/bartik_preprocess_menu/8.8.x) を見ても同様の実装がされています。
 
 ---
 
 Drupal 8に関するドキュメントは手厚く整備されているとはいい難い状況ですが、手がかりがゼロということはまずありません。概念的な解説やコードの中に手がかりは多数あります。
 
-特にコアやモジュールのコードはとても有益な実装サンプルです。何か情報を探す場合は必ず見る習慣をつけてください。
+特にコア(テーマを含む)やモジュールのコードはとても有益な実装サンプルです。何か情報を探す場合は必ず見る習慣をつけてください。
 
 それでは、`my_awesome_theme_preprocess_block` を次のように実装してください。
 

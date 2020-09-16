@@ -38,7 +38,7 @@ _class: invert
 
 このうち、1.は「あるフックのテンプレート候補のデフォルト値」を定義するためのものです。
 
-対して、「あるフックに対してテンプレートの候補を新たに追加する」場合は、2.もしくは3.のフックを利用します(これは `alter` という関数名からも類推できますね、英語の語彙力は大事です)
+対して、「あるフックに対してテンプレートの候補を新たに追加する」場合は、2.もしくは3.のフックを利用します。これは `alter` という関数名からも類推できますね。
 
 ---
 
@@ -96,7 +96,7 @@ function my_awesome_theme_theme_suggestions_region_alter(array &$suggestions, ar
 
 キャッシュをクリアして、再度トップページにアクセスしてください。
 
-次のように、適用されるテンプレートが `region__without_wrapper.html.twig` に変わり、Navbarの横幅が100%になっていれば成功です。
+次のように、適用されるテンプレートが `region--without-wrapper.html.twig` に変わり、Navbarの横幅が100%になっていれば成功です。
 
 ---
 
@@ -139,7 +139,7 @@ function my_awesome_theme_theme_suggestions_region_alter(array &$suggestions, ar
 
 キャッシュをクリアして、再度トップページにアクセスしてください。
 
-Primary Menuリージョンにのみ、`region__without_wrapper.html.twig` が適用されていれば成功です。
+Primary Menuリージョンにのみ、`region-without-wrapper.html.twig` が適用されていれば成功です。
 
 ---
 
@@ -147,7 +147,7 @@ Primary Menuリージョンにのみ、`region__without_wrapper.html.twig` が�
 
 このセクションでは、フックを実装してテンプレートの候補を変更する方法を解説しました。
 
-今回のセクションの変更内容だと、UIコンポーネントのIDに依存する部分が「テンプレート名に含まれるか」・「フックのコードに含まれるか」の違いなので、Template Suggestionをわざわざ実装するメリットは正直あまりありません。
+今回のセクションの変更内容だと、UIコンポーネントのIDに依存する部分が「テンプレート名に含まれるか」・「フックのコードに含まれるか」の違いなので、Template Suggestionをわざわざ実装する大きなメリットはありません。
 
 ---
 

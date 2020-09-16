@@ -83,7 +83,7 @@ Drupalが出力するDOM構造とCSSのクラスをこれに合わせて変更�
 
 ---
 
-ご存知の通り、Drupalではメニューを管理UIから定義してそれをブロックとしてリージョンに配置することでメニューを出力しています。
+ご存知の通り、Drupalではメニューを管理UIから定義して、それをブロックとしてリージョンに配置することでメニューを出力しています。
 
 まずはロゴの出力を無効化しましょう。
 
@@ -313,7 +313,7 @@ Twig VarDumperは標準の `dump()` 関数の実装を上書きするので、tw
 
 ここでトップページの状態を確認しましょう。まだBootstrapのスタイルは当たっていないはずです。
 
-ここから更にliやaタグにもクラスを当てる必要があります。これらについては次のセクションで解説します。
+ここから更にliやaタグにもクラスを当てる必要があります。
 
 ---
 
@@ -322,7 +322,7 @@ Twig VarDumperは標準の `dump()` 関数の実装を上書きするので、tw
 
 ---
 
-先ほど使ったテンプレートを見ると、`nav` タグの下の階層の `li` や `a` タグは別のテンプレートが出力していることが分かります。
+先ほど使ったテンプレートを見ると、`nav` タグの下の階層の `li` や `a` タグは別のテンプレートが出力しているようです。
 
 ```
   {# Menu. #}
@@ -442,9 +442,13 @@ $ cp web/core/modules/system/templates/menu.html.twig web/themes/custom/my_aweso
 
 ---
 
-ulタグに `navbar-nav` クラスを、liタグに `nav-item` クラス、aタグに `nav-link` クラスをそれぞれ付与しています。
+ulタグに `navbar-nav` クラスを、liタグに `nav-item` クラスを付与しました。
+
+aタグの出力には `link` 関数が使われていますが、この関数の第3引数を通して `nav-link` クラスを付与しています。`link` 関数の詳細については [Functions - In Twig Templatesのlinkセクション](https://www.drupal.org/docs/theming-drupal/twig-in-drupal/functions-in-twig-templates#s-linktext-uri-attributes) を参照してください。
 
 これで期待通り動きそうですね。トップページにアクセスしてみましょう。
+
+---
 
 ![](../assets/03_themeing_basics/07_region_block_menu_template/nabvar_1.png)
 
@@ -454,13 +458,13 @@ ulタグに `navbar-nav` クラスを、liタグに `nav-item` クラス、aタ�
 
 サイドメニューのHTMLを見ると、同じテンプレートファイルが利用されていることが分かります。
 
+---
+
 ![width:1100px](../assets/03_themeing_basics/07_region_block_menu_template/nabvar_2.png)
 
 ---
 
-twigのテンプレートファイルは、いくつかの候補の中から最も優先度の高いものが利用されます。
-
-`FILE NAME SUGGESTIONS` の上に表示されているファイルほど優先度が高くなります。
+twigのテンプレートファイルは、いくつかの候補の中から最も優先度の高いものが利用され、`FILE NAME SUGGESTIONS` の上に表示されているファイルほど優先度が高くなります。
 
 候補のテンプレートファイル名を見てみると、3.1章で紹介したpreprocessと同様に、コンテキストが詳細に特定できるものほど優先度高いことが分かります。
 
@@ -480,7 +484,9 @@ twigのテンプレートファイルは、いくつかの候補の中から最�
 $ mv web/themes/custom/my_awesome_theme/templates/block--system-menu-block.html.twig web/themes/custom/my_awesome_theme/templates//block--system-menu-block--main.html.twig
 ```
 
-再度トップページにアクセスしてください。先ほどリネームしたテンプレートファイルが適用され、上部のナビゲーションのみにBootstrap4のスタイルが適用されているはずです。
+再度トップページにアクセスしてください。
+
+先ほどリネームしたテンプレートファイルが適用され、上部のナビゲーションのみにBootstrap4のスタイルが適用されているはずです。
 
 ---
 
@@ -559,7 +565,7 @@ $ cp web/core/modules/system/templates/region.html.twig web/themes/custom/my_awe
 
 ---
 
-これで全ての変更は終了です。トップページにアクセスして、コピーしてテンプレートファイルが適用されていることと、ナビゲージョンの幅が100%になっていることの2点を確認しましょう。
+これで全ての変更は終了です。トップページにアクセスして、コピーしてテンプレートファイルが適用されていること、ナビゲーションの幅が100%になっていることの2点を確認しましょう。
 
 ![width:1100px](../assets/03_themeing_basics/07_region_block_menu_template/nabvar_6.png)
 

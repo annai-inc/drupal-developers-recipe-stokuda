@@ -22,7 +22,7 @@ _class: invert
 
 ---
 
-2.1章で説明したとおり、contribute themeやカスタムテーマ　は `web/themes` ディレクトリに格納されます。
+2.1章で説明したとおり、contribute themeやカスタムテーマは `web/themes` ディレクトリに格納されます。
 
 モジュールやテーマなど、Drupal特有のファイルをどのディレクトリに配置するかは、composerの [installer-paths](https://getcomposer.org/doc/faqs/how-do-i-install-a-package-to-a-custom-path-for-my-framework.md#how-do-i-install-a-package-to-a-custom-path-for-my-framework-) で設定されています。
 
@@ -243,7 +243,6 @@ Drupalでは複数のテーマを有効にし、ユーザー毎にどのテー�
 次のコマンドを実行してmy_awesome_themeをデフォルトのテーマにしましょう。
 
 ```txt
-https://www.drupal.org/files/EL_blue_RGB%281%29.png
 $ vendor/bin/drush -y config:set system.theme default my_awesome_theme
 ```
 
@@ -257,7 +256,7 @@ $ vendor/bin/drush -y config:set system.theme default my_awesome_theme
 
 また、Drupalでは「管理画面のテーマ」を一般ユーザーや匿名ユーザーが利用するテーマとは別に設定することができます。
 
-`/admin/appearance` の最下部の管理用テーマの設定があり、standard profileでDrupalをインストールした場合は `seven` に設定されています。
+`/admin/appearance` の最下部に管理画面のテーマの設定があり、standard profileでDrupalをインストールした場合は `seven` に設定されています。
 
 ![](../assets/03_themeing_basics/03_theme_basic_structures/default_admin_theme.png)
 
@@ -270,9 +269,9 @@ $ vendor/bin/drush -y config:set system.theme default my_awesome_theme
 $ vendor/bin/drush -y config:set system.theme admin my_awesome_theme
 ```
 
-管理画面にもカスタムテーマを適用する場合、Drupalのコアだけでも100程度はある全てのパスでレイアウトやJavascriptの機能が問題なく動くかを確認する必要があります。
+管理画面にもカスタムテーマを適用する場合、Drupalのコアだけでも100程度はある全てのパスでレイアウトやJavascriptが問題なく動くかを確認する必要があります。
 
-逆に言うと、管理画面でも動くように意識してカスタムテーマを開発する必要があります。
+つまり、管理画面でも動くように意識してカスタムテーマを開発する、という事になります。
 
 ---
 
@@ -311,13 +310,13 @@ Drupalでは、個々のパスの処理を担当するコードで「このパ�
 
 この場合、 `stable` が実装しているプリプロセス、css/jsなどのアセット、テンプレートを活用できるというメリットがあります。
 
-一方で、デザインの自由度に制限があったり、セキュリティ更新やDrupalコアのバージョンアップの際にコードが変更され、意図しない動きやデザインになる可能性がある、というデメリットもあります。
+一方で、セキュリティ更新やDrupalコアのバージョンアップの際にコードが変更され、意図しない動きやデザインになる可能性がある、というデメリットもあります。
 
 ---
 
 開発する際の自由度やコントロール性を重視する場合は、`base theme` を `false` に設定することで、サブテーマを無効にできます。
 
-本コンテンツではこの方法を採用します。次のように `my_awesome_theme.info.yml` に `base theme` の指定を追加してください。
+本コンテンツでは、なるべくシンプルな構成でテーマ開発を経験する事を重視してこの方法を採用します。次のように `my_awesome_theme.info.yml` に `base theme` の指定を追加してください。
 
 ```yml
 name: My awesome theme

@@ -222,7 +222,7 @@ function template_preprocess_page(&$variables) {
 
 このコードにより、テンプレート側では `page.{region_name}` という変数でリージョンコンテンツにアクセスすることができます。
 
-※ちなみに、コードを見ても分かる通りこの関数では実際に値を設定しているわけで貼りません。実際のコンテンツの内容はこの関数より先に実行される[PageBlockVariant::build](https://github.com/drupal/drupal/blob/8.8.0/core/modules/block/src/Plugin/DisplayVariant/BlockPageVariant.php#L125) で設定されています。
+※ちなみに、コードを見ても分かる通りこの関数では実際に値を設定しているわけではありません。実際のコンテンツの内容はこの関数より先に実行される[PageBlockVariant::build](https://github.com/drupal/drupal/blob/8.8.0/core/modules/block/src/Plugin/DisplayVariant/BlockPageVariant.php#L125) で設定されています。
 
 ---
 

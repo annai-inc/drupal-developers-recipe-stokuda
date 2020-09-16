@@ -73,8 +73,6 @@ welcome-message:
     - core/drupal
 ```
 
-(？？？になった方は無理に進まずに、ここで3.4章の内容をじっくり読み直しましょう)。
-
 これでコードの変更は終了です。もし、Drupalにログインしている場合はここでいったんログアウトしてください。その後、キャッシュをクリアしてからトップページにアクセスしましょう。次のようにコンソールにメッセージが表示されれば成功です。
 
 ---
@@ -102,7 +100,7 @@ welcome-message:
 
 ここで少しコアのJavascriptのコードを見てみましょう。
 
-[web/core/misc/drupal.js#L17](https://github.com/drupal/drupal/blob/8.8.0/core/misc/drupal.js#L17) の `Drupal.attachBehaviors` という関数で、`Drupal.behaviors` の全てのプロパティを走査し、`attach` というキーに関数が登録されていれば実行しています。
+[web/core/misc/drupal.js#L17](https://github.com/drupal/drupal/blob/8.8.0/core/misc/drupal.js#L17) の `Drupal.attachBehaviors` という関数で、`Drupal.behaviors` の全てのプロパティを走査し `attach` というキーに関数が登録されていれば実行しています。
 
 先ほど実装した `Drupal.behaviors.welcomeMessage` の `attach` メソッドはここから実行されているわけですね。
 
@@ -122,7 +120,7 @@ jQueryのAPIではなく [domready](https://github.com/ded/domready) という�
 
 これは名前の通り、Drupalが何らかのDOM要素を動的に挿入する際に実行されます。
 
-※ここを掘り下げていくと完全にバックエンドの深い話になるので詳細は割愛します。。興味がある方は詳細は [Core AJAX Callback Commands](https://www.drupal.org/docs/drupal-apis/ajax-api/core-ajax-callback-commands) を参照してください。
+※ここを掘り下げていくとかなりバックエンド寄りの話になるので詳細は割愛します。。興味がある方は [Core AJAX Callback Commands](https://www.drupal.org/docs/drupal-apis/ajax-api/core-ajax-callback-commands) を参照してください。
 
 ---
 

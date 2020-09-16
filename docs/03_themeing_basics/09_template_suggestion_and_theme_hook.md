@@ -22,8 +22,10 @@ _class: invert
 
 それでは、まずは全体の流れから見ていきましょう。ここまでのセクションで次のことを学んでいます。
 
-- Drupalは [MainContentViewSubscriber::onViewRenderArray](https://github.com/drupal/drupal/blob/8.8.x/core/lib/Drupal/Core/EventSubscriber/MainContentViewSubscriber.php#L78) を SymfonyのRender Pipelineの `Kernel.view` に対するイベントスクライバーとして登録することでレスポンスを返す
-- このイベントスクライバーが `MainContentRendererInterface::renderResponse` を呼び出して[Response](https://symfony.com/doc/current/components/http_foundation.html#response) オブジェクトを生成する
+---
+
+- Drupalは [MainContentViewSubscriber::onViewRenderArray](https://github.com/drupal/drupal/blob/8.8.x/core/lib/Drupal/Core/EventSubscriber/MainContentViewSubscriber.php#L78) を SymfonyのRender Pipelineの `Kernel.view` に対するイベントサブスクライバーとして登録することでレスポンスを返す
+- このイベントサブスクライバーが `MainContentRendererInterface::renderResponse` を呼び出して[Response](https://symfony.com/doc/current/components/http_foundation.html#response) オブジェクトを生成する
 - テンプレートに変数を渡すためのPreprocessは、特定の名前の規則で実装されたグローバル関数であり優先度順に全て実行される
 - テンプレートファイルの候補は複数あり、その中から一番優先度が高いものが利用される
 
@@ -395,7 +397,7 @@ $ grep -A2 -E "\s+renderer:$" web/core/core.services.yml
  
 ---
 
-3章でブラックボックとして利用していたRender Arrayの `#markup` キーはここの3.で利用されます。
+3章でブラックボックスとして利用していたRender Arrayの `#markup` キーはここの3.で利用されます。
 
 3.1章で「レンダリングはRender Arrayのコンポーネントの階層毎に再帰的に行われる」と説明しましたが、これが2.の部分です。
 
@@ -558,7 +560,9 @@ Preprocessフックの呼び出しの主要部分は、先のTemplate suggestion
 
 テーマレジストリの `function` というキーで明示的に上書きされない限り、HTML文字列の生成は [ThemeManager.php#L321](https://github.com/drupal/drupal/blob/8.8.0/core/lib/Drupal/Core/Theme/ThemeManager.php#L321) の通り [twig_render_template](twig_render_template()) で行われます。
 
-この関数の実装を見ると、デバッグ機能を有効にした時にHTMLに含まれている `THEME HOOK` や `FILE NAME SUGGESTIONS` などが出力されていることが分かりますね。
+この関数の実装を見ると、デバッグ機能を有効にした時にHTMLに含まれている `THEME HOOK` や `FILE NAME SUGGESTIONS` などが出力されていることが分かります。
+
+逆に言えば、`function` というキーを設定してtwigを使わずにレンダリングすることも可能です(推奨はしません)。
 
 ---
 

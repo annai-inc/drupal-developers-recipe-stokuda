@@ -54,19 +54,25 @@ base-styling:
 
 ---
 
-`css` にはライブラリが参照するCSSファイルを指定します。`css` の直下の階層には優先度を指定します。これはDrupal特有のものではなく[SMACSS](https://smacss.com/)の定義です。
+`css` にはライブラリが参照するCSSファイルを指定します。
 
-上記のサンプルコードでは一番優先度が低い `theme` を指定しています。その下の階層にテーマのディレクトリを起点としたcssファイルのパスを指定します。
+`css` の直下の階層には優先度を指定します。これはDrupal特有のものではなく[SMACSS](https://smacss.com/)の定義です。サンプルコードでは一番優先度が低い `theme` を指定しています。
 
-今回はminifiedされたCSSを利用するため、`minified` を `true` に設定しています。これにより、Drupalが再度ファイルをminifyすることを抑制できます。
+その下の階層にテーマのディレクトリを起点としたcssファイルのパスを指定します。
 
----
-
-`minified` 以外にも多数の属性が指定可能です。詳細は「Adding stylesheets (CSS) and JavaScript (JS) to a Drupal module」の[Defining Libraries: Options & Detailsセクション](https://www.drupal.org/docs/theming-drupal/adding-stylesheets-css-and-javascript-js-to-a-drupal-theme#libraries-options-details) を参照してください。
+また、minifiedされたCSSを利用するため、`minified` を `true` に設定しています。これにより、Drupalが再度ファイルをminifyすることを抑制できます。
 
 ---
 
-`js` にはライブラリが参照するJavascriptファイルを指定します。その下の階層にテーマのディレクトリを起点としたJavascriptファイルのパスをリストで指定します。
+`minified` 以外にも多数の属性が指定可能です。例えば、外部リソースを参照する場合に利用する `external` という属性があります。
+
+詳細は「Adding stylesheets (CSS) and JavaScript (JS) to a Drupal module」の[Defining Libraries: Options & Detailsセクション](https://www.drupal.org/docs/theming-drupal/adding-stylesheets-css-and-javascript-js-to-a-drupal-theme#libraries-options-details) を参照してください。
+
+---
+
+`js` にはライブラリが参照するJavascriptファイルを指定します。
+
+その下の階層にテーマのディレクトリを起点としたJavascriptファイルのパスをリストで指定します。今回は全てのコードをローカル上に持つために内部のパスを指定していますが、CDN等の外部のURLを指定することもできます。
 
 CSSと同様にこちらもminifiedされたファイルを利用するため、`minified` を `true` に設定しています。
 
@@ -78,7 +84,7 @@ Drupalコアが定義しているライブラリにどのようなものがあ�
 
 非常に恐ろしいことに、「Drupalコアに含まれているjQueryの参照方法が分からない」、「参考にしたスニペットや導入したいプラグインがDrupalとは違うバージョンのjQueryで動いている」という理由だけで、CDN等から違うバージョンのjQueryをロードするカスタム実装はよく見かけます。
 
-当然ですが、このような実装をしてしまうとコアの機能が正しく動く保証がなくなりますので、絶対に止めましょう。
+このような実装をしてしまうとコアの機能が正しく動く保証がなくなりますので、絶対に止めましょう。
 
 ---
 
@@ -128,11 +134,9 @@ web/themes/custom/my_awesome_themes/css/bootstrap.min.css
 
 ---
 
-今回の変更はテーマレジストリの変更になります。
+今回の修正を行うと、Drupal内部では「テーマレジストリ」と呼ばれるテーマの構造が変更されます。
 
-テーマレジストリはDrupalのキャッシュの設定に依らずキャッシュされます。
-
-そのため、変更を適用するためにキャッシュをクリアしましょう。
+テーマレジストリはDrupalのキャッシュの設定に依らず必ずキャッシュされるため、変更を適用するためにキャッシュをクリアしましょう。
 
 ```txt
 $ vendor/bin/drush cr

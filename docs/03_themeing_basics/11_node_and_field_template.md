@@ -18,7 +18,7 @@ _class: invert
 
 ---
 
-まずは、「記事 (article)」ノードのコンテンツを2つ作成して、どちらかのノードを表示してください。
+まずは「記事 (article)」ノードのコンテンツを2つ作成して、どちらかのノードを表示してください。
 
 現時点では次のようなデザインになっていると思います。
 
@@ -93,7 +93,7 @@ $ cp web/core/modules/system/templates/region.html.twig web/themes/custom/my_awe
 
 ---
 
-次に、JumbotoronのCSSクラス (`.jumbotron`) を `hook_preprocess_HOOK` で追加します。こちらも適用範囲を`Content` リージョンに限定するため、`HOOK` の部分は `regison__content` にします。
+次に、JumbotoronのCSSクラス (`.jumbotron`) を `hook_preprocess_HOOK` で追加します。こちらも適用範囲を`Content` リージョンに限定するため、`HOOK` の部分は `region__content` にします。
 
 `my_awesome_theme.theme` に次のコードを追加してください。
 
@@ -285,7 +285,7 @@ web/core/modules/node/templates/node.html.twig:85:  {% if display_submitted %}
 
 ---
 
-つまり、今回の対応として適切な修正は、「テンプレートを修正せず、記事ノードタイプの設定を変更する」になります。
+つまり、今回の対応として適切な修正は「テンプレートを修正せず記事ノードタイプの設定を変更する」になります。
 
 もし、テンプレートの修正をコミットしている場合は、`git revert`　で変更を打ち消しておきましょう。
 
@@ -368,13 +368,13 @@ $ cp web/core/modules/system/templates/field.html.twig web/themes/custom/my_awes
 
 ---
 
-3章全体を通していくつかのtwigテンプレートに触れてきましたが、Drupalコアが提供するtwigテンプレートは次のように他にもたくさんあります。
+3章全体を通していくつかのtwigテンプレートに触れてきましたが、Drupalで利用可能なtwigテンプレートは次のように他にもたくさんあります。
 
 - Views関連のコンポーネント
 - テキストエリア、セレクト、チェックボックスなどフォーム要素のコンポーネント
 - リンク、テーブル、リストなど汎用的なUIコンポーネント
 
-[Theme system overview](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/group/themeable/8.8.x) の末尾に利用可能なテンプレートの一覧がまとまっていますので一度目を通しておいてください。
+[Theme system overview](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/group/themeable/8.8.x) の末尾に利用可能なテンプレートの一覧がまとまっていますので、一度目を通しておいてください。
 
 ---
 
@@ -390,7 +390,7 @@ $ cp web/core/modules/system/templates/field.html.twig web/themes/custom/my_awes
 
 ## ストレッチゴール
 
-1. 3.11.2章で実装したコードには、「Contentリージョンに表示されるデータであれば、ノード以外でもJumbotronのデザインが適用される」という副作用があります。これは、トップページにアクセスすると、次の図のように確認できます。preprocessの実装を経脳して、単一ノードの表示画面でだけJumbotronのデザインが適用されるように修正してください。
+1. 3.11.2章で実装したコードには、「Contentリージョンに表示されるデータであれば、ノード以外でもJumbotronのデザインが適用される」という副作用があります。これは、トップページにアクセスすると、次の画像のように確認できます。preprocessの実装を経脳して、単一ノードの表示画面でだけJumbotronのデザインが適用されるように修正してください。
 
 ---
 
