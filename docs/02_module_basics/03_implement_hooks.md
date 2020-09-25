@@ -169,7 +169,7 @@ https://api.drupal.org/api/drupal/core%21core.api.php/group/hooks/8.8.x
 
 Drupalでは `{module_name}.module` というファイルに関数を定義するとグローバル関数として扱われます。
 
-`web/core/modules/custom/hello_world/hello_world.module` を新規に作成し、次のコードを追加してください。
+`web/modules/custom/hello_world/hello_world.module` を新規に作成し、次のコードを追加してください。
 
 ---
 
