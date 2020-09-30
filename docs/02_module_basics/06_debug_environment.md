@@ -42,7 +42,7 @@ Drupalのコーディングスタンダードのドキュメントは [Coding st
 
 ```txt
 # "drupal/coder" をglobalにインストール
-$ composer global requre drupal/coder
+$ composer global require drupal/coder
 
 # phpcsコマンドにパスを通す
 # "drupal/coder" がphpcsに依存しているため、phpcsは先のコマンドでインストールされます
