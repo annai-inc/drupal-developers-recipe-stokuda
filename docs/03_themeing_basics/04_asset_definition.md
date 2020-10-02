@@ -172,4 +172,4 @@ $ vendor/bin/drush cr
 
 ## ストレッチゴール
 
-1. コンソールに "hello my_awesome_theme!!!, It works with Bootstrap {version}." を出力するJavascriptを `custom.js` というファイル名で作成し、`custom_script` というライブラリ名で登録してテーマに組み込んでください。`{version}` の部分は参照しているBootstrapのバージョンを動的に取得するようにしてください。
+1. コンソールに "hello my_awesome_theme!!!, It works with Bootstrap {version}." を出力するJavascriptを `custom.js` というファイル名で作成し、`custom-script` というライブラリ名で登録してテーマに組み込んでください。`{version}` の部分は参照しているBootstrapのバージョンを動的に取得するようにしてください。
