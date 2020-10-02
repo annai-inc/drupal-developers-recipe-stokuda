@@ -39,7 +39,7 @@ libraries:
 
 `regions` キーがないですね。しかし、ここまでのブロックレイアウトの管理UIやテンプレート開発を通して複数のリージョンが存在することは確認できています。
 
-`{theme_name}.info.yml` に `regions` キーが存在しない場合、次のドキュメントの通り規定のリージョン群がデフォルトで利用できます。
+`{theme_name}.info.yml` に `regions` キーが存在しない場合、次のドキュメントの通り既定既定のリージョン群がデフォルトで利用できます。
 
 - [Adding Regions to a Theme: Default Regions](https://www.drupal.org/docs/theming-drupal/adding-regions-to-a-theme#default_regions)
 
