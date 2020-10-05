@@ -45,7 +45,7 @@ $ rm web/themes/custom/my_awesome_theme/templates/block--system-menu-block--main
 
 Laravelでは [view helper](https://laravel.com/docs/7.x/views)を通して変数をテンプレートに渡します。
 
-Drupalでは [Preprocess](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/group/themeable#sec_preprocess_templates) を使ってテンプレートに変数を渡します。
+Drupalでは [Preprocess](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/group/themeable#sec_preprocess_templates) を使ってテンプレートに変数を渡すことができます。
 
 ---
 
@@ -222,13 +222,22 @@ function my_awesome_theme_preprocess_block(&$variables) {
 
 この方法の場合、proprocessの関数名を `{theme}_proprocess_HOOK__{対象のID}` に変更します。
 
-今回のケースでは、対象のブロックIDは `system_menu_block:main` ですが、PHPでは関数名に`:`が利用できないので、`:` を `_` に置き換えて `system_menu_block_menu` になります。
-
-そのため、実装するpreprocess関数の名前は `my_awesome_theme_preprocess_block__my_awesome_theme_main_menu` になります。
+`{対象のID}` は先ほどの実装で参照したプラグインIDではなく、「対象のUIコンポーネントのMachine name」 になる点に注意してください。
 
 ---
 
-この方法の場合、特定のIDのブロックをレンダリングする場合だけコアがpreprocess関数をコールするため、先ほどの実装で追加したブロックIDのチェック処理は不要になります。
+Machine name は次のような方法で確認することができます。
+- 1. `{theme}_proprocess_HOOK` で `$variables['element']['#id']` の値を確認する
+- 2. configの `id` キーを確認する
+- 3. 管理UIからmachine nameを確認する
+
+今回のケースでは、対象のIDは `my_awesome_theme_main_menu` になります。
+
+そのため、実装するPreprocess関数の名前は `my_awesome_theme_preprocess_block__my_awesome_theme_main_menu` (長い...) になります。
+
+---
+
+この方法の場合、特定のIDのブロックをレンダリングする場合だけコアがPreprocess関数をコールするため、先ほどの実装で追加したブロックIDのチェック処理は不要になります。
 
 それでは、 `my_awesome_theme_preprocess_block` を削除し、代わりに `my_awesome_theme_preprocess_block__my_awesome_theme_main_menu` を次のように実装してください (長い...)。
 
