@@ -9,7 +9,7 @@ _class: invert
 
 ---
 
-3.4章では `{theme_name.info.yml}` および `{theme_name}.libraries.yml` にライブラリを定義し、Bootstrap4のJSとCSSをロードしました。
+3.4章では `{theme_name.info.yml}` および `{theme_name}.libraries.yml` にライブラリを定義し、Bootstrap4のJavaScriptとCSSをロードしました。
 
 この方法の場合、ライブラリはDrupalがレスポンスを生成する際に必ずロードされます。
 
@@ -42,7 +42,7 @@ welcome-message:
     - core/jquery
 ```
 
-Javascriptのコードで `$` を使いたいため、Drupalコアに含まれているjQueryのライブラリ(`core/jquery`) への依存を定義しています。
+JavaScriptのコードで `$` を使いたいため、Drupalコアに含まれているjQueryのライブラリ(`core/jquery`) への依存を定義しています。
 
 ---
 
@@ -60,7 +60,7 @@ Javascriptのコードで `$` を使いたいため、Drupalコアに含まれ�
 
 ---
 
-DrupalコアにはjQueryが含まれていますが、他のJavascriptライブラリとの競合を防ぐために [jQuery.noConflict()](https://api.jquery.com/jquery.noconflict/) が実行されます。
+DrupalコアにはjQueryが含まれていますが、他のJavaScriptライブラリとの競合を防ぐために [jQuery.noConflict()](https://api.jquery.com/jquery.noconflict/) が実行されます。
 
 そのため、`$` を使いたい場合は、このサンプルのようにスクリプトのスコープで `jQuery` を `$` として利用するように明示的に宣言する必要があります。
 
@@ -121,7 +121,7 @@ Drupal 8のデフォルトでは、トップページへのレスポンスはVie
 
 このセクションでは「特定の条件にマッチする場合のみライブラリをロードする方法」を解説しました。
 
-不必要なライブラリのロードはパフォーマンスの低下や副作用を招くこともあります。Drupalでよくあるケースだと、エンドユーザー向けのライブラリが常時ロードされることにより、管理画面のレイアウトが崩れたりJavascriptが正しく動かず設定変更ができなくなる等です。
+不必要なライブラリのロードはパフォーマンスの低下や副作用を招くこともあります。Drupalでよくあるケースだと、エンドユーザー向けのライブラリが常時ロードされることにより、管理画面のレイアウトが崩れたりJavaScriptが正しく動かず設定変更ができなくなる等です。
 
 Drupal 7の開発経験がある方は、Viewsの管理画面でこの問題に当たって困ったことがあるかもしれません(大抵はカスタムコードが原因です)。
 
