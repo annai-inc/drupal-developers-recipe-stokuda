@@ -9,7 +9,7 @@ _class: invert
 
 ---
 
-ここ2回のセクションでは、Javascriptが実行される条件を変更する方法を学んできました。
+ここ2回のセクションでは、JavaScriptが実行される条件を変更する方法を学んできました。
 
 一方で、単に実行する条件を変更するだけではなく実行するコード自体にパラメータを与えたくなる場合もあります。
 
@@ -66,21 +66,21 @@ function my_awesome_theme_preprocess_page(&$variables) {
 
 ---
 
-`$variables['#attached']['drupalSettings']` の値がそのままJavascriptの `attach` メソッドの `settings` で利用可能です。
+`$variables['#attached']['drupalSettings']` の値がそのままJavaScriptの `attach` メソッドの `settings` で利用可能です。
 
-`$variables['#attached']['drupalSettings']` 以下の配列のキーは、Javascirpt側では `settings` のプロパティにマッピングされます。
+`$variables['#attached']['drupalSettings']` 以下の配列のキーは、JavaScirpt側では `settings` のプロパティにマッピングされます。
 
-サンプルコードの例では `$variables['#attached']['drupalSettings']['welcomeMessage']['userName']` の値は、Javascript側では `settings.welcomeMessage.userName` で参照できます。
+サンプルコードの例では `$variables['#attached']['drupalSettings']['welcomeMessage']['userName']` の値は、JavaScript側では `settings.welcomeMessage.userName` で参照できます。
 
 ---
 
 配列のキーは自由に決定して構いませんが、例によってユニークになるように気を付ける必要があります。
 
-また、そのままJavascriptのプロパティに変換されるという性質上、プロパティとして利用不可能な文字(`-` など)を使うとPHPのコード上はエラーになりませんが、Javascript側で目的の値にアクセスできなくなります。
+また、そのままJavaScriptのプロパティに変換されるという性質上、プロパティとして利用不可能な文字(`-` など)を使うとPHPのコード上はエラーになりませんが、JavaScript側で目的の値にアクセスできなくなります。
 
 ---
 
-仕組みが分かったとことで、今度は `js/message.js` のコードを次のように変更してください。
+仕組みが分かったとところで、今度は `js/message.js` のコードを次のように変更してください。
 
 ```js
 (function($) {
@@ -121,6 +121,6 @@ welcome-message:
 
 ## まとめ
 
-このセクションでは、このセクションでは、[drupalSettings](https://www.drupal.org/node/2274843#configurable)を使いJavascriptをロードする際にPHP側からパラメータを渡す方法を解説しました。
+このセクションでは、このセクションでは、[drupalSettings](https://www.drupal.org/node/2274843#configurable)を使いJavaScriptをロードする際にPHP側からパラメータを渡す方法を解説しました。
 
-簡単な実装でPHPバックエンドからJavascriptのコードにパラメータを渡すことができるので、必要に応じて利用してください。
+簡単な実装でPHPバックエンドからJavaScriptのコードにパラメータを渡すことができるので、必要に応じて利用してください。
