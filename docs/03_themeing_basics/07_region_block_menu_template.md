@@ -288,7 +288,7 @@ Twig VarDumperは標準の `dump()` 関数の実装を上書きするので、tw
 
 ```txt
 {% set heading_id = attributes.id ~ '-menu'|clean_id %}
-{% set additional_classes = ['navbar', 'navbar-light1', 'navbar-expand-sm', 'bg-light', 'nav-fill', 'w-100'] %}
+{% set additional_classes = ['navbar', 'navbar-light', 'navbar-expand-sm', 'bg-light', 'nav-fill', 'w-100'] %}
 <nav role="navigation" aria-labelledby="{{ heading_id }}"{{ attributes.addClass(additional_classes)|without('role', 'aria-labelledby') }}>
   {# Label. If not displayed, we still provide it for screen readers. #}
   {% if not configuration.label_display %}
