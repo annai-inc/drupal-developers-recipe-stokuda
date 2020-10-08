@@ -92,7 +92,7 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
 
 これは `{module_name}.links.menu.yml` というファイルに定義します。
 
-`hello_world.link.menu.yml` を新規に作成して次のように実装してください。
+`hello_world.links.menu.yml` を新規に作成して次のように実装してください。
 
 ```yml
 hello_world.hello:
