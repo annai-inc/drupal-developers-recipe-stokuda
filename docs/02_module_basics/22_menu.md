@@ -100,7 +100,7 @@ hello_world.hello:
   description: 'Show hello message according to configuration.'
   route_name: hello_world.hello
   menu_name: main
-  weight: 1
+  weight: -1
 ```
 
 ---
