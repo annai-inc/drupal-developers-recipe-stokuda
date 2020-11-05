@@ -92,7 +92,7 @@ Drupalコアが定義しているライブラリにどのようなものがあ�
 
 ---
 
-次に、`{theme_name}.info.yml` でテーマがこのライブラリを利用するように変更します。`web/themes/custom/my_awesome_theme/my_awesome_theme.ifo.yml` に次の内容を追加してください。
+次に、`{theme_name}.info.yml` でテーマがこのライブラリを利用するように変更します。`web/themes/custom/my_awesome_themes/my_awesome_theme.info.yml` に次の内容を追加してください。
 
 ```yml
 libraries:
@@ -110,10 +110,10 @@ libraries:
 ```
 $ mkdir -p web/themes/custom/my_awesome_theme/css
 $ mkdir -p web/themes/custom/my_awesome_theme/js
-$ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css --output web/theme/custom/my_awesome_theme/css/bootstrap.min.css
-$ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css.map --output web/theme/custom/my_awesome_theme/css/bootstrap.min.css.map
-$ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js --output web/theme/custom/my_awesome_theme/js/bootstrap.min.js
-$ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js.map --output web/theme/custom/my_awesome_theme/js/bootstrap.min.js.map
+$ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css --output web/themes/custom/my_awesome_theme/css/bootstrap.min.css
+$ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css.map --output web/themes/custom/my_awesome_theme/css/bootstrap.min.css.map
+$ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js --output web/themes/custom/my_awesome_theme/js/bootstrap.min.js
+$ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js.map --output web/themes/custom/my_awesome_theme/js/bootstrap.min.js.map
 ```
 
 開発効率を上げるためにソースマップ (`.map`) ファイルの追加も忘れずに行いましょう。
