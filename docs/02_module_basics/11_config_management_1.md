@@ -45,7 +45,7 @@ Drupalでは、コンフィグのエクスポート・インポートを管理UI
 
 それでは、まずは管理UIからコンフィグをエクスポートしてみましょう。
 
-ツールバーから「環境設定 > Development > 同期」(/admin/config/development/configuration) にアクセスしてください。このUIでは、タブ毎に以下の操作を行うことができます。
+ツールバーから「環境設定 > 開発 > 同期」(/admin/config/development/configuration) にアクセスしてください。このUIでは、タブ毎に以下の操作を行うことができます。
 
 ---
 
