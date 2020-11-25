@@ -399,7 +399,7 @@ Drupalで特定環境向けの設定を行う場合、以下の行をコメン�
 $ cp web/sites/example.settings.local.php web/sites/default/settings.local.php
 ```
 
-コピーした `web/sites/default/settings.local.php` を開き、コメントアウトされている `$settings` 変数の定義が全て有効になるように変更してください。
+コピーした `web/sites/default/settings.local.php` を開き、コメントアウトされている `$settings` 変数の定義を `$settings['config_exclude_modules']` を除いて全て有効になるように変更してください。
 
 最後に、ここで一度キャッシュをクリアしてください。
 
