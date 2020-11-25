@@ -35,17 +35,16 @@ Drupalで定期的に何らかの処理を実行するにはいくつかの方�
 
 メリットとしては以下があります。
 
-- [Automated Cron](https://www.drupal.org/docs/8/administering-a-drupal-8-site/cron-automated-tasks/automated-cron) モジュールを利用する場合、サーバー側でcrontab等の設定は不要
-- 管理UI上 (/admin/config/system/cron) から任意のタイミングでも実行できる
-- 外部からのGETリクエストを起動のトリガーにすることもできる
+- [Automated Cron](https://www.drupal.org/docs/8/administering-a-drupal-8-site/cron-automated-tasks/automated-cron) モジュールを利用する場合、任意のHTTPリクエストを起動のトリガーにできるためサーバー側でcrontab等の設定は不要
+- 管理UI上 (/admin/config/system/cron) から任意のタイミングで（も）実行できる
 
 ---
 
 [Automated Cron](https://www.drupal.org/docs/8/administering-a-drupal-8-site/cron-automated-tasks/automated-cron) モジュールを利用する場合、起動のトリガーは「一定期間を過ぎた後にDrupalがなんらかのHTTPリクエストを受けた時」になります。そのため、例えば「毎日0時0分に実行」のような精度が必要な場合は適していません。
 
-このような場合はAutomated Cronは使わずに、crontabなどで実行時刻を指定し、[Drushのcronサブコマンド](https://docs.drush.org/en/master/cron/) を実行するか、wgetやcurlなどでToken付きのURLに対してGETリクエストを送ることで対応できます。
+このような場合はAutomated Cronは使わずに、crontabなどで実行時刻を指定して[Drushのcronサブコマンド](https://docs.drush.org/en/master/cron/) を実行するか、wgetやcurlなどでToken付きのURLに対してGETリクエストを送ることで対応できます。
 
-どの方法でも hook_cron が実行されることには変わりありません。
+どの方法でも `hook_cron` が実行されることには変わりありません。
 
 ---
 
