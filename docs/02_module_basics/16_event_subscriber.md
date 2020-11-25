@@ -457,7 +457,7 @@ use Drupal\Core\Routing\TrustedRedirectResponse;
 
 Drupalにはある単位でキャッシュを制御するための [Cache Tag](https://www.drupal.org/docs/8/api/cache-api/cache-tags) という仕組みが用意されています。効率的にキャッシュしたい場合はこの仕組みを利用するのが良いでしょう。
 
-キャッシュについては本セクションの趣旨ではないので、ここでの詳細な解説は割愛しますが本コンテンツの後半で解説します。
+キャッシュについては本セクションの趣旨ではないのでここでの詳細な解説は割愛します。
 
 ----
 
