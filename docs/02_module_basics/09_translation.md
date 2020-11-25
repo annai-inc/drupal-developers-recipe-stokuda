@@ -95,9 +95,7 @@ msgstr "ハローワールド!"
 
 ![hello world module description 1](../assets/02_module_basics/09_translation/translate_hello_world_module_description_1.png)
 
-おや、翻訳されていませんね。。
-
-`.yml` の中の文字列を翻訳する場合、値はクォートする必要があります。`hello_world.info.yml` 内の `description` の値を次のようにシングルクォートで括りましょう。
+お使いの環境がDrupal 8.8より以前のバージョンの場合は、この画像のように翻訳されていないと思います。この場合、`.yml` の中の文字列を翻訳する場合は値をクォートする必要があります。`hello_world.info.yml` 内の `description` の値を次のようにシングルクォートで括りましょう。
 
 ```yml
 description: 'Hello World module'
@@ -112,6 +110,8 @@ description: 'Hello World module'
 上記のように表示されれば成功です。
 
 実装は割愛しますが、`{module_name}.permissions.yml` についても同様に翻訳することが可能です。
+
+なお、Drupal 8.9ではクォートしなくても翻訳されるため、この対応は必要ありません。
 
 ---
 
