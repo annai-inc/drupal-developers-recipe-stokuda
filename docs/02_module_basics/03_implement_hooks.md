@@ -143,6 +143,8 @@ function hook_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_
 
 **「hook_help() という関数で、ルート毎のヘルプテキストを返すことができるんだなぁ」** という情報が何となく読み取れると思います。
 
+`{module_name}.api.php` はincludeされないため、このファイルで定義されている `hook_` で始まる関数は実際に呼び出されることはありません。このファイル自体がドキュメントを自動生成する目的で書かれています。
+
 ---
 
 <!-- _class: lead -->
