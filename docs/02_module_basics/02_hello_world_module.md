@@ -206,6 +206,10 @@ description: Hello World module
 
 ---
 
+Machine nameで利用な文字種などの詳細は [Naming and placing your Drupal moduleのName your module](https://www.drupal.org/docs/creating-custom-modules/naming-and-placing-your-drupal-module#s-name-your-module) の「Name your module」セクションを参照してください。
+
+---
+
 <!-- _class: lead -->
 ## 2.2.6 hello_worldモジュールの有効化
 
