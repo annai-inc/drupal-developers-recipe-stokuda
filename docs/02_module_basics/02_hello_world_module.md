@@ -114,7 +114,7 @@ type: module
 core: 8.x
 ```
 
-この `name`、`type`、`core` が `{module_name}.info.yml` に必須なキーとなります。その他のキーも含めて、 `{module_name}.info.yml` では次のようなキーが指定できます。
+この `name`、`type`、`core` が `{module_name}.info.yml` に必須なキーとなります。`{module_name}.info.yml` で利用可能な代表的なキーを以下に記載します。
 
 ---
 
@@ -134,6 +134,11 @@ core: 8.x
 |version|no|モジュール(テーマ)のバージョン|
 
 ---
+
+この他にもいくつかのキーが利用可能です。詳細は [Let Drupal know about your module with an .info.yml file](https://www.drupal.org/docs/creating-custom-modules/let-drupal-know-about-your-module-with-an-infoyml-file#s-complete-example) の「Complete example」セクションを参照してください。
+
+---
+
 
 それでは、hello_worldモジュールが無事Drupalに認識されたか確認してみましょう。
 
