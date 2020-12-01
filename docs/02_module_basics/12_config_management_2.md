@@ -111,7 +111,7 @@ https://gist.githubusercontent.com/blauerberg/3ce158b4c7ec93417974291a68f99aa1/r
 次にdrushコマンドでサイトを初期化します。サイトの初期化には [site:install](https://drushcommands.com/drush-9x/site/site:install/) サブコマンドを利用します。このコマンドには `--existing-config` というオプションがあり、これを指定することでコード化されたコンフィグからサイトを立ち上げることができます。
 
 ```txt
-$ vendor/bin/drush -y site:install --existing-config --account-name="admin" --account-pass="admin" --db-url=sqlite://web/sites/default/files/.ht.sqlite
+$ vendor/bin/drush -y site:install --existing-config --account-name="admin" --account-pass="admin" --db-url=sqlite://sites/default/files/.ht.sqlite
 
  You are about to CREATE the 'web/sites/default/files/.ht.sqlite' database. Do you want to continue? (yes/no) [yes]:
  > yes
