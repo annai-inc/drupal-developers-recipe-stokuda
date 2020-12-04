@@ -163,4 +163,4 @@ Template suggestionで実装しておけば、対象のIDを設定可能にす�
 
 ## ストレッチゴール
 
-1. `hook_theme_suggestions_alter` を実装して　`page` エレメントのTemplate suggestionに `page__node_{ロールID}` を追加し、定義済みのロール毎にテンプレートが切り替えられるようにしてください。テンプレートファイル自体の実装は不要とします。また、追加するテンプレートの優先順位は `page__node` の次になるようにしてください。
+1. `hook_theme_suggestions_alter` を実装して　`page` エレメントのTemplate suggestionに `page__node_{ロールID}` を追加し、定義済みのロール毎にテンプレートが切り替えられるようにしてください。テンプレートファイル自体の実装は不要とします。また、追加するテンプレートの優先順位は `page__node` の次に高くなるようにしてください。なお、このフックの結果はキャッシュされる点に留意してください。
