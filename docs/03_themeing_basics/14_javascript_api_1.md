@@ -151,7 +151,12 @@ jQueryのAPIではなく [domready](https://github.com/ded/domready) という�
 
 `context` に `html` が含まれている場合、つまり初回のDOMロードの時にだけコンソールにメッセージを出すように修正しています。
 
-同時に [jquery-once](https://github.com/RobLoach/jquery-once)に依存するように修正しているため、`core/jquery.once` への依存の定義も必要です。
+※このサンプルコードは実は若干無駄があります。`html` が含まれるイベントは一度しか発生しないため、`.once` は不要です。
+しかし、例えばショッピングカートのように「商品を追加すると合計金額が変わる」ような機能をJavaScriptで実装する場合、同じcontextに対して複数回イベントが発生することがあるため、場合によっては `.once` を使ってコードが一度だけ実行されることを保証する必要が出てきます。
+
+---
+
+[jquery-once](https://github.com/RobLoach/jquery-once)に依存するように修正しているため、`core/jquery.once` への依存の定義も必要です。
 
 `my_awesome_theme.libraries.yml` を開いて `welcome-message` の `dependencies` に次のように `core/jquery.once` への依存を追加してください。
 
