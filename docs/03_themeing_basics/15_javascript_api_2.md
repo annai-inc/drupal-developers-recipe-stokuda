@@ -80,7 +80,7 @@ function my_awesome_theme_preprocess_page(&$variables) {
 
 ---
 
-仕組みが分かったとところで、今度は `js/message.js` のコードを次のように変更してください。
+仕組みが分かったところで、今度は `js/message.js` のコードを次のように変更してください。
 
 ```js
 (function($) {
