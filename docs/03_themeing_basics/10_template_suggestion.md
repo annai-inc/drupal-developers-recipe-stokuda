@@ -49,7 +49,7 @@ _class: invert
 まずは、`region--primary-menu.html.twig` を `region--without-wrapper.html.twig` にリネームしましょう。
 
 ```txt
-$ mv web/themes/custom/my_awesome_theme/templates/region--primary_menu.html.twig web/themes/custom/my_awesome_theme/templates/region--without-wrapper.html.twig
+$ mv web/themes/custom/my_awesome_theme/templates/region--primary-menu.html.twig web/themes/custom/my_awesome_theme/templates/region--without-wrapper.html.twig
 ```
 
 次に、キャッシュをクリアしてトップページにアクセスしてください。
@@ -139,7 +139,7 @@ function my_awesome_theme_theme_suggestions_region_alter(array &$suggestions, ar
 
 キャッシュをクリアして、再度トップページにアクセスしてください。
 
-Primary Menuリージョンにのみ、`region-without-wrapper.html.twig` が適用されていれば成功です。
+Primary Menuリージョンにのみ、`region--without-wrapper.html.twig` が適用されていれば成功です。
 
 ---
 
