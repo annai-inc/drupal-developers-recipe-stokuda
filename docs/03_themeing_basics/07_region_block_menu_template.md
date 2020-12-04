@@ -481,7 +481,7 @@ twigのテンプレートファイルは、いくつかの候補の中から最�
 次のコマンドを実行してテンプレートをリネームしてください。
 
 ```
-$ mv web/themes/custom/my_awesome_theme/templates/block--system-menu-block.html.twig web/themes/custom/my_awesome_theme/templates//block--system-menu-block--main.html.twig
+$ mv web/themes/custom/my_awesome_theme/templates/block--system-menu-block.html.twig web/themes/custom/my_awesome_theme/templates/block--system-menu-block--main.html.twig
 ```
 
 再度トップページにアクセスしてください。
