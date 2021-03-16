@@ -565,7 +565,7 @@ $ cp web/core/modules/system/templates/region.html.twig web/themes/custom/my_awe
 
 ---
 
-これで全ての変更は終了です。トップページにアクセスして、コピーしてテンプレートファイルが適用されていること、ナビゲーションの幅が100%になっていることの2点を確認しましょう。
+これで全ての変更は終了です。トップページにアクセスして、コピーしたテンプレートファイルが適用されていること、ナビゲーションの幅が100%になっていることの2点を確認しましょう。
 
 ![width:1100px](../assets/03_themeing_basics/07_region_block_menu_template/nabvar_6.png)
 
