@@ -118,7 +118,7 @@ $ curl https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js.ma
 
 開発効率を上げるためにソースマップ (`.map`) ファイルの追加も忘れずに行いましょう。
 
-ソースマップって何？という方は、「Set Up CSS and JS Preprocessors」の[Debugging and editing preprocessed content](https://developers.google.com/web/tools/setup/setup-preprocessors#debugging_and_editing_preprocessed_content) を参照してください。
+ソースマップって何？という方は、[Map Preprocessed Code to Source Code](https://developers.google.com/web/tools/chrome-devtools/javascript/source-maps) を参照してください。
 
 ---
 
