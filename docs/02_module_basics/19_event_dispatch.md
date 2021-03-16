@@ -229,8 +229,8 @@ Drupal 8.8時点ではまだhookによる拡張のインターフェースも残
 
 ## ストレッチゴール
 
-1. hello_messege_override モジュールを新しく作成し、このセクションで定義したイベントを受信して表示されるメッセージが「Hello message override!」になるように変更してください。
+1. hello_message_override モジュールを新しく作成し、このセクションで定義したイベントを受信して表示されるメッセージが「Hello message override!」になるように変更してください。
 
-2. bonjour_messege_override モジュールを新しく作成し、このセクションで定義したイベントを受信して表示されるメッセージが 「Bonjour message override!」 になるように変更してください。なお、実装については以下の制約を満たすようにしてください。
-   - hello_messege_override が有効な場合でも要件を満たすこと
-   - イベントを受信する優先度は、bonjour_messege_overrideの方がhello_messege_overrideより高くなるように設定すること。
+2. bonjour_message_override モジュールを新しく作成し、このセクションで定義したイベントを受信して表示されるメッセージが 「Bonjour message override!」 になるように変更してください。なお、実装については以下の制約を満たすようにしてください。
+   - hello_message_override が有効な場合でも要件を満たすこと
+   - イベントを受信する優先度は、bonjour_message_overrideの方がhello_message_overrideより高くなるように設定すること。
