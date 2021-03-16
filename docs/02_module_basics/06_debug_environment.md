@@ -180,7 +180,7 @@ Drupalのバージョンやインストールプロファイル、drupal.orgの�
 
 キャッシュのクリア、ルート、エンティティ、フィールド、セッション、サービスコンテナの一覧、phpinfo()などを表示することができます。
 
-![web profiler drupal](../assets/02_module_basics/06_debug_environment/devel_web_profiler_tools.png)
+![height:350px](../assets/02_module_basics/06_debug_environment/devel_web_profiler_tools.png)
 
 ---
 
