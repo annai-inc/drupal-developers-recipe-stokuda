@@ -238,7 +238,7 @@ Drupalで設定用のフォームを開発する場合は、`ConfigFormBase` を
 
 今回の例では、`hello_message` というキーを持つテキストフィールドを定義しています。
 
-`#type` を変更することで、テキストフィールド以外のフォーム要素も利用可能です。詳細は [Form and render elements](https:/api.drupal.org/api/drupal/elements) を参照してください。
+`#type` を変更することで、テキストフィールド以外のフォーム要素も利用可能です。詳細は [Form and render elements](https://api.drupal.org/api/drupal/elements) を参照してください。
 
 ---
 
