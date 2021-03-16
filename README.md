@@ -1,18 +1,27 @@
 # Drupal Developers Recipe
 
-## How to Use
+## Prerequisite
 
+- Node.js 12.x
+
+## How to Use on your local environment
+
+```sh
+git clone git@github.com:annai-labs/drupal-developers-recipe.git
+cd drupal-developers-recipe
+npm install
+npx marp --server docs
+open http://localhost:8080
 ```
-$ git clone git@bitbucket.org:annai-labs/drupal_developers_recipe.git
-$ npm install
-$ npx marp --server docs
-$ open http://localhost:8080
+
+## A short example how to deploy on the Google App Engine
+
+```sh
+gcloud config set project {YOUR_PROJECT_ID}
+gcloud app create --region=asia-northeast1
+gcloud app deploy --project={YOUR_PROJECT_ID}
 ```
 
-## Contribute
+### Can I use any authentication before access?
 
-### エディタ環境
-vscodeに以下の拡張機能を導入した環境で編集することを推奨します。
-
-- [Markdown All in One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)
-- [Marp for VS Code](https://marketplace.visualstudio.com/items?itemName=marp-team.marp-vscode)
+Yes, you can use [Identify-aware Proxy](https://cloud.google.com/iap/docs/concepts-overview).
