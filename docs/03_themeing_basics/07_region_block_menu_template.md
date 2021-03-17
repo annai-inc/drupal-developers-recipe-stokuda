@@ -278,7 +278,7 @@ Twig VarDumperは標準の `dump()` 関数の実装を上書きするので、tw
 今回の場合、次の2つの方法で対応できます。
 
 - 1. Twigテンプレート内でattributes変数を変更する
-- 2. Proprocessを実装してattributes変数を変更する
+- 2. Preprocessを実装してattributes変数を変更する
 
 今回はtwigの知識だけで実現できるように1.の方法を採用します。
 

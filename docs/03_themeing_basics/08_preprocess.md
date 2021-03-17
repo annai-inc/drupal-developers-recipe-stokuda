@@ -53,7 +53,7 @@ Drupalでは [Preprocess](https://api.drupal.org/api/drupal/core%21lib%21Drupal%
 
 Preprocessは [hook_preprocess_HOOK](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Render%21theme.api.php/function/hook_preprocess_HOOK/8.8.x) という命名規則を持つグローバル関数として実装します。
 
-2章でモジュールのフックを実装しましたが、それと同じ仕組みですね。まさにその通りで、Proprocessの実体はフックです。
+2章でモジュールのフックを実装しましたが、それと同じ仕組みですね。まさにその通りで、Preprocessの実体はフックです。
 
 モジュールの場合、フックは `{module_name}.module` というファイルに実装する必要がありました。テーマの場合は、`{theme_name}.theme` というファイルで実装します。
 
@@ -220,14 +220,14 @@ function my_awesome_theme_preprocess_block(&$variables) {
 
 次に2.の方法で実装してみましょう。
 
-この方法の場合、proprocessの関数名を `{theme}_proprocess_HOOK__{対象のID}` に変更します。
+この方法の場合、preprocessの関数名を `{theme}_preprocess_HOOK__{対象のID}` に変更します。
 
 `{対象のID}` は先ほどの実装で参照したプラグインIDではなく、「対象のUIコンポーネントのMachine name」 になる点に注意してください。
 
 ---
 
 Machine name は次のような方法で確認することができます。
-- 1. `{theme}_proprocess_HOOK` で `$variables['element']['#id']` の値を確認する
+- 1. `{theme}_preprocess_HOOK` で `$variables['element']['#id']` の値を確認する
 - 2. configの `id` キーを確認する
 - 3. 管理UIからmachine nameを確認する
 
