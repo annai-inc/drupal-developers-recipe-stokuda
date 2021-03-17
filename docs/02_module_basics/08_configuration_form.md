@@ -208,7 +208,7 @@ Drupalで設定用のフォームを開発する場合は、`ConfigFormBase` を
 
 ---
 
-`ConfigFormBase` を敬称したクラスでは、最低限以下のメソッドを実装する必要があります。
+`ConfigFormBase` を継承したクラスでは、最低限以下のメソッドを実装する必要があります。
 - [getEditableConfigNames](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21ConfigFormBaseTrait.php/function/ConfigFormBaseTrait%3A%3AgetEditableConfigNames/)
 - [getFormId](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21FormBuilderInterface.php/function/FormBuilderInterface%3A%3AgetFormId/)
 - [buildForm](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21FormBuilderInterface.php/function/FormBuilderInterface%3A%3AbuildForm/)
