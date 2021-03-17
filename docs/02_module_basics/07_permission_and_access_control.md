@@ -331,7 +331,7 @@ AccessResultクラスには、他にも便利なヘルパーメソッドが多�
 
 ## ストレッチゴール
 
-1. `hello.hello` にアクセスした時に、`show hello message` か `use advanced search` のどちらかの権限を持っていればアクセスを許可するように修正してください。
+1. `hello_world.hello` にアクセスした時に、`show hello message` か `use advanced search` のどちらかの権限を持っていればアクセスを許可するように修正してください。
  
 2. `hello_world.say_something` の `_role` で設定したロールのチェックを `_custom_access` で実装し直してください。
 
