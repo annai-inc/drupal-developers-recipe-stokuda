@@ -208,7 +208,7 @@ Drupalで設定用のフォームを開発する場合は、`ConfigFormBase` を
 
 ---
 
-`ConfigFormBase` を敬称したクラスでは、最低限以下のメソッドを実装する必要があります。
+`ConfigFormBase` を継承したクラスでは、最低限以下のメソッドを実装する必要があります。
 - [getEditableConfigNames](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21ConfigFormBaseTrait.php/function/ConfigFormBaseTrait%3A%3AgetEditableConfigNames/)
 - [getFormId](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21FormBuilderInterface.php/function/FormBuilderInterface%3A%3AgetFormId/)
 - [buildForm](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Form%21FormBuilderInterface.php/function/FormBuilderInterface%3A%3AbuildForm/)
@@ -238,7 +238,7 @@ Drupalで設定用のフォームを開発する場合は、`ConfigFormBase` を
 
 今回の例では、`hello_message` というキーを持つテキストフィールドを定義しています。
 
-`#type` を変更することで、テキストフィールド以外のフォーム要素も利用可能です。詳細は [Form and render elements](https:/api.drupal.org/api/drupal/elements) を参照してください。
+`#type` を変更することで、テキストフィールド以外のフォーム要素も利用可能です。詳細は [Form and render elements](https://api.drupal.org/api/drupal/elements) を参照してください。
 
 ---
 
@@ -305,9 +305,9 @@ select * from config where name = 'hello_world.settings';
 
 1. `administer hello world` 権限を定義し、`hello_world.setting_form` にアクセスする際にチェックするように変更してください。
 
-2. `hello.say_something` にアクセス可能なロールをフォームから設定できるようにしてください。なお、ロールは複数選択可能とします (2.7章のストレッチゴール2.も参照)。
+2. `hello_world.say_something` にアクセス可能なロールをフォームから設定できるようにしてください。なお、ロールは複数選択可能とします (2.7章のストレッチゴール2.も参照)。
 
-3. `hello.say_something` にアクセスした時に、 `{message}` に含むことができない文字列をフォームから設定できるようにしてください。文字列はtextareaで入力し複数の文字列を設定する場合は改行して入力する仕様とします (2.7章のストレッチゴール3.も参照)。
+3. `hello_world.say_something` にアクセスした時に、 `{message}` に含むことができない文字列をフォームから設定できるようにしてください。文字列はtextareaで入力し複数の文字列を設定する場合は改行して入力する仕様とします (2.7章のストレッチゴール3.も参照)。
 
 ---
 

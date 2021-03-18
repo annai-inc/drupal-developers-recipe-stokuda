@@ -278,7 +278,7 @@ Twig VarDumperは標準の `dump()` 関数の実装を上書きするので、tw
 今回の場合、次の2つの方法で対応できます。
 
 - 1. Twigテンプレート内でattributes変数を変更する
-- 2. Proprocessを実装してattributes変数を変更する
+- 2. Preprocessを実装してattributes変数を変更する
 
 今回はtwigの知識だけで実現できるように1.の方法を採用します。
 
@@ -565,7 +565,7 @@ $ cp web/core/modules/system/templates/region.html.twig web/themes/custom/my_awe
 
 ---
 
-これで全ての変更は終了です。トップページにアクセスして、コピーしてテンプレートファイルが適用されていること、ナビゲーションの幅が100%になっていることの2点を確認しましょう。
+これで全ての変更は終了です。トップページにアクセスして、コピーしたテンプレートファイルが適用されていること、ナビゲーションの幅が100%になっていることの2点を確認しましょう。
 
 ![width:1100px](../assets/03_themeing_basics/07_region_block_menu_template/nabvar_6.png)
 

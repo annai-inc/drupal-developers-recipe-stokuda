@@ -40,7 +40,7 @@ _class: invert
 ```json
         "patches": {
             "drupal/core": {
-                "Allow an install hook in profiles installing from configuration": "https://www.drupal.org/files/issues/2020-01-09/2982052-37.patch",
+                "Allow an install hook in profiles installing from configuration": "https://www.drupal.org/files/issues/2020-11-25/2982052-55.patch",
                 "avoid null reference on drush site:install --existing-config": "https://gist.githubusercontent.com/blauerberg/3ce158b4c7ec93417974291a68f99aa1/raw/46df1a6da1473477009fcfbb261e7a3a3da2fd3c/gistfile1.txt"
             }
         }

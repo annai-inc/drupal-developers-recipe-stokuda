@@ -189,6 +189,8 @@ INSERTクエリを発行するには [insert](https://www.drupal.org/docs/8/api/
 $ vendor/bin/drush scr web/modules/custom/hello_world/scripts/insert.php
 ```
 
+---
+
 実行したら、bookテーブルのレコードを確認してください。以下のように2件のデータが挿入されていれば成功です。
 
 ```txt
