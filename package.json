@@ -14,7 +14,7 @@
   "author": "Yoshikazu Aoyama <y_aoyama@annai-labs.com>",
   "license": "UNLICENSED",
   "dependencies": {
-    "@marp-team/marp-cli": "^0.17.2",
+    "@marp-team/marp-cli": "^1.1.1",
     "express": "^4.17.1",
     "serve-index": "^1.9.1"
   }
