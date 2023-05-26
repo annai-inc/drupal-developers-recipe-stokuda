@@ -36,8 +36,10 @@ class HelloWorldController extends ControllerBase {
    * Inspect user information.
    */
   public function inspectUser(AccountInterface $user = NULL) {
-    dpm($user);
-
+    $moduleHandler = \Drupal::service('module_handler');
+    if ($moduleHandler->moduleExists('devel')) {
+      dpm($user);
+    }
     $content = "User id: " . $user->id() . ", username: " . $user->getAccountName();
 
     return [
