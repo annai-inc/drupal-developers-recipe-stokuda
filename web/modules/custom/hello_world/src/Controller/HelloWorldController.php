@@ -16,11 +16,11 @@ use Drupal\Core\Access\AccessResult;
 class HelloWorldController extends ControllerBase {
 
   /**
-   * Just say "Hello World!".
+   * Just say a configured hello message.
    */
   public function helloWorld() {
     return [
-      "#markup" => "Hello World!",
+      "#markup" => \Drupal::service('config.factory')->get('hello_world.settings')->get('hello_message'),
     ];
   }
 
