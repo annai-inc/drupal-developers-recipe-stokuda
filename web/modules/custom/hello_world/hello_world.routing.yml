@@ -11,7 +11,7 @@ hello_world.say_something:
     _controller: '\Drupal\hello_world\Controller\HelloWorldController::saySomething'
     _title: 'Say Something!'
   requirements:
-    _role: 'can say something'
+    _custom_access: '\Drupal\hello_world\Controller\HelloWorldController::validateForbiddenMessage'
 hello_world.inspect_user:
   path: '/inspect_user/{user}'
   defaults:

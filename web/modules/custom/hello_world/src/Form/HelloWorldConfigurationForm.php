@@ -7,11 +7,15 @@ use Drupal\Core\Form\FormBase;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Form\ConfigFormBaseTrait;
+use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Configuration form for hellow_world module.
  */
 class HelloWorldConfigurationForm extends FormBase {
+
+  use ConfigFormBaseTrait;
 
   protected $permissionHandler;
 
@@ -19,15 +23,17 @@ class HelloWorldConfigurationForm extends FormBase {
 
   public string $target_permission = 'can say something';
 
-  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage) {
+  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage, ConfigFactoryInterface $config_factory) {
     $this->permissionHandler = $permission_handler;
     $this->roleStorage = $role_storage;
+    $this->setConfigFactory($config_factory);
   }
 
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('user.permissions'),
-      $container->get('entity_type.manager')->getStorage('user_role')
+      $container->get('entity_type.manager')->getStorage('user_role'),
+      $container->get('config.factory')
     );
   }
 
@@ -50,6 +56,7 @@ class HelloWorldConfigurationForm extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state){
+    $config = $this->config('hello_world.settings');
     $options = [];
     $default_values = [];
     foreach ($this->getRoles() as $role_name => $role) {
@@ -69,6 +76,11 @@ class HelloWorldConfigurationForm extends FormBase {
       '#title' => 'ロールを選択',
       '#description' => 'Please select roles to grant on /say_something',
       '#default_value' => $default_values,
+    ];
+    $form['forbidden_message'] = [
+      '#type' => 'textarea',
+      '#title' => '禁止文字列を入力',
+      '#default_value' => $config->get('forbidden_message'),
     ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
@@ -93,6 +105,9 @@ class HelloWorldConfigurationForm extends FormBase {
         ));
       }
     }
+    $this->config('hello_world.settings')
+      ->set('forbidden_message', $form_state->getValue('forbidden_message'))
+      ->save();
     $this->messenger()->addStatus($this->t('The changes have been saved.'));
   }
 
