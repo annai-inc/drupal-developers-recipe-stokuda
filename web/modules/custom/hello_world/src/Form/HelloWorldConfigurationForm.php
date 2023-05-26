@@ -55,6 +55,18 @@ class HelloWorldConfigurationForm extends FormBase {
     return 'hello_world_configuration_form';
   }
 
+  public function validateForm(array &$form, FormStateInterface $form_state)
+  {
+    $forbidden_message =  $form_state->getValue('forbidden_message');
+    $forbidden_message = str_replace(array("\r\n", "\r", "\n"), "\n", $forbidden_message);
+    foreach(explode("\n", $forbidden_message) as $one_line_message){
+      if (strlen($one_line_message) == 0) {
+        $form_state->setErrorByName("禁止文字列", $this->t('"禁止文字列を入力"に空行は含められません。'));
+      }
+    }
+    parent::validateForm($form, $form_state);
+  }
+
   public function buildForm(array $form, FormStateInterface $form_state){
     $config = $this->config('hello_world.settings');
     $options = [];
