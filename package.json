@@ -1,0 +1,21 @@
+{
+  "name": "drupal_developers_recipe",
+  "version": "0.1.0",
+  "description": "A training book for Drupal developer, internal use only.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx marp --server docs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "private": true,
+  "author": "Yoshikazu Aoyama <y_aoyama@annai-labs.com>",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@marp-team/marp-cli": "^1.1.1",
+    "express": "^4.17.1",
+    "serve-index": "^1.9.1"
+  }
+}
