@@ -22,9 +22,18 @@ use Drupal\Core\Form\FormStateInterface;
  */
 function hello_world_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if ($form_id === "user_register_form" || $form_id === "user_form") {
-    $form["#validate"][] = "hello_world_validate_password_length";
+//    $form["#validate"][] = "hello_world_validate_password_length";
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hello_world_form_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+  $form["#validate"][] = "hello_world_validate_password_length";
+}
+
 /**
  * Validate that password length greater than 8 characters.
  *
