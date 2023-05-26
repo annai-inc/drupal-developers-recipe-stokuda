@@ -9,6 +9,7 @@ msgstr "ハローワールド!"
 
 msgid "About"
 msgstr "このモジュールについて"
+msgctxt "hello world module"
 
 msgid "This is an hello world module."
 msgstr "これはハローワールドモジュールです。"

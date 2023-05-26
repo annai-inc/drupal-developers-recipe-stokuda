@@ -10,7 +10,7 @@ function hello_world_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.hello_world':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('This is an hello world module.') . '</p>';
+      $output .= '<h3>' . t('About', [], Array("context" => "hello world module")) . '</h3>';
       return $output;
     default:
   }
