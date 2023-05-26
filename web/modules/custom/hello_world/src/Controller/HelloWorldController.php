@@ -10,53 +10,54 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Node\NodeInterface;
 use Drupal\Core\Access\AccessResult;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\user\PermissionHandlerInterface;
-use Drupal\user\RoleStorageInterface;
-use Drupal\hello_world\Service\HelloWorldMessenger;
+use Drupal\hello_world\EchoMessageServiceInterface;
 
 /**
  * A example of custom controller.
  */
 class HelloWorldController extends ControllerBase {
 
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\hello_world\EchoMessageServiceInterface
+   */
+  protected $messenger;
 
-  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage, ConfigFactoryInterface $config_factory) {
-    $this->permissionHandler = $permission_handler;
-    $this->roleStorage = $role_storage;
+  /**
+   * A construtor of HelloWorldController.
+   *
+   * @param \Drupal\hello_world\EchoMessageServiceInterface $messenger
+   *   The messenger service.
+   */
+  public function __construct(EchoMessageServiceInterface $messenger) {
+    $this->messenger = $messenger;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('user.permissions'),
-      $container->get('entity_type.manager')->getStorage('user_role'),
-      $container->get('config.factory')
+      $container->get('hello_world.messenger')
     );
   }
-
 
   /**
    * Just say a configured hello message.
    */
   public function helloWorld() {
-    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
-    $service = \Drupal::service('hello_world.messenger');
-
     return [
-      "#markup" => $service->helloWorld(),
+      "#markup" => $this->messenger->helloWorld(),
     ];
   }
-
 
   /**
    * Just say something by use param.
    */
   public function saySomething(string $message) {
-    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
-    $service = \Drupal::service('hello_world.messenger');
-
     return [
-      "#markup" => $service->saySomething($message),
+      "#markup" => $this->messenger->saySomething($message),
     ];
   }
 
@@ -64,11 +65,8 @@ class HelloWorldController extends ControllerBase {
    * Inspect user information.
    */
   public function inspectUser(AccountInterface $user = NULL) {
-    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
-    $service = \Drupal::service('hello_world.messenger');
-
     return [
-      "#markup" => $service->inspectUser($user),
+      "#markup" => $this->messenger->inspectUser($user),
     ];
   }
 
@@ -76,11 +74,8 @@ class HelloWorldController extends ControllerBase {
    * Inspect node information.
    */
   public function inspectNode(NodeInterface $node) {
-    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
-    $service = \Drupal::service('hello_world.messenger');
-
     return [
-      "#markup" => $service->inspectNode($node),
+      "#markup" => $this->messenger->inspectNode($node),
     ];
   }
 
