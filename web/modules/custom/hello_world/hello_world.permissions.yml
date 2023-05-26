@@ -1,3 +1,7 @@
 show hello message:
   title: 'Show hello message'
   description: 'Show hello message on /hello'
+administer hello world:
+  title: 'administer hello world'
+  description: 'administer hello world'
+  restrict access: true

@@ -40,5 +40,5 @@ hello_world.setting_form:
     _form: '\Drupal\hello_world\Form\HelloWorldConfigurationForm'
     _title: 'Hello world configuration'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer hello world'
 
