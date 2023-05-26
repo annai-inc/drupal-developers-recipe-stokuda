@@ -5,3 +5,7 @@ administer hello world:
   title: 'administer hello world'
   description: 'administer hello world'
   restrict access: true
+can say something:
+  title: 'can say something'
+  description: 'Show hello message on /say_something'
+  restrict access: true
