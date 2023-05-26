@@ -36,6 +36,8 @@ class HelloWorldController extends ControllerBase {
    * Inspect user information.
    */
   public function inspectUser(AccountInterface $user = NULL) {
+    dpm($user);
+
     $content = "User id: " . $user->id() . ", username: " . $user->getAccountName();
 
     return [
