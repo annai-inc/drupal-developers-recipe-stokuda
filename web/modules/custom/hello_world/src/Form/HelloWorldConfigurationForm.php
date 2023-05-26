@@ -61,7 +61,7 @@ class HelloWorldConfigurationForm extends FormBase {
     $forbidden_message = str_replace(array("\r\n", "\r", "\n"), "\n", $forbidden_message);
     foreach(explode("\n", $forbidden_message) as $one_line_message){
       if (strlen($one_line_message) == 0) {
-        $form_state->setErrorByName("禁止文字列", $this->t('"禁止文字列を入力"に空行は含められません。'));
+        $form_state->setErrorByName("forbidden message", $this->t('you can not contain empty line at `enter forbidden message`'));
       }
     }
     parent::validateForm($form, $form_state);
@@ -85,13 +85,13 @@ class HelloWorldConfigurationForm extends FormBase {
     $form['role_names'] = [
       '#type' => 'checkboxes',
       '#options' => $options,
-      '#title' => 'ロールを選択',
-      '#description' => 'Please select roles to grant on /say_something',
+      '#title' => $this->t('select role'),
+      '#description' => $this->t('Please select roles to grant on /say_something'),
       '#default_value' => $default_values,
     ];
     $form['forbidden_message'] = [
       '#type' => 'textarea',
-      '#title' => '禁止文字列を入力',
+      '#title' => $this->t('enter forbidden message'),
       '#default_value' => $config->get('forbidden_message'),
     ];
     $form['actions']['submit'] = [

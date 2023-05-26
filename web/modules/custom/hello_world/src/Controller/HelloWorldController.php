@@ -55,14 +55,15 @@ class HelloWorldController extends ControllerBase {
    * Inspect user information.
    */
   public function inspectUser(AccountInterface $user = NULL) {
-    $moduleHandler = \Drupal::service('module_handler');
-    if ($moduleHandler->moduleExists('devel')) {
+    if (\Drupal::moduleHandler()->moduleExists("devel")) {
       dpm($user);
     }
-    $content = "User id: " . $user->id() . ", username: " . $user->getAccountName();
 
     return [
-      "#markup" => $content,
+      "#markup" => $this->t(
+        "User id: %user_id, username: %user_name",
+        ["%user_id" => $user->id(), '%user_name' => $user->getAccountName()]
+      ),
     ];
   }
 
@@ -70,10 +71,11 @@ class HelloWorldController extends ControllerBase {
    * Inspect node information.
    */
   public function inspectNode(NodeInterface  $node = NULL) {
-    $content = "node id: " . $node->id() . ", title: " . $node->getTitle();
-
     return [
-      "#markup" => $content,
+      "#markup" => $this->t(
+        "node id: %node_id, title: %title",
+        ["%node_id" => $node->id(), "%title" => $node->getTitle()]
+      )
     ];
   }
 
