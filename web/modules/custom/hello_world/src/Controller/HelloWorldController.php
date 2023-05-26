@@ -70,4 +70,19 @@ class HelloWorldController extends ControllerBase {
   public function helloWorldAccess(AccountInterface $account) {
     return AccessResult::allowedIfHasPermission($account, 'show hello message');
   }
+
+  /**
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   Access result. @see \Drupal\Core\Access\AccessResultInterface
+   */
+  public function hasAdminAccess(AccountInterface $account) {
+    if (in_array('administrator', $account->getRoles(), true)) {
+      return AccessResult::allowed();
+    }
+    return AccessResult::forbidden();
+  }
 }
