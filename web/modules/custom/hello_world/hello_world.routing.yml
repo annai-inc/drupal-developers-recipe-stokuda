@@ -5,3 +5,10 @@ hello_world.hello:
     _title: 'Hello World!'
   requirements:
     _access: 'TRUE'
+hello_world.say_something:
+  path: '/say_something/{message}'
+  defaults:
+    _controller: '\Drupal\hello_world\Controller\HelloWorldController::saySomething'
+    _title: 'Say Something!'
+  requirements:
+    _access: 'TRUE'

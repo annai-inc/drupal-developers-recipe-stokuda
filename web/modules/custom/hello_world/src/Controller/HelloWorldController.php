@@ -18,4 +18,12 @@ class HelloWorldController extends ControllerBase {
     ];
   }
 
+  /**
+   * Just say something by use param.
+   */
+  public function saySomething(string $message) {
+    return [
+      "#markup" => $message,
+    ];
+  }
 }
