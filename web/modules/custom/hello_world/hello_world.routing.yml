@@ -12,3 +12,14 @@ hello_world.say_something:
     _title: 'Say Something!'
   requirements:
     _access: 'TRUE'
+hello_world.inspect_user:
+  path: '/inspect_user/{user}'
+  defaults:
+    _controller: '\Drupal\hello_world\Controller\HelloWorldController::inspectUser'
+    _title: 'Inspect User information'
+  requirements:
+    _access: 'TRUE'
+  options:
+    parameters:
+      user:
+        type: entity:user
