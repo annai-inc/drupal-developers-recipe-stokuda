@@ -1,0 +1,3 @@
+services:
+  hello_world.messenger:
+    class: '\Drupal\hello_world\Service\HelloWorldMessenger'

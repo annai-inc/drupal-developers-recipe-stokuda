@@ -40,19 +40,20 @@ class HelloWorldController extends ControllerBase {
    */
   public function helloWorld() {
     /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
-    $service = new HelloWorldMessenger();
+    $service = \Drupal::service('hello_world.messenger');
 
     return [
       "#markup" => $service->helloWorld(),
     ];
   }
 
+
   /**
    * Just say something by use param.
    */
   public function saySomething(string $message) {
     /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
-    $service = new HelloWorldMessenger();
+    $service = \Drupal::service('hello_world.messenger');
 
     return [
       "#markup" => $service->saySomething($message),
@@ -64,7 +65,7 @@ class HelloWorldController extends ControllerBase {
    */
   public function inspectUser(AccountInterface $user = NULL) {
     /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
-    $service = new HelloWorldMessenger();
+    $service = \Drupal::service('hello_world.messenger');
 
     return [
       "#markup" => $service->inspectUser($user),
@@ -76,7 +77,7 @@ class HelloWorldController extends ControllerBase {
    */
   public function inspectNode(NodeInterface $node) {
     /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
-    $service = new HelloWorldMessenger();
+    $service = \Drupal::service('hello_world.messenger');
 
     return [
       "#markup" => $service->inspectNode($node),
