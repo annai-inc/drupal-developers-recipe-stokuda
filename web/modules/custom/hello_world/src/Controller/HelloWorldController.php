@@ -4,6 +4,7 @@ namespace Drupal\hello_world\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Node\NodeInterface;
 
 /**
  * A example of custom controller.
@@ -33,6 +34,17 @@ class HelloWorldController extends ControllerBase {
    */
   public function inspectUser(AccountInterface $user = NULL) {
     $content = "User id: " . $user->id() . ", username: " . $user->getAccountName();
+
+    return [
+      "#markup" => $content,
+    ];
+  }
+
+  /**
+   * Inspect node information.
+   */
+  public function inspectNode(NodeInterface  $node = NULL) {
+    $content = "node id: " . $node->id() . ", title: " . $node->getTitle();
 
     return [
       "#markup" => $content,

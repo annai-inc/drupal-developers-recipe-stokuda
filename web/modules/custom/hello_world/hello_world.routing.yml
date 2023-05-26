@@ -23,3 +23,14 @@ hello_world.inspect_user:
     parameters:
       user:
         type: entity:user
+hello_world.inspect_node:
+  path: '/inspect_node/{node}'
+  defaults:
+    _controller: '\Drupal\hello_world\Controller\HelloWorldController::inspectNode'
+    _title: 'Inspect Node information'
+  requirements:
+    _access: 'TRUE'
+  options:
+    parameters:
+      node:
+        type: entity:node
