@@ -1,0 +1,3 @@
+show hello message:
+  title: 'Show hello message'
+  description: 'Show hello message on /hello'
