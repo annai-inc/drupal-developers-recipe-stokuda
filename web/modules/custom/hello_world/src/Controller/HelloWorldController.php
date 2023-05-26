@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleStorageInterface;
+use Drupal\hello_world\Service\HelloWorldMessenger;
 
 /**
  * A example of custom controller.
@@ -33,12 +34,16 @@ class HelloWorldController extends ControllerBase {
     );
   }
 
+
   /**
    * Just say a configured hello message.
    */
   public function helloWorld() {
+    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
+    $service = new HelloWorldMessenger();
+
     return [
-      "#markup" => \Drupal::service('config.factory')->get('hello_world.settings')->get('hello_message'),
+      "#markup" => $service->helloWorld(),
     ];
   }
 
@@ -46,8 +51,11 @@ class HelloWorldController extends ControllerBase {
    * Just say something by use param.
    */
   public function saySomething(string $message) {
+    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
+    $service = new HelloWorldMessenger();
+
     return [
-      "#markup" => $message,
+      "#markup" => $service->saySomething($message),
     ];
   }
 
@@ -55,27 +63,23 @@ class HelloWorldController extends ControllerBase {
    * Inspect user information.
    */
   public function inspectUser(AccountInterface $user = NULL) {
-    if (\Drupal::moduleHandler()->moduleExists("devel")) {
-      dpm($user);
-    }
+    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
+    $service = new HelloWorldMessenger();
 
     return [
-      "#markup" => $this->t(
-        "User id: %user_id, username: %user_name",
-        ["%user_id" => $user->id(), '%user_name' => $user->getAccountName()]
-      ),
+      "#markup" => $service->inspectUser($user),
     ];
   }
 
   /**
    * Inspect node information.
    */
-  public function inspectNode(NodeInterface  $node = NULL) {
+  public function inspectNode(NodeInterface $node) {
+    /** @var \Drupal\hello_world\EchoMessageServiceInterface $service */
+    $service = new HelloWorldMessenger();
+
     return [
-      "#markup" => $this->t(
-        "node id: %node_id, title: %title",
-        ["%node_id" => $node->id(), "%title" => $node->getTitle()]
-      )
+      "#markup" => $service->inspectNode($node),
     ];
   }
 
