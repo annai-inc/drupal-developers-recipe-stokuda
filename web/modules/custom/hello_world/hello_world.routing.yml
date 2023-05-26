@@ -4,7 +4,7 @@ hello_world.hello:
     _controller: '\Drupal\hello_world\Controller\HelloWorldController::helloWorld'
     _title: 'Hello World!'
   requirements:
-    _permission: 'show hello message,use advanced search'
+    _permission: 'show hello message+use advanced search'
 hello_world.say_something:
   path: '/say_something/{message}'
   defaults:
