@@ -4,3 +4,5 @@ core_version_requirement: ^10
 description: Hello World module
 package: 'Custom'
 version: '10.0-1.0'
+'interface translation project': hello_world
+'interface translation server pattern': modules/custom/hello_world/translations/%language.po

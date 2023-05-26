@@ -1,0 +1,8 @@
+msgid ""
+msgstr ""
+
+msgid "Hello World module"
+msgstr "ハローワールドモジュール"
+
+msgid "Hello World!"
+msgstr "ハローワールド!"
