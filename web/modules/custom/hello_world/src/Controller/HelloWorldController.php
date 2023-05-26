@@ -8,6 +8,7 @@ namespace Drupal\hello_world\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Node\NodeInterface;
+use Drupal\Core\Access\AccessResult;
 
 /**
  * A example of custom controller.
@@ -79,10 +80,10 @@ class HelloWorldController extends ControllerBase {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   Access result. @see \Drupal\Core\Access\AccessResultInterface
    */
-  public function hasAdminAccess(AccountInterface $account) {
-    if (in_array('administrator', $account->getRoles(), true)) {
-      return AccessResult::allowed();
+  public function hasAdminAccess(AccountInterface $account, String $message) {
+    if (str_contains($message, "a")) {
+      return AccessResult::forbidden();
     }
-    return AccessResult::forbidden();
+    return AccessResult::allowed();
   }
 }
