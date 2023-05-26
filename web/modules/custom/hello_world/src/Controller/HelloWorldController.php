@@ -57,4 +57,17 @@ class HelloWorldController extends ControllerBase {
       "#markup" => $content,
     ];
   }
+
+  /**
+   * Access check for helloWorld().
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   Access result. @see \Drupal\Core\Access\AccessResultInterface
+   */
+  public function helloWorldAccess(AccountInterface $account) {
+    return AccessResult::allowedIfHasPermission($account, 'show hello message');
+  }
 }
