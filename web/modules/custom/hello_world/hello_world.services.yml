@@ -1,3 +1,6 @@
 services:
   hello_world.messenger:
     class: '\Drupal\hello_world\Service\HelloWorldMessenger'
+    arguments:
+      - '@config.factory'
+      - '@module_handler'
