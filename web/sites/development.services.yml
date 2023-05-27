@@ -7,3 +7,5 @@ parameters:
 services:
   cache.backend.null:
     class: Drupal\Core\Cache\NullBackendFactory
+  hello_world.messenger:
+    class: \Drupal\hello_world\Service\NullMessenger
