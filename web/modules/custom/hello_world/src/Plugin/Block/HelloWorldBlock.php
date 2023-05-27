@@ -6,6 +6,8 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\hello_world\EchoMessageServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Hello World block.
@@ -16,6 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class HelloWorldBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The messenger service.
@@ -51,20 +55,51 @@ class HelloWorldBlock extends BlockBase implements ContainerFactoryPluginInterfa
       $container->get('hello_world.messenger')
     );
   }
+
   /**
    * {@inheritdoc}
    */
   public function build() {
-    $build = [];
+    $content = $this->messenger->helloWorld();
+    if ($this->configuration['emphasize']) {
+      $content = '<em>' . $content . '</em>';
+    }
 
-    $build[] = [
-      '#theme' => 'container',
-      '#children' => [
-        '#markup' => $this->messenger->helloWorld(),
-      ],
+    return [
+      '#markup' => $content,
     ];
-
-    return $build;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function defaultConfiguration() {
+    return [
+      'emphasize' => 0,
+    ];
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function blockForm($form, FormStateInterface $form_state) {
+    /** @var array $config */
+    $config = $this->getConfiguration();
+
+    $form['emphasize'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Emphasize message'),
+      '#description' => $this->t('Check this box if you want to emphasize message'),
+      '#default_value' => $config['emphasize'],
+    ];
+
+    return $form;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function blockSubmit($form, FormStateInterface $form_state) {
+    $this->configuration['emphasize'] = $form_state->getValue('emphasize');
+  }
 }
