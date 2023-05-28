@@ -55,7 +55,8 @@ class HelloWorldRedirectSubscriber implements EventSubscriberInterface {
     }
     if ($this->currentUser->isAnonymous()) {
       /** @var \Drupal\Core\Routing\TrustedRedirectResponse $response */
-      $response = new TrustedRedirectResponse('https://google.com');
+      $q = $event->getRequest()->get("keys");
+      $response = new TrustedRedirectResponse('https://google.com/?q=' . $q);
       $event->setResponse($response);
     }
   }
