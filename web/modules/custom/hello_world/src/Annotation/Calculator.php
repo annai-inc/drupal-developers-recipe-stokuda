@@ -30,4 +30,10 @@ class Calculator extends Plugin {
    */
   public $label;
 
+  /**
+   * Radix.
+   *
+   * @var int
+   */
+  public $radix;
 }

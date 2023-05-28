@@ -11,7 +11,8 @@ use Drupal\hello_world\Annotation\Calculator;
  *
  * @Calculator(
  *   id = "pass_through",
- *   label = @Translation("Pass through calculator")
+ *   label = @Translation("Pass through calculator"),
+ *   radix = 0
  * )
  */
 class PassThroughCalculator extends CalculatorBase {

@@ -69,7 +69,7 @@ class HelloWorldController extends ControllerBase {
    */
   public function calculate(int $val) {
     /** @var \Drupal\hello_world\Plugin\CalculatorInterface @calculator */
-    $calculator = $this->pluginManager->createInstance($this->getCalculatorPluginId());
+    $calculator = $this->pluginManager->createInstance($this->getCalculatorPluginIdByRadix($val%3));
 
     $result = [];
     $result['plugin id'] = $calculator->getPluginId();
@@ -78,6 +78,24 @@ class HelloWorldController extends ControllerBase {
     return [
       "#markup" => json_encode($result, JSON_PRETTY_PRINT),
     ];
+  }
+
+
+  /**
+   * Get a plugin id of Calculator at random.
+   *
+   * @return string
+   *   Plugin id of Caluclator
+   */
+  private function getCalculatorPluginIdByRadix($radix) {
+    $definitions = $this->pluginManager->getDefinitions();
+    foreach ($definitions as $definition) {
+      if ($definition['radix'] == $radix) {
+        return $definition['id'];
+      }
+    }
+    $top = array_slice($definitions, 0, 1);
+    return $top[key($top)]['id'];
   }
 
   /**

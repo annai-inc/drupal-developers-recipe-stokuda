@@ -11,7 +11,8 @@ use Drupal\hello_world\Annotation\Calculator;
  *
  * @Calculator(
  *   id = "twice",
- *   label = @Translation("Twice calculator")
+ *   label = @Translation("Twice calculator"),
+ *   radix = 2
  * )
  */
 class TwiceCalculator extends CalculatorBase {

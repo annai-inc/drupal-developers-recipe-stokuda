@@ -11,7 +11,8 @@ use Drupal\hello_world\Annotation\Calculator;
  *
  * @Calculator(
  *   id = "square",
- *   label = @Translation("Square calculator")
+ *   label = @Translation("Square calculator"),
+ *   radix = 1
  * )
  */
 class SquareCalculator extends CalculatorBase {
