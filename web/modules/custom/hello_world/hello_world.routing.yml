@@ -41,4 +41,10 @@ hello_world.setting_form:
     _title: 'Hello world configuration'
   requirements:
     _permission: 'administer hello world'
-
+hello_world.calculator:
+  path: '/calculate/{val}'
+  defaults:
+    _controller: '\Drupal\hello_world\Controller\HelloWorldController::calculate'
+    _title: 'Calculate by the Plugin via PluginManager'
+  requirements:
+    _access: 'TRUE'
