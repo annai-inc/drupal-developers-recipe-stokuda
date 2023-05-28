@@ -4,3 +4,6 @@ services:
     arguments:
       - '@config.factory'
       - '@module_handler'
+  plugin.manager.calculator:
+    class: '\Drupal\hello_world\Plugin\CalculatorPluginManager'
+    parent: default_plugin_manager
