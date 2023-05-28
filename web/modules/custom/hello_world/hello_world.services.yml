@@ -16,4 +16,7 @@ services:
     class: Drupal\hello_world\Routing\HelloWorldRouteSubscriber
     tags:
       - { name: event_subscriber }
-
+  hello_world.route_subscriber2:
+    class: Drupal\hello_world\Routing\HelloWorldRouteSubscriber2
+    tags:
+      - { name: event_subscriber }
