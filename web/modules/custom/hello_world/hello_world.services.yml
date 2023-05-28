@@ -12,4 +12,8 @@ services:
     arguments: ['@current_user']
     tags:
       - { name: event_subscriber }
+  hello_world.route_subscriber:
+    class: Drupal\hello_world\Routing\HelloWorldRouteSubscriber
+    tags:
+      - { name: event_subscriber }
 
