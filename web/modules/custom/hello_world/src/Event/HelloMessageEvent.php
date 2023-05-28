@@ -2,12 +2,13 @@
 
 namespace Drupal\hello_world\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * An example of Event implementation.
  */
-class HelloMessageEvent extends Event {
+class HelloMessageEvent extends GenericEvent {
   const EVENT = 'hello_world.hello_message';
 
   /**
