@@ -1,0 +1,6 @@
+name: Hello World Override
+type: module
+core_version_requirement: ^10
+description: Hello World Override module
+package: 'Custom'
+version: '10.0-1.0'
