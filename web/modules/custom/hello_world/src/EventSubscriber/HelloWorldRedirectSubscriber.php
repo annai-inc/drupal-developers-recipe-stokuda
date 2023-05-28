@@ -49,11 +49,10 @@ class HelloWorldRedirectSubscriber implements EventSubscriberInterface {
    *   The response event.
    */
   public function onRequest(RequestEvent $event) {
-    $path = $event->getRequest()->getPathInfo();
-    if ($path !== '/search/node') {
+    $routeName = \Drupal::routeMatch()->getRouteName();
+    if ($routeName !== 'search.view_node_search') {
       return;
     }
-
     if ($this->currentUser->isAnonymous()) {
       /** @var \Drupal\Core\Routing\TrustedRedirectResponse $response */
       $response = new TrustedRedirectResponse('https://google.com');
