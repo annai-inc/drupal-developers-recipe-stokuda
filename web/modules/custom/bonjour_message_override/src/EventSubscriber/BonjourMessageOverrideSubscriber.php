@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\hello_world_override\EventSubscriber;
+namespace Drupal\bonjour_message_override\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\hello_world\Event\HelloMessageEvent;
 
 /**
  */
-class HelloWorldOverrideSubscriber implements EventSubscriberInterface {
+class BonjourMessageOverrideSubscriber implements EventSubscriberInterface {
 
   /**
    * Constructor.
@@ -19,7 +19,7 @@ class HelloWorldOverrideSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[HelloMessageEvent::EVENT][] = ['onHelloMessage', 50];
+    $events[HelloMessageEvent::EVENT][] = ['onHelloMessage', 100];
     return $events;
   }
 
@@ -30,7 +30,7 @@ class HelloWorldOverrideSubscriber implements EventSubscriberInterface {
    *   The response event.
    */
   public function onHelloMessage(HelloMessageEvent $event) {
-    $event->setValue($event->getValue() . " override");
+    $event->setValue("bonjour message");
   }
 
 }
