@@ -1,0 +1,36 @@
+hello_world.hello:
+  path: '/hello'
+  defaults:
+    _controller: '\Drupal\hello_world\Controller\HelloWorldController::helloWorld'
+    _title: 'Hello World!'
+  requirements:
+    _access: 'TRUE'
+hello_world.say_something:
+  path: '/say_something/{message}'
+  defaults:
+    _controller: '\Drupal\hello_world\Controller\HelloWorldController::saySomething'
+    _title: 'Say Something!'
+  requirements:
+    _access: 'TRUE'
+hello_world.inspect_user:
+  path: '/inspect_user/{user}'
+  defaults:
+    _controller: '\Drupal\hello_world\Controller\HelloWorldController::inspectUser'
+    _title: 'Inspect User information'
+  requirements:
+    _access: 'TRUE'
+  options:
+    parameters:
+      user:
+        type: entity:user
+hello_world.inspect_node:
+  path: '/inspect_node/{node}'
+  defaults:
+    _controller: '\Drupal\hello_world\Controller\HelloWorldController::inspectNode'
+    _title: 'Inspect Node information'
+  requirements:
+    _access: 'TRUE'
+  options:
+    parameters:
+      node:
+        type: entity:node
