@@ -4,14 +4,14 @@ hello_world.hello:
     _controller: '\Drupal\hello_world\Controller\HelloWorldController::helloWorld'
     _title: 'Hello World!'
   requirements:
-    _access: 'TRUE'
+    _permission: 'show hello message+use advanced search'
 hello_world.say_something:
   path: '/say_something/{message}'
   defaults:
     _controller: '\Drupal\hello_world\Controller\HelloWorldController::saySomething'
     _title: 'Say Something!'
   requirements:
-    _access: 'TRUE'
+    _custom_access: '\Drupal\hello_world\Controller\HelloWorldController::hasAdminAccess'
 hello_world.inspect_user:
   path: '/inspect_user/{user}'
   defaults:
