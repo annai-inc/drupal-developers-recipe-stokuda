@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * HelloWorldController is fantastic.
+ * PHP VERSION >= 8.0.0
+ */
 namespace Drupal\hello_world\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -33,6 +36,10 @@ class HelloWorldController extends ControllerBase {
    * Inspect user information.
    */
   public function inspectUser(AccountInterface $user = NULL) {
+    $moduleHandler = \Drupal::service('module_handler');
+    if ($moduleHandler->moduleExists('devel')) {
+      dpm($user);
+    }
     $content = "User id: " . $user->id() . ", username: " . $user->getAccountName();
 
     return [
