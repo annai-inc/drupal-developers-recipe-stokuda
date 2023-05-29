@@ -75,22 +75,16 @@ class HelloWorldController extends ControllerBase {
    * @see https://www.drupal.org/docs/8/api/database-api/static-queries
    */
   public function showContent() {
-    $query = <<<EOS
-SELECT
-node_field_data.nid AS node_field_data_nid,
-node_field_data.title AS node_field_data_title,
-node_field_data.type AS node_field_data_type,
-node_field_data.status AS node_field_data_status,
-node_field_data.changed AS node_field_data_changed,
-users_field_data_node_field_data.uid AS users_field_data_node_field_data_uid
-FROM {node_field_data} node_field_data
-INNER JOIN {users_field_data} users_field_data_node_field_data
-ON node_field_data.uid = users_field_data_node_field_data.uid
-ORDER BY node_field_data.changed DESC
-LIMIT 50 OFFSET 0
-EOS;
+    $query = $this->database->select('node_field_data', 'n');
+    $query
+      ->fields('n', ['nid', 'title', 'type', 'status', 'changed'])
+      ->innerJoin('users_field_data', 'u', 'n.uid = u.uid');
+    $query
+      ->fields('u', ['uid'])
+      ->orderBy('changed', 'DESC')
+      ->range(0, 50);
 
-    $records = $this->database->query($query)->fetchAll();
+    $records = $query->execute();
 
     $header = [
       $this->t('title'),
@@ -103,18 +97,18 @@ EOS;
     $rows = [];
     foreach ($records as $record) {
       /** @var \Drupal\node\Entity\NodeType $node_type */
-      $node_type = \Drupal::service('entity_type.manager')->getStorage('node_type')->load($record->node_field_data_type);
+      $node_type = \Drupal::service('entity_type.manager')->getStorage('node_type')->load($record->type);
       /** @var \Drupal\user\Entity\User $account */
-      $account = \Drupal\user\Entity\User::load($record->users_field_data_node_field_data_uid);
+      $account = \Drupal\user\Entity\User::load($record->uid);
       /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
       $date_formatter = \Drupal::service('date.formatter');
 
       $rows[] = [
-        $record->node_field_data_title,
+        $record->title,
         $node_type->get('name'),
         $account->getDisplayName(),
-        $record->node_field_data_status == 1 ? $this->t('published') : $this->t('unpublished'),
-        $date_formatter->format($record->node_field_data_changed, 'short'),
+        $record->status == 1 ? $this->t('published') : $this->t('unpublished'),
+        $date_formatter->format($record->changed, 'short'),
       ];
     }
 
