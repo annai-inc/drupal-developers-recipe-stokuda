@@ -103,6 +103,10 @@ class HelloWorldController extends ControllerBase {
       /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
       $date_formatter = \Drupal::service('date.formatter');
 
+      if ($record->status == 0) {
+        continue;
+      }
+
       $rows[] = [
         $record->title,
         $node_type->get('name'),
