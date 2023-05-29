@@ -1,0 +1,45 @@
+msgid ""
+msgstr ""
+
+msgid "Hello World module"
+msgstr "ハローワールドモジュール"
+
+msgid "Hello World!"
+msgstr "ハローワールド!"
+
+msgid "About"
+msgstr "このモジュールについて"
+msgctxt "hello world module"
+
+msgid "This is an hello world module."
+msgstr "これはハローワールドモジュールです。"
+
+msgid "User id: %user_id, username: %user_name"
+msgstr "ユーザーID: %user_id, ユーザー名: %user_name"
+
+msgid "Say Something!"
+msgstr "何か話してください！"
+
+msgid "Inspect User information"
+msgstr "ユーザー情報を調べます"
+
+msgid "Inspect Node information"
+msgstr "ノード情報を調べます"
+
+msgid "node id: %node_id, title: %title"
+msgstr "ノードID: %node_id, タイトル: %title"
+
+msgid "Hello world configuration"
+msgstr "ハローワールドの設定"
+
+msgid "select role"
+msgstr "ロールを選択"
+
+msgid "enter forbidden message"
+msgstr "禁止文字列を入力"
+
+msgid "you can not contain empty line at `enter forbidden message`"
+msgstr "「禁止文字列を入力」に空行は含められません"
+
+msgid "Please select roles to grant on /say_something"
+msgstr "/say_something にいて権限付与するロールを選択してください"
