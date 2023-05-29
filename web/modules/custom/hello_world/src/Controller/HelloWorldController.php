@@ -13,11 +13,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\hello_world\EchoMessageServiceInterface;
 use Drupal\hello_world\Plugin\CalculatorPluginManager;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
 
 /**
  * A example of custom controller.
  */
 class HelloWorldController extends ControllerBase {
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
 
   /**
    * The plugin manager of Caluclator.
@@ -41,10 +49,12 @@ class HelloWorldController extends ControllerBase {
    */
   public function __construct(EchoMessageServiceInterface $messenger,
                               ConfigFactoryInterface $config_factory,
-                              CalculatorPluginManager $plugin_manager) {
+                              CalculatorPluginManager $plugin_manager,
+                              Connection $database) {
     $this->messenger = $messenger;
     $this->configFactory = $config_factory;
     $this->pluginManager = $plugin_manager;
+    $this->database = $database;
   }
 
   /**
@@ -55,7 +65,64 @@ class HelloWorldController extends ControllerBase {
       $container->get('hello_world.messenger'),
       $container->get('config.factory'),
       $container->get('plugin.manager.calculator'),
+      $container->get('database'),
     );
+  }
+
+  /**
+   * Show contents with Database API.
+   *
+   * @see https://www.drupal.org/docs/8/api/database-api/static-queries
+   */
+  public function showContent() {
+    $query = <<<EOS
+SELECT
+node_field_data.nid AS node_field_data_nid,
+node_field_data.title AS node_field_data_title,
+node_field_data.type AS node_field_data_type,
+node_field_data.status AS node_field_data_status,
+node_field_data.changed AS node_field_data_changed,
+users_field_data_node_field_data.uid AS users_field_data_node_field_data_uid
+FROM {node_field_data} node_field_data
+INNER JOIN {users_field_data} users_field_data_node_field_data
+ON node_field_data.uid = users_field_data_node_field_data.uid
+ORDER BY node_field_data.changed DESC
+LIMIT 50 OFFSET 0
+EOS;
+
+    $records = $this->database->query($query)->fetchAll();
+
+    $header = [
+      $this->t('title'),
+      $this->t('content type'),
+      $this->t('author'),
+      $this->t('published'),
+      $this->t('updated'),
+    ];
+
+    $rows = [];
+    foreach ($records as $record) {
+      /** @var \Drupal\node\Entity\NodeType $node_type */
+      $node_type = \Drupal::service('entity_type.manager')->getStorage('node_type')->load($record->node_field_data_type);
+      /** @var \Drupal\user\Entity\User $account */
+      $account = \Drupal\user\Entity\User::load($record->users_field_data_node_field_data_uid);
+      /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+      $date_formatter = \Drupal::service('date.formatter');
+
+      $rows[] = [
+        $record->node_field_data_title,
+        $node_type->get('name'),
+        $account->getDisplayName(),
+        $record->node_field_data_status == 1 ? $this->t('published') : $this->t('unpublished'),
+        $date_formatter->format($record->node_field_data_changed, 'short'),
+      ];
+    }
+
+    return [
+      '#theme' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+    ];
   }
 
   /**
