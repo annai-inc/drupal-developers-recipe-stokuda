@@ -15,3 +15,35 @@ function hello_world_help($route_name, RouteMatchInterface $route_match) {
     default:
   }
 }
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function hello_world_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id === "user_register_form" || $form_id === "user_form") {
+//    $form["#validate"][] = "hello_world_validate_password_length";
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hello_world_form_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+  $form["#validate"][] = "hello_world_validate_password_length";
+}
+
+/**
+ * Validate that password length greater than 8 characters.
+ *
+ * @param array $form
+ * @param FormStateInterface $form_state
+ * @return void
+ */
+function hello_world_validate_password_length(array &$form, FormStateInterface $form_state) {
+  $password_length = strlen($form_state->getValue("pass"));
+  if ($password_length < 8) {
+    $form_state->setErrorByName("pass", "パスワードは8文字以上に設定してください。");
+  }
+}
