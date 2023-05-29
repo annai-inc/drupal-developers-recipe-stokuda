@@ -10,26 +10,36 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Node\NodeInterface;
 use Drupal\Core\Access\AccessResult;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\user\PermissionHandlerInterface;
-use Drupal\user\RoleStorageInterface;
+use Drupal\hello_world\EchoMessageServiceInterface;
 
 /**
  * A example of custom controller.
  */
 class HelloWorldController extends ControllerBase {
 
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\hello_world\EchoMessageServiceInterface
+   */
+  protected $messenger;
 
-  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage, ConfigFactoryInterface $config_factory) {
-    $this->permissionHandler = $permission_handler;
-    $this->roleStorage = $role_storage;
+  /**
+   * A construtor of HelloWorldController.
+   *
+   * @param \Drupal\hello_world\EchoMessageServiceInterface $messenger
+   *   The messenger service.
+   */
+  public function __construct(EchoMessageServiceInterface $messenger) {
+    $this->messenger = $messenger;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('user.permissions'),
-      $container->get('entity_type.manager')->getStorage('user_role'),
-      $container->get('config.factory')
+      $container->get('hello_world.messenger')
     );
   }
 
@@ -38,7 +48,7 @@ class HelloWorldController extends ControllerBase {
    */
   public function helloWorld() {
     return [
-      "#markup" => \Drupal::service('config.factory')->get('hello_world.settings')->get('hello_message'),
+      "#markup" => $this->messenger->helloWorld(),
     ];
   }
 
@@ -47,7 +57,7 @@ class HelloWorldController extends ControllerBase {
    */
   public function saySomething(string $message) {
     return [
-      "#markup" => $message,
+      "#markup" => $this->messenger->saySomething($message),
     ];
   }
 
@@ -55,27 +65,17 @@ class HelloWorldController extends ControllerBase {
    * Inspect user information.
    */
   public function inspectUser(AccountInterface $user = NULL) {
-    if (\Drupal::moduleHandler()->moduleExists("devel")) {
-      dpm($user);
-    }
-
     return [
-      "#markup" => $this->t(
-        "User id: %user_id, username: %user_name",
-        ["%user_id" => $user->id(), '%user_name' => $user->getAccountName()]
-      ),
+      "#markup" => $this->messenger->inspectUser($user),
     ];
   }
 
   /**
    * Inspect node information.
    */
-  public function inspectNode(NodeInterface  $node = NULL) {
+  public function inspectNode(NodeInterface $node) {
     return [
-      "#markup" => $this->t(
-        "node id: %node_id, title: %title",
-        ["%node_id" => $node->id(), "%title" => $node->getTitle()]
-      )
+      "#markup" => $this->messenger->inspectNode($node),
     ];
   }
 
