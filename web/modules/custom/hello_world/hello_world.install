@@ -32,3 +32,32 @@ function hello_world_schema() {
 
   return $schema;
 }
+
+/**
+ * Change length of name to 128.
+ */
+function hello_world_update_8001(&$sandbox) {
+  /**
+   * The database service.
+   *
+   * @var \Drupal\Core\Database\Connection $database
+   */
+  $database = \Drupal::database();
+
+  /**
+   * The database schema.
+   *
+   * @var  \Drupal\Core\Database\Schema $schema
+   */
+  $schema = $database->schema();
+
+  $new_definition = [
+    'description' => 'The book title.',
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => TRUE,
+  ];
+
+  $schema->changeField('book', 'name', 'name', $new_definition);
+
+}
