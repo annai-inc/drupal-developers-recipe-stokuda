@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function hello_world_schema() {
+  $schema = [];
+
+  $schema['book'] = [
+    'description' => 'The table holds book data.',
+    'fields' => [
+      'id' => [
+        'description' => 'The primary identifier.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'name' => [
+        'description' => 'The book title.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'description' => [
+        'description' => 'The book description.',
+        'type' => 'text',
+        'size' => 'normal',
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+
+  return $schema;
+}
