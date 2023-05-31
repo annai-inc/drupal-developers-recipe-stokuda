@@ -77,9 +77,11 @@ class HelloWorldController extends ControllerBase {
   public function showContent() {
     $query = $this->database->select('node_field_data', 'n');
     $query
-      ->fields('n', ['nid', 'title', 'type', 'status', 'changed'])
       ->innerJoin('users_field_data', 'u', 'n.uid = u.uid');
     $query
+      ->leftJoin('node_field_revision', 'nr', 'n.nid = nr.nid');
+    $query
+      ->fields('n', ['nid', 'title', 'type', 'status', 'changed'])
       ->fields('u', ['uid'])
       ->orderBy('changed', 'DESC')
       ->range(0, 50);
@@ -92,6 +94,7 @@ class HelloWorldController extends ControllerBase {
       $this->t('author'),
       $this->t('published'),
       $this->t('updated'),
+      $this->t('count of revision'),
     ];
 
     $rows = [];
@@ -107,13 +110,19 @@ class HelloWorldController extends ControllerBase {
         continue;
       }
 
-      $rows[] = [
-        $record->title,
-        $node_type->get('name'),
-        $account->getDisplayName(),
-        $record->status == 1 ? $this->t('published') : $this->t('unpublished'),
-        $date_formatter->format($record->changed, 'short'),
-      ];
+      $nid = $record->nid;
+      if (!isset($rows[$nid])) {
+        $rows[$nid] = [
+          $record->title,
+          $node_type->get('name'),
+          $account->getDisplayName(),
+          $record->status == 1 ? $this->t('published') : $this->t('unpublished'),
+          $date_formatter->format($record->changed, 'short'),
+          1
+        ];
+      } else {
+        $rows[$nid][count($rows[$nid])-1]++;
+      }
     }
 
     return [
