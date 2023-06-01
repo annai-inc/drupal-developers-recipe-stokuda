@@ -1,0 +1,6 @@
+hello_world.hello:
+  title: 'Hello World!'
+  description: 'Show hello message according to configuration.'
+  route_name: hello_world.hello
+  menu_name: main
+  weight: -1
