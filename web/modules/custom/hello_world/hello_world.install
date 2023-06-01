@@ -61,3 +61,30 @@ function hello_world_update_8001(&$sandbox) {
   $schema->changeField('book', 'name', 'name', $new_definition);
 
 }
+
+/**
+ */
+function hello_world_update_8002(&$sandbox) {
+  /**
+   * The database service.
+   *
+   * @var \Drupal\Core\Database\Connection $database
+   */
+  $database = \Drupal::database();
+
+  /**
+   * The database schema.
+   *
+   * @var  \Drupal\Core\Database\Schema $schema
+   */
+  $schema = $database->schema();
+
+  $definition = [
+    'description' => 'The book price.',
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 1000,
+  ];
+
+  $schema->addField('book', 'price', $definition);
+}
