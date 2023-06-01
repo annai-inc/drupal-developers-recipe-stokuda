@@ -47,3 +47,10 @@ function hello_world_validate_password_length(array &$form, FormStateInterface $
     $form_state->setErrorByName("pass", "パスワードは8文字以上に設定してください。");
   }
 }
+
+/**
+ * Implements hook_cron().
+ */
+function hello_world_cron() {
+  \Drupal::service('logger.factory')->get('hello_world')->info('hello_world_cron has been triggered!');
+}
