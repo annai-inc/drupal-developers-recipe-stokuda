@@ -4,3 +4,9 @@ hello_world.hello:
   route_name: hello_world.hello
   menu_name: main
   weight: 1
+hello_world.site_information_settings:
+  title: 'Hello world settings'
+  parent: system.admin_config_system
+  description: 'Configure hello world module settings.'
+  route_name: hello_world.setting_form
+  weight: 100
