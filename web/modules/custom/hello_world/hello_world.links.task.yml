@@ -17,3 +17,9 @@ hello_world.contents:
   title: 'Contents'
   parent_id: hello_world.page
   weight: 1
+hello_world.inspect_user:
+  route_name: hello_world.inspect_user
+  title: 'Inspect User'
+  base_route: hello_world.hello
+  route_parameters:
+    user: 1
