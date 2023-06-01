@@ -1,0 +1,19 @@
+hello_world.page:
+  route_name: hello_world.hello
+  title: 'Hello World!'
+  base_route: hello_world.hello
+hello_world.config:
+  route_name: hello_world.setting_form
+  title: 'Configuration'
+  base_route: hello_world.hello
+  weight: 0
+hello_world.config_secondary:
+  route_name: hello_world.setting_form
+  title: 'Configuration'
+  parent_id: hello_world.page
+  weight: 0
+hello_world.contents:
+  route_name: hello_world.admin_content_replica
+  title: 'Contents'
+  parent_id: hello_world.page
+  weight: 1
