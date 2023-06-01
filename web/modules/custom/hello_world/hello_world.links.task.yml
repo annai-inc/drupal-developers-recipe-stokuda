@@ -23,3 +23,7 @@ hello_world.inspect_user:
   base_route: hello_world.hello
   route_parameters:
     user: 1
+hello_world.user_canonical:
+  route_name: hello_world.inspect_user
+  title: 'Inspect User'
+  base_route: entity.user.canonical
