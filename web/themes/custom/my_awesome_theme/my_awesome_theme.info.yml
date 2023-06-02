@@ -4,3 +4,4 @@ core: 10.x
 core_version_requirement: ^10
 base theme: false
 description: My first awesome theme!!!.
+logo: logo.png
