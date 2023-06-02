@@ -6,3 +6,4 @@ base theme: false
 description: My first awesome theme!!!.
 logo: logo.png
 package: Custom
+version: 10.x-0
