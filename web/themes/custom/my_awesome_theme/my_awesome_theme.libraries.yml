@@ -7,3 +7,11 @@ base-styling:
     js/bootstrap.min.js: { minified: true }
   dependencies:
     - core/jquery
+
+custom-script:
+  version: 1.x
+  js:
+    js/custom.js: {}
+  dependencies:
+    - core/jquery
+

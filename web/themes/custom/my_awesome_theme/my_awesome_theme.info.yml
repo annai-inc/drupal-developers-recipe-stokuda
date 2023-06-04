@@ -9,3 +9,4 @@ package: Custom
 version: 10.x-0
 libraries:
   - my_awesome_theme/base-styling
+  - my_awesome_theme/custom-script
