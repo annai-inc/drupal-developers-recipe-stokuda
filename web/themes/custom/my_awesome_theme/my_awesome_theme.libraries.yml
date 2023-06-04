@@ -1,0 +1,9 @@
+base-styling:
+  version: 1.x
+  css:
+    theme:
+      css/bootstrap.min.css: { minified: true }
+  js:
+    js/bootstrap.min.js: { minified: true }
+  dependencies:
+    - core/jquery
