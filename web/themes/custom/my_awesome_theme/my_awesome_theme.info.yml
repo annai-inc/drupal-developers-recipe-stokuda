@@ -1,0 +1,9 @@
+name: My awesome theme
+type: theme
+core: 10.x
+core_version_requirement: ^10
+base theme: false
+description: My first awesome theme!!!.
+logo: logo.png
+package: Custom
+version: 10.x-0
