@@ -78,9 +78,15 @@
 
     <div class="row flex-row">
       <div class="col">
-        <div class="layout-content">
+        {% if page.sidebar_first|length == 0 and page.sidebar_second|length == 0 %}
+          <div class="layout-content" style="width:100%">
           {{ page.content }}
-        </div>{# /.layout-content #}
+          </div>{# /.layout-content #}
+        {% else %}
+          <div class="layout-content">
+          {{ page.content }}
+          </div>{# /.layout-content #}
+        {% endif %}
       </div>
 
       <div class="col-md-4">
