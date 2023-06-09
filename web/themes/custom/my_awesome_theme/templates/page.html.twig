@@ -45,46 +45,67 @@
  * @ingroup themeable
  */
 #}
-<div class="layout-container">
+<div class="layout-container container">
 
-  <header role="banner">
-    {{ page.header }}
-  </header>
+  <div class="row flex-row">
+    <header role="banner">
+      {{ page.header }}
+    </header>
+  </div>
 
-  {{ page.primary_menu }}
-  {{ page.secondary_menu }}
+  <div class="row flex-row">
+    {{ page.primary_menu }}
+  </div>
 
-  {{ page.breadcrumb }}
+  <div class="row flex-row">
+    {{ page.secondary_menu }}
+  </div>
 
-  {{ page.highlighted }}
+  <div class="row flex-row">
+    {{ page.breadcrumb }}
+  </div>
 
-  {{ page.help }}
+  <div class="row flex-row">
+    {{ page.highlighted }}
+  </div>
+
+  <div class="row flex-row">
+    {{ page.help }}
+  </div>
 
   <main role="main">
     <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
 
-    <div class="layout-content">
-      {{ page.content }}
-    </div>{# /.layout-content #}
+    <div class="row flex-row">
+      <div class="col">
+        <div class="layout-content">
+          {{ page.content }}
+        </div>{# /.layout-content #}
+      </div>
 
-    {% if page.sidebar_first %}
-      <aside class="layout-sidebar-first" role="complementary">
-        {{ page.sidebar_first }}
-      </aside>
-    {% endif %}
+      <div class="col-md-4">
+        {% if page.sidebar_first %}
+          <aside class="layout-sidebar-first" role="complementary">
+            {{ page.sidebar_first }}
+          </aside>
+        {% endif %}
 
-    {% if page.sidebar_second %}
-      <aside class="layout-sidebar-second" role="complementary">
-        {{ page.sidebar_second }}
-      </aside>
-    {% endif %}
+        {% if page.sidebar_second %}
+          <aside class="layout-sidebar-second" role="complementary">
+            {{ page.sidebar_second }}
+          </aside>
+        {% endif %}
+      </div>
 
+    </div>
   </main>
 
-  {% if page.footer %}
-    <footer role="contentinfo">
-      {{ page.footer }}
-    </footer>
-  {% endif %}
+  <div class="row flex-row">
+    {% if page.footer %}
+      <footer role="contentinfo">
+        {{ page.footer }}
+      </footer>
+    {% endif %}
+  </div>
 
 </div>{# /.layout-container #}
