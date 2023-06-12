@@ -1,0 +1,6 @@
+services:
+  hello_world_override.hello_world_event_subscriber:
+    class: '\Drupal\hello_world_override\EventSubscriber\HelloWorldOverrideSubscriber'
+    arguments: []
+    tags:
+      - { name: event_subscriber }
