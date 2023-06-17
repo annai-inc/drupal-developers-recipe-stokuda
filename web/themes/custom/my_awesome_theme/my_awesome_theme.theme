@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\user\Entity\Role;
+
 /**
  * HOOK の 1つが menu__main.
  * @param $variables
@@ -53,4 +55,14 @@ function my_awesome_theme_theme_suggestions_region_alter(array &$suggestions, ar
     $suggestions[] = 'region__' . 'without_wrapper';
   }
   return $suggestions;
+}
+
+/**
+ */
+function my_awesome_theme_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+  $additional_suggestions = array_map(function ($role) {
+    return 'page__node_' . $role->id();
+  }, Role::loadMultiple());
+
+  return array_merge($suggestions, $additional_suggestions);
 }
