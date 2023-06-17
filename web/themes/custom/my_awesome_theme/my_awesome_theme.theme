@@ -43,3 +43,14 @@ function my_awesome_theme_preprocess_block__my_awesome_theme_main_menu(&$variabl
   // Merge with any classes that may have been set by other hook_preprocess_menu invocations
   $variables['attributes']['class'] = array_merge($variables['attributes']['class'], $additional_classes);
 }
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function my_awesome_theme_theme_suggestions_region_alter(array &$suggestions, array $variables) {
+  $regions = ['primary_menu'];
+  if (in_array($variables['elements']['#region'], $regions)) {
+    $suggestions[] = 'region__' . 'without_wrapper';
+  }
+  return $suggestions;
+}
