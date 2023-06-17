@@ -4,3 +4,20 @@ services:
     arguments:
       - '@config.factory'
       - '@module_handler'
+      - '@event_dispatcher'
+  plugin.manager.calculator:
+    class: '\Drupal\hello_world\Plugin\CalculatorPluginManager'
+    parent: default_plugin_manager
+  hello_world.redirect_subscriber:
+    class: '\Drupal\hello_world\EventSubscriber\HelloWorldRedirectSubscriber'
+    arguments: ['@current_user']
+    tags:
+      - { name: event_subscriber }
+  hello_world.route_subscriber:
+    class: Drupal\hello_world\Routing\HelloWorldRouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  hello_world.route_subscriber2:
+    class: Drupal\hello_world\Routing\HelloWorldRouteSubscriber2
+    tags:
+      - { name: event_subscriber }
