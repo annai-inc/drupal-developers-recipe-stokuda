@@ -92,6 +92,8 @@ function my_awesome_theme_preprocess_node(&$variables) {
 function my_awesome_theme_preprocess_page(&$variables) {
   $route_name = \Drupal::routeMatch()->getRouteName();
   if ($route_name === 'view.frontpage.page_1') {
+    $current_user = \Drupal::currentUser();
+    $variables['#attached']['drupalSettings']['welcomeMessage']['userName'] = $current_user->getDisplayName();
     $variables['#attached']['library'][] = 'my_awesome_theme/welcome-message';
   }
 }
