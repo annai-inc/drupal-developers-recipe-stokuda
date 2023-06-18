@@ -70,7 +70,16 @@ function my_awesome_theme_theme_suggestions_page_alter(array &$suggestions, arra
 /**
  * Implements hook_preprocess_HOOK().
  */
-function my_awesome_theme_preprocess_region__content(&$variables) {
+//function my_awesome_theme_preprocess_region__content(&$variables) {
+//  if (!isset($variables['attributes']['class'])) {
+//    $variables['attributes']['class'] = [];
+//  }
+//  $variables['attributes']['class'] = array_merge($variables['attributes']['class'], ['jumbotron']);
+//}
+
+/**
+ */
+function my_awesome_theme_preprocess_node(&$variables) {
   if (!isset($variables['attributes']['class'])) {
     $variables['attributes']['class'] = [];
   }
