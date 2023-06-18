@@ -1,0 +1,29 @@
+hello_world.page:
+  route_name: hello_world.hello
+  title: 'Hello World!'
+  base_route: hello_world.hello
+hello_world.config:
+  route_name: hello_world.setting_form
+  title: 'Configuration'
+  base_route: hello_world.hello
+  weight: 0
+hello_world.config_secondary:
+  route_name: hello_world.setting_form
+  title: 'Configuration'
+  parent_id: hello_world.page
+  weight: 0
+hello_world.contents:
+  route_name: hello_world.admin_content_replica
+  title: 'Contents'
+  parent_id: hello_world.page
+  weight: 1
+hello_world.inspect_user:
+  route_name: hello_world.inspect_user
+  title: 'Inspect User'
+  base_route: hello_world.hello
+  route_parameters:
+    user: 1
+hello_world.user_canonical:
+  route_name: hello_world.inspect_user
+  title: 'Inspect User'
+  base_route: entity.user.canonical
