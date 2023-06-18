@@ -9,7 +9,8 @@ use Drupal\node\NodeInterface;
 use Drupal\core\config\ConfigFactoryInterface;
 use Drupal\core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Drupal\hello_world\Event\HelloMessageEvent;
 
 /**
  * A service that echo messages.
@@ -29,6 +30,13 @@ class HelloWorldMessenger implements EchoMessageServiceInterface {
   protected $moduleHandler;
 
   /**
+   * Event dispatcher service.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * A construtor of HelloWorldController.
    *
    * @param \Drupal\core\config\ConfigFactoryInterface $configFactory
@@ -36,9 +44,12 @@ class HelloWorldMessenger implements EchoMessageServiceInterface {
    * @param \Drupal\core\Extension\ModuleHandlerInterface $moduleHandler
    *   The messenger service.
    */
-  public function __construct(ConfigFactoryInterface $configFactory, ModuleHandlerInterface $moduleHandler) {
+  public function __construct(ConfigFactoryInterface $configFactory,
+                              ModuleHandlerInterface $moduleHandler,
+                              EventDispatcherInterface $eventDispatcher) {
     $this->configFactory = $configFactory;
     $this->moduleHandler = $moduleHandler;
+    $this->eventDispatcher = $eventDispatcher;
   }
 
   /**
@@ -48,6 +59,7 @@ class HelloWorldMessenger implements EchoMessageServiceInterface {
     return new static(
       $container->get('config.factory'),
       $container->get('module_handler'),
+      $container->get('event_dispatcher'),
     );
   }
   /**
@@ -56,7 +68,14 @@ class HelloWorldMessenger implements EchoMessageServiceInterface {
    * @inheritDoc
    */
   public function helloWorld() {
-    return $this->configFactory->get('hello_world.settings')->get('hello_message');
+    /** @var string $default_message */
+    $default_message = $this->configFactory->get('hello_world.settings')->get('hello_message');
+
+    /** @var \Drupal\hello_world\Event\HelloMessageEvent $event */
+    $event = new HelloMessageEvent();
+    $event->setValue($default_message);
+    $this->eventDispatcher->dispatch($event, HelloMessageEvent::EVENT);
+    return $event->getValue();
   }
 
   /**
