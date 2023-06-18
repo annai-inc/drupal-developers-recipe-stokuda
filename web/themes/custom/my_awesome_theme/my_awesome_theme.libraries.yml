@@ -20,3 +20,4 @@ welcome-message:
     js/message.js: {}
   dependencies:
     - core/jquery
+    - core/drupal
