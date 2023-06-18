@@ -15,3 +15,8 @@ custom-script:
   dependencies:
     - core/jquery
 
+welcome-message:
+  js:
+    js/message.js: {}
+  dependencies:
+    - core/jquery
