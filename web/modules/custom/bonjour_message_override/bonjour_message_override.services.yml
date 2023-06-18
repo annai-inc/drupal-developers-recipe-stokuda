@@ -1,0 +1,6 @@
+services:
+  bonjour_message_override.hello_world_event_subscriber:
+    class: '\Drupal\bonjour_message_override\EventSubscriber\BonjourMessageOverrideSubscriber'
+    arguments: []
+    tags:
+      - { name: event_subscriber }
