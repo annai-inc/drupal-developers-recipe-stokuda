@@ -1,0 +1,19 @@
+<?php
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function bonjour_message_override_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.bonjour_message_override':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h3>' . t('About', [], Array("context" => "bonjour message override module")) . '</h3>';
+      return $output;
+    default:
+  }
+}
+
+
