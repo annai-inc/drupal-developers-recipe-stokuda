@@ -11,11 +11,20 @@ use Drupal\Node\NodeInterface;
 use Drupal\Core\Access\AccessResult;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\hello_world\EchoMessageServiceInterface;
+use Drupal\hello_world\Plugin\CalculatorPluginManager;
+use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * A example of custom controller.
  */
 class HelloWorldController extends ControllerBase {
+
+  /**
+   * The plugin manager of Caluclator.
+   *
+   * @var \Drupal\hello_world\Plugin\CalculatorPluginManager
+   */
+  protected $pluginManager;
 
   /**
    * The messenger service.
@@ -30,8 +39,12 @@ class HelloWorldController extends ControllerBase {
    * @param \Drupal\hello_world\EchoMessageServiceInterface $messenger
    *   The messenger service.
    */
-  public function __construct(EchoMessageServiceInterface $messenger) {
+  public function __construct(EchoMessageServiceInterface $messenger,
+                              ConfigFactoryInterface $config_factory,
+                              CalculatorPluginManager $plugin_manager) {
     $this->messenger = $messenger;
+    $this->configFactory = $config_factory;
+    $this->pluginManager = $plugin_manager;
   }
 
   /**
@@ -39,8 +52,79 @@ class HelloWorldController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('hello_world.messenger')
+      $container->get('hello_world.messenger'),
+      $container->get('config.factory'),
+      $container->get('plugin.manager.calculator'),
     );
+  }
+
+  /**
+   * Calculate value by Calculator Plugin at random.
+   *
+   * @params int $val
+   *   Input value of calculation.
+   *
+   * @return array
+   *   Rendered array.
+   */
+  public function calculate(int $val) {
+    /** @var \Drupal\hello_world\Plugin\CalculatorInterface @calculator */
+    $calculator = $this->pluginManager->createInstance($this->getCalculatorPluginIdByRadix($val%3));
+
+    $result = [];
+    $result['plugin id'] = $calculator->getPluginId();
+    $result['result'] = $calculator->calculate($val);
+
+    return [
+      "#markup" => json_encode($result, JSON_PRETTY_PRINT),
+    ];
+  }
+
+
+  /**
+   * Get a plugin id of Calculator at random.
+   *
+   * @return string
+   *   Plugin id of Caluclator
+   */
+  private function getCalculatorPluginIdByRadix($radix) {
+    $definitions = $this->pluginManager->getDefinitions();
+    foreach ($definitions as $definition) {
+      if ($definition['radix'] == $radix) {
+        return $definition['id'];
+      }
+    }
+    $top = array_slice($definitions, 0, 1);
+    return $top[key($top)]['id'];
+  }
+
+  /**
+   * Get a plugin id of Calculator at random.
+   *
+   * @return string
+   *   Plugin id of Caluclator
+   */
+  private function getCalculatorPluginId() {
+    $seed = random_int(0, 2);
+
+    /** @var string $plugin_id */
+    $plugin_id = 'pass_through';
+
+    switch ($seed) {
+      case 0:
+        $plugin_id = 'twice';
+        break;
+
+      case 1:
+        $plugin_id = 'square';
+        break;
+
+      default:
+        $plugin_id = 'pass_through';
+        break;
+    }
+
+    return $plugin_id;
   }
 
   /**
