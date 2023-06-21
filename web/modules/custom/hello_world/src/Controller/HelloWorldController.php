@@ -83,6 +83,7 @@ class HelloWorldController extends ControllerBase {
     $query
       ->fields('n', ['nid', 'title', 'type', 'status', 'changed'])
       ->fields('u', ['uid'])
+      ->condition('n.status', 1, '=')
       ->orderBy('changed', 'DESC')
       ->range(0, 50);
 
@@ -105,10 +106,6 @@ class HelloWorldController extends ControllerBase {
       $account = \Drupal\user\Entity\User::load($record->uid);
       /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
       $date_formatter = \Drupal::service('date.formatter');
-
-      if ($record->status == 0) {
-        continue;
-      }
 
       $nid = $record->nid;
       if (!isset($rows[$nid])) {
