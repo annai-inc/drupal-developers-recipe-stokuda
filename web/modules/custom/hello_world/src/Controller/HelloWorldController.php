@@ -131,6 +131,7 @@ class HelloWorldController extends ControllerBase {
    * Just say a configured hello message.
    */
   public function helloWorld() {
+    \Drupal::service('logger.factory')->get('hello_world')->info('hello is hello ');
     return [
       "#markup" => $this->messenger->helloWorld(),
     ];
