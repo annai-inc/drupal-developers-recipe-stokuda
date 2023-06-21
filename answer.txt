@@ -1,0 +1,60 @@
+2.14_ex_3
+  まず「このサイトとは異なるサイトを元にしたものであったため...」のエラー原因が特定できなかったため、対象と思われる1つのビューのconfigだけimportしました↓。
+  configの中身は以下となっています。
+  NodeのIDを保持してしまっているためDB含めてコピーしないとエラーになるものと思われます。
+
+  ```
+  uuid: 5aeb8ee4-b140-4e3f-a7f4-b0907c032c34
+  langcode: ja
+  status: true
+  dependencies:
+    content:
+      - 'block_content:basic:00ae6442-ed25-4189-8bd5-4bb016378496'
+    module:
+      - block_content
+    theme:
+      - olivero
+  id: helloblockcreatedfrommanagementui
+  theme: olivero
+  region: sidebar
+  weight: 0
+  provider: null
+  plugin: 'block_content:00ae6442-ed25-4189-8bd5-4bb016378496'
+  settings:
+    id: 'block_content:00ae6442-ed25-4189-8bd5-4bb016378496'
+    label: 'Hello Block created from Management UI'
+    label_display: visible
+    provider: block_content
+    status: true
+    info: ''
+    view_mode: full
+  visibility: {  }
+  ```
+
+  DB でブロックの定義を持っているので、このあたりのデータが無くてエラーがでていると予想します。
+
+  ```
+  MariaDB [db]> select * from block_content\G
+  *************************** 1. row ***************************
+           id: 1
+  revision_id: 1
+         type: basic
+         uuid: 00ae6442-ed25-4189-8bd5-4bb016378496
+     langcode: ja
+  1 row in set (0.001 sec)
+
+  MariaDB [db]> select * from block_content_body\G
+  ERROR 1146 (42S02): Table 'db.block_content_body' doesn't exist
+  MariaDB [db]> select * from block_content__body\G
+  *************************** 1. row ***************************
+        bundle: basic
+       deleted: 0
+     entity_id: 1
+   revision_id: 1
+      langcode: ja
+         delta: 0
+    body_value: <p>hello</p>
+  body_summary:
+   body_format: basic_html
+  1 row in set (0.001 sec)
+  ```
