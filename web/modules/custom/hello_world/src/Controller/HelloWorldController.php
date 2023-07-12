@@ -75,14 +75,20 @@ class HelloWorldController extends ControllerBase {
    * @see https://www.drupal.org/docs/8/api/database-api/static-queries
    */
   public function showContent() {
+    $subquery = $this->database->select('node_field_revision', 'nfr');
+    $subquery->addExpression('COUNT(vid)', 'cvid');
+    $subquery->groupBy('nid')
+      ->fields('nfr', ['nid']);
+
     $query = $this->database->select('node_field_data', 'n');
     $query
       ->innerJoin('users_field_data', 'u', 'n.uid = u.uid');
     $query
-      ->leftJoin('node_field_revision', 'nr', 'n.nid = nr.nid');
+      ->leftJoin($subquery, 'nfr', 'n.nid = nfr.nid');
     $query
       ->fields('n', ['nid', 'title', 'type', 'status', 'changed'])
       ->fields('u', ['uid'])
+      ->fields('nfr', ['cvid'])
       ->condition('n.status', 1, '=')
       ->orderBy('changed', 'DESC')
       ->range(0, 50);
@@ -108,18 +114,14 @@ class HelloWorldController extends ControllerBase {
       $date_formatter = \Drupal::service('date.formatter');
 
       $nid = $record->nid;
-      if (!isset($rows[$nid])) {
-        $rows[$nid] = [
-          $record->title,
-          $node_type->get('name'),
-          $account->getDisplayName(),
-          $record->status == 1 ? $this->t('published') : $this->t('unpublished'),
-          $date_formatter->format($record->changed, 'short'),
-          1
-        ];
-      } else {
-        $rows[$nid][count($rows[$nid])-1]++;
-      }
+      $rows[$nid] = [
+        $record->title,
+        $node_type->get('name'),
+        $account->getDisplayName(),
+        $record->status == 1 ? $this->t('published') : $this->t('unpublished'),
+        $date_formatter->format($record->changed, 'short'),
+        $record->cvid,
+      ];
     }
 
     return [
