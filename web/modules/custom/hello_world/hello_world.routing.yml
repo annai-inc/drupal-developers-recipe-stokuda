@@ -48,3 +48,10 @@ hello_world.calculator:
     _title: 'Calculate by the Plugin via PluginManager'
   requirements:
     _access: 'TRUE'
+hello_world.admin_content_replica:
+  path: '/custom_admin_content'
+  defaults:
+    _controller: '\Drupal\hello_world\Controller\HelloWorldController::showContent'
+    _title: 'Contents'
+  requirements:
+    _access: 'TRUE'
