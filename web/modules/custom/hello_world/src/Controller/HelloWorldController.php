@@ -13,11 +13,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\hello_world\EchoMessageServiceInterface;
 use Drupal\hello_world\Plugin\CalculatorPluginManager;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
 
 /**
  * A example of custom controller.
  */
 class HelloWorldController extends ControllerBase {
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
 
   /**
    * The plugin manager of Caluclator.
@@ -41,10 +49,12 @@ class HelloWorldController extends ControllerBase {
    */
   public function __construct(EchoMessageServiceInterface $messenger,
                               ConfigFactoryInterface $config_factory,
-                              CalculatorPluginManager $plugin_manager) {
+                              CalculatorPluginManager $plugin_manager,
+                              Connection $database) {
     $this->messenger = $messenger;
     $this->configFactory = $config_factory;
     $this->pluginManager = $plugin_manager;
+    $this->database = $database;
   }
 
   /**
@@ -55,7 +65,71 @@ class HelloWorldController extends ControllerBase {
       $container->get('hello_world.messenger'),
       $container->get('config.factory'),
       $container->get('plugin.manager.calculator'),
+      $container->get('database'),
     );
+  }
+
+  /**
+   * Show contents with Database API.
+   *
+   * @see https://www.drupal.org/docs/8/api/database-api/static-queries
+   */
+  public function showContent() {
+    $query = $this->database->select('node_field_data', 'n');
+    $query
+      ->innerJoin('users_field_data', 'u', 'n.uid = u.uid');
+    $query
+      ->leftJoin('node_field_revision', 'nr', 'n.nid = nr.nid');
+    $query
+      ->fields('n', ['nid', 'title', 'type', 'status', 'changed'])
+      ->fields('u', ['uid'])
+      ->orderBy('changed', 'DESC')
+      ->range(0, 50);
+
+    $records = $query->execute();
+
+    $header = [
+      $this->t('title'),
+      $this->t('content type'),
+      $this->t('author'),
+      $this->t('published'),
+      $this->t('updated'),
+      $this->t('count of revision'),
+    ];
+
+    $rows = [];
+    foreach ($records as $record) {
+      /** @var \Drupal\node\Entity\NodeType $node_type */
+      $node_type = \Drupal::service('entity_type.manager')->getStorage('node_type')->load($record->type);
+      /** @var \Drupal\user\Entity\User $account */
+      $account = \Drupal\user\Entity\User::load($record->uid);
+      /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+      $date_formatter = \Drupal::service('date.formatter');
+
+      if ($record->status == 0) {
+        continue;
+      }
+
+      $nid = $record->nid;
+      if (!isset($rows[$nid])) {
+        $rows[$nid] = [
+          $record->title,
+          $node_type->get('name'),
+          $account->getDisplayName(),
+          $record->status == 1 ? $this->t('published') : $this->t('unpublished'),
+          $date_formatter->format($record->changed, 'short'),
+          1
+        ];
+      } else {
+        $rows[$nid][count($rows[$nid])-1]++;
+      }
+    }
+
+    return [
+      '#theme' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+    ];
   }
 
   /**

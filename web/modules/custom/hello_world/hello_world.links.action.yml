@@ -1,0 +1,5 @@
+hello_world.config:
+  route_name: hello_world.setting_form
+  title: 'Configuration'
+  appears_on:
+    - hello_world.hello
